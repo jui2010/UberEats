@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import withStyles from '@material-ui/core/styles/withStyles'
+import withStyles from '@material-ui/core/styles/withStyles'    
 import axios from 'axios'    
 import Grid from '@material-ui/core/Grid'
 import InputBase from '@material-ui/core/InputBase'
@@ -15,11 +15,9 @@ const styles = (theme) => ({
     },
 })
 
-class signup extends Component {
+class restaurantLogin extends Component {
     
     state = {
-        firstname : '',
-        lastname : '',
         email : '',
         password : ''
     }
@@ -32,15 +30,13 @@ class signup extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault()
-        var newUser = {
-            firstname : this.state.firstname,
-            lastname : this.state.lastname,
+        var newRestaurant = {
             email : this.state.email,
-            password : this.state.password,
+            password : this.state.password
         }
-        axios.post('/signup', newUser)
+        axios.post('/login', newRestaurant)
             .then(res => {
-                console.log("signup successful")
+                console.log("login successful")
             })
             .catch(err => {
                 console.log(err)
@@ -54,36 +50,15 @@ class signup extends Component {
                 <Grid item sm={12}>
                     Uber Eats
                 </Grid>
+                <Grid item sm={12}>
+                    Welcome back
+                </Grid>
 
                 <Grid item sm={12}>
-                    Sign up with your email address
+                    Log in with your email address.
                 </Grid>
                 
                 <form noValidate onSubmit ={this.handleSubmit }>
-                    <InputBase 
-                        id ="firstname" 
-                        name="firstname" 
-                        placeholder="Firstname" 
-                        type="text"
-                        className={classes.textField}
-                        variant="outlined"
-                        value={this.state.firstname} 
-                        onChange= {this.handleChange} fullWidth 
-                        color ='secondary'
-                    />
-
-                    <InputBase 
-                        id ="lastname" 
-                        name="lastname" 
-                        placeholder="Lastname" 
-                        type="text"
-                        className={classes.textField}
-                        variant="outlined"
-                        value={this.state.lastname} 
-                        onChange= {this.handleChange} fullWidth 
-                        color ='secondary'
-                    />
-
                     <InputBase 
                         id ="email" 
                         name="email" 
@@ -109,7 +84,7 @@ class signup extends Component {
                     />
 
                     <Button type="submit">
-                        Signup
+                        Login as a restaurant
                     </Button>
                 </form>
             </Grid>
@@ -117,4 +92,4 @@ class signup extends Component {
     }
 }
 
-export default (withStyles(styles)(signup))
+export default (withStyles(styles)(restaurantLogin))

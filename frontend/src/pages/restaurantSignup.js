@@ -18,8 +18,8 @@ const styles = (theme) => ({
 class signup extends Component {
     
     state = {
-        firstname : '',
-        lastname : '',
+        restaurantName : '',
+        location : '',
         email : '',
         password : ''
     }
@@ -32,13 +32,13 @@ class signup extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault()
-        var newUser = {
-            firstname : this.state.firstname,
-            lastname : this.state.lastname,
+        var newRestaurant = {
+            restaurantName : this.state.restaurantName,
+            location : this.state.location,
             email : this.state.email,
             password : this.state.password,
         }
-        axios.post('/signup', newUser)
+        axios.post('/restaurantSignup', newRestaurant)
             .then(res => {
                 console.log("signup successful")
             })
@@ -61,25 +61,25 @@ class signup extends Component {
                 
                 <form noValidate onSubmit ={this.handleSubmit }>
                     <InputBase 
-                        id ="firstname" 
-                        name="firstname" 
-                        placeholder="Firstname" 
+                        id ="restaurantName" 
+                        name="restaurantName" 
+                        placeholder="Restaurant Name" 
                         type="text"
                         className={classes.textField}
                         variant="outlined"
-                        value={this.state.firstname} 
+                        value={this.state.restaurantName} 
                         onChange= {this.handleChange} fullWidth 
                         color ='secondary'
                     />
 
                     <InputBase 
-                        id ="lastname" 
-                        name="lastname" 
-                        placeholder="Lastname" 
+                        id ="location" 
+                        name="location" 
+                        placeholder="Location" 
                         type="text"
                         className={classes.textField}
                         variant="outlined"
-                        value={this.state.lastname} 
+                        value={this.state.location} 
                         onChange= {this.handleChange} fullWidth 
                         color ='secondary'
                     />
@@ -109,7 +109,7 @@ class signup extends Component {
                     />
 
                     <Button type="submit">
-                        Signup
+                        Signup as a restaurant
                     </Button>
                 </form>
             </Grid>

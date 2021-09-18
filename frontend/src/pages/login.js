@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'    
+import axios from 'axios'    
 import Grid from '@material-ui/core/Grid'
 import InputBase from '@material-ui/core/InputBase'
+import { Button } from '@material-ui/core'
 
 const styles = (theme) => ({
     ...theme.spread,
@@ -16,13 +18,29 @@ const styles = (theme) => ({
 class login extends Component {
     
     state = {
-        email_no : ''  
+        email : '',
+        password : ''
     }
 
     handleChange = (event) => {
         this.setState({
             [event.target.name] : event.target.value
         })
+    }
+
+    handleSubmit = (event) => {
+        event.preventDefault()
+        var newUser = {
+            email : this.state.email,
+            password : this.state.password
+        }
+        axios.post('/login', newUser)
+            .then(res => {
+                console.log("login successful")
+            })
+            .catch(err => {
+                console.log(err)
+            })
     }
 
     render() {
@@ -37,23 +55,38 @@ class login extends Component {
                 </Grid>
 
                 <Grid item sm={12}>
-                    Sign in with your email address or mobile number.
+                    Log in with your email address.
                 </Grid>
                 
-                <InputBase 
-                    id ="email_no" 
-                    name="email_no" 
-                    placeholder="Email or mobile number" 
-                    className={classes.textField}
-                    variant="outlined"
-                    value={this.state.email_no} 
-                    onChange= {this.handleChange} fullWidth 
-                    color ='secondary'
-                />
+                <form noValidate onSubmit ={this.handleSubmit }>
+                    <InputBase 
+                        id ="email" 
+                        name="email" 
+                        placeholder="Email" 
+                        type="email"
+                        className={classes.textField}
+                        variant="outlined"
+                        value={this.state.email} 
+                        onChange= {this.handleChange} fullWidth 
+                        color ='secondary'
+                    />
 
-                <Grid item sm={12}>
-                    New to Uber? Create an account
-                </Grid>
+                    <InputBase 
+                        id ="password" 
+                        name="password" 
+                        placeholder="Password" 
+                        type="password"
+                        className={classes.textField}
+                        variant="outlined"
+                        value={this.state.password} 
+                        onChange= {this.handleChange} fullWidth 
+                        color ='secondary'
+                    />
+
+                    <Button type="submit">
+                        Login
+                    </Button>
+                </form>
             </Grid>
         )
     }
