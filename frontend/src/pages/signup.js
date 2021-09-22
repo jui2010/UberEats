@@ -1,18 +1,15 @@
 import React, { Component } from 'react'
-import withStyles from '@material-ui/core/styles/withStyles'
-import axios from 'axios'    
+import withStyles from '@material-ui/core/styles/withStyles' 
 import Grid from '@material-ui/core/Grid'
 import InputBase from '@material-ui/core/InputBase'
 import { Button } from '@material-ui/core'
 
+//redux
+import {connect} from 'react-redux'
+import {signupUser} from '../redux/actions/userActions'
+
 const styles = (theme) => ({
     ...theme.spread,
-    pageTitle : {
-        margin : '20px 0px 20px auto' ,
-        fontFamily: 'Bebas Neue',
-        fontSize : '27px',
-        color : 'white'
-    },
 })
 
 class signup extends Component {
@@ -38,13 +35,7 @@ class signup extends Component {
             email : this.state.email,
             password : this.state.password,
         }
-        axios.post('/signup', newUser)
-            .then(res => {
-                console.log("signup successful")
-            })
-            .catch(err => {
-                console.log(err)
-            })
+        this.props.signupUser(newUser, this.props.history)
     }
 
     render() {
@@ -117,4 +108,8 @@ class signup extends Component {
     }
 }
 
-export default (withStyles(styles)(signup))
+const mapStateToProps = (state) => ({
+    user : state.user
+})
+
+export default connect(mapStateToProps, {signupUser} )(withStyles(styles)(signup))

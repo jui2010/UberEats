@@ -7,12 +7,6 @@ import { Button } from '@material-ui/core'
 
 const styles = (theme) => ({
     ...theme.spread,
-    pageTitle : {
-        margin : '20px 0px 20px auto' ,
-        fontFamily: 'Bebas Neue',
-        fontSize : '27px',
-        color : 'white'
-    },
 })
 
 class signup extends Component {

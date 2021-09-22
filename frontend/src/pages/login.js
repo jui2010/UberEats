@@ -1,18 +1,15 @@
 import React, { Component } from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'    
-import axios from 'axios'    
 import Grid from '@material-ui/core/Grid'
 import InputBase from '@material-ui/core/InputBase'
 import { Button } from '@material-ui/core'
 
+//redux
+import {connect} from 'react-redux'
+import {loginUser} from '../redux/actions/userActions'
+
 const styles = (theme) => ({
     ...theme.spread,
-    pageTitle : {
-        margin : '20px 0px 20px auto' ,
-        fontFamily: 'Bebas Neue',
-        fontSize : '27px',
-        color : 'white'
-    },
 })
 
 class login extends Component {
@@ -34,13 +31,7 @@ class login extends Component {
             email : this.state.email,
             password : this.state.password
         }
-        axios.post('/login', newUser)
-            .then(res => {
-                console.log("login successful")
-            })
-            .catch(err => {
-                console.log(err)
-            })
+        this.props.loginUser(newUser, this.props.history)
     }
 
     render() {
@@ -92,4 +83,8 @@ class login extends Component {
     }
 }
 
-export default (withStyles(styles)(login))
+const mapStateToProps = (state) => ({
+    user : state.user
+})
+
+export default connect(mapStateToProps, {loginUser} )(withStyles(styles)(login))
