@@ -60,12 +60,6 @@ class NavigationBar extends Component {
                             <Button className={classes.button} component = {Link} to="/login" >
                                 Login
                             </Button>)}
-                        
-                        {/* signup */}
-                        {!authenticated && (
-                            <Button className={classes.button} component = {Link} to="/signup">
-                                Signup
-                            </Button>)}
 
                         {/* dashboard */}                        
                         {authenticated && ( 

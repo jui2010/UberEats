@@ -22,8 +22,9 @@ exports.signupUser = (req, res) => {
     values (?,?,?,?)`, [firstname, lastname , email, password],(error, results) => {
         if(error)
             console.log(error)
-        else 
+        else{ 
             res.end(JSON.stringify(results))
+        }
     })
 }
 
@@ -34,7 +35,7 @@ exports.loginUser = (req, res) => {
 
     console.log(JSON.stringify("loginUser function: "+email+" "+password))
 
-    con.query(`select count(*) from users where email = ? and password = ?`, [email, password],(error, results) => {
+    con.query(`select * from users where email = ? and password = ?`, [email, password],(error, results) => {
         if(error)
             console.log(error)
         else 
