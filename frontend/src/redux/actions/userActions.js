@@ -1,4 +1,4 @@
-import { LOGIN_USER} from '../types'
+import { LOGIN_USER, EDIT_PROFILE } from '../types'
 import axios from 'axios'
 
 export const signupUser = (newUser, history) => (dispatch) => {
@@ -19,8 +19,24 @@ export const loginUser = (newUser, history) => (dispatch) => {
                 type : LOGIN_USER,
                 payload : res.data[0]
             })
+            console.log("LOGIN_USER"+res.data[0])
+
             history.push('/')
             console.log("login successful")
+        })
+        .catch(err => {
+            console.log(err)
+        })
+}
+
+export const editProfile = (userDetails) => (dispatch) => {
+    axios.post('/edit', userDetails)
+        .then(res => {
+            dispatch({
+                type : EDIT_PROFILE,
+                payload : res.data[0]
+            })
+            console.log("user profile edit successful")
         })
         .catch(err => {
             console.log(err)

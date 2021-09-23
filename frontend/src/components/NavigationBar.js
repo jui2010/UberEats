@@ -3,8 +3,10 @@ import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Tooltip from '@material-ui/core/Tooltip'
 import Button from '@material-ui/core/Button'
+import Avatar from '@material-ui/core/Avatar'
 import withStyles from '@material-ui/core/styles/withStyles'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
+import ExitToAppIcon  from '@material-ui/icons/ExitToApp'
 import MenuIcon from '@material-ui/icons/Menu'
 
 import { Link } from 'react-router-dom'
@@ -40,11 +42,10 @@ const styles = (theme) => ({
     }
 })
 
-
 class NavigationBar extends Component {
     render(){
         const { classes } = this.props
-        const {authenticated} = this.props.user
+        const {authenticatedUser , authenticated} = this.props.user
 
         return (
             <div >
@@ -63,9 +64,27 @@ class NavigationBar extends Component {
 
                         {/* dashboard */}                        
                         {authenticated && ( 
-                            <Tooltip title="Info" >
+                            <Tooltip title="Cart" >
                                 <Button component = {Link} to="/cart" >
                                     <ShoppingCartIcon/> Cart
+                                </Button>
+                            </Tooltip>
+                        )}
+
+                        {/* profile */}                        
+                        {authenticated && ( 
+                            <Tooltip title="Profile" >
+                                <Button component = {Link} to="/profile" >
+                                    <Avatar>{authenticatedUser.firstname.substring(0,1)}{authenticatedUser.lastname.substring(0,1)}</Avatar>
+                                </Button>
+                            </Tooltip>
+                        )}
+
+                        {/* logout */}                        
+                        {authenticated && ( 
+                            <Tooltip title="Logout" >
+                                <Button component = {Link} to="/logout" >
+                                    <ExitToAppIcon/>
                                 </Button>
                             </Tooltip>
                         )}

@@ -1,11 +1,13 @@
 var express = require('express')
 var app = express()
+var session = require('express-session')
 
 //Cross-Origin-Resource-Sharing
 const cors = require('cors')
 
 const {signupUser} = require('./routes/users')
 const {loginUser} = require('./routes/users')
+const {editProfile} = require('./routes/users')
 const {signupRestaurant} = require('./routes/restaurants')
 const {loginRestaurant} = require('./routes/restaurants')
 
@@ -19,6 +21,7 @@ app.use(express.json()) //since server will send and receive json
 //users routes
 app.post('/api/signup' , signupUser)
 app.post('/api/login' , loginUser)
+app.post('/api/edit' , editProfile)
 app.post('/api/restaurantLogin' , loginRestaurant)
 app.post('/api/restaurantSignup' , signupRestaurant)
 
