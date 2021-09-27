@@ -34,7 +34,7 @@ export const editProfile = (userDetails) => (dispatch) => {
         .then(res => {
             dispatch({
                 type : EDIT_PROFILE,
-                payload : res.data[0]
+                payload : userDetails
             })
             console.log("user profile edit successful")
         })

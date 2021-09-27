@@ -30,6 +30,7 @@ const styles = (theme) => ({
 })
 
 class profile extends Component {
+    
     state = {
         edit : false,
         phone  : this.props.user.authenticatedUser.phone,
@@ -39,6 +40,18 @@ class profile extends Component {
         city : this.props.user.authenticatedUser.city,
         state : this.props.user.authenticatedUser.state,
         country : this.props.user.authenticatedUser.country
+    }
+
+    componentDidMount(){
+        this.setState({
+            phone  : this.props.user.authenticatedUser.phone,
+            nickname : this.props.user.authenticatedUser.nickname,
+            dob : this.props.user.authenticatedUser.dob,
+            about : this.props.user.authenticatedUser.about,
+            city : this.props.user.authenticatedUser.city,
+            state : this.props.user.authenticatedUser.state,
+            country : this.props.user.authenticatedUser.country
+        })
     }
 
     handleChange = (event) => {
@@ -57,6 +70,9 @@ class profile extends Component {
         event.preventDefault()
         
         var userDetails = {
+            userid : this.props.user.authenticatedUser.userid,
+            firstname : this.props.user.authenticatedUser.firstname,
+            lastname : this.props.user.authenticatedUser.lastname,
             email : this.props.user.authenticatedUser.email,
             phone  : this.state.phone,
             nickname : this.state.nickname,
@@ -84,7 +100,7 @@ class profile extends Component {
                 <Grid container item sm={4} direcion="row">
 
                     <Avatar className={classes.avatar}>
-                        {authenticatedUser.firstname.substring(0,1)}{authenticatedUser.lastname.substring(0,1)}
+                        {authenticatedUser.firstname && authenticatedUser.firstname.substring(0,1)}{ authenticatedUser.lastname &&  authenticatedUser.lastname.substring(0,1)}
                     </Avatar>
 
                     <div onClick={this.handleEdit} className={classes.edit}>
@@ -102,7 +118,7 @@ class profile extends Component {
                         <div>
                             Phone : 
                         </div>
-
+{console.log("state "+JSON.stringify(this.state && this.state.firstname))}
                         <TextField 
                             id ="phone" 
                             name="phone" 

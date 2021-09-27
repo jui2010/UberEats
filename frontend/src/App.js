@@ -1,10 +1,13 @@
 import React, { Component } from 'react'
 import './App.css'
+import cookie from 'react-cookies'
+import axios from 'axios'
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
 
 //redux
 import {Provider} from 'react-redux'
 import store from './redux/store'
+import {GET_AUTHENTICATED_USER} from './redux/types'
 
 import home from './pages/home'
 import login from './pages/login'
@@ -16,6 +19,20 @@ import restaurantSignup from './pages/restaurantSignup'
 import NavigationBar from './components/NavigationBar'
 
 class App extends Component{
+  componentDidMount(){
+    if(cookie.load('cookie')){
+      let email = cookie.load('cookie')
+      console.log('app cookie', email)
+      axios.post('/getAuthenticatedUser', {email : email})
+        .then(res => {
+          store.dispatch({
+            type : GET_AUTHENTICATED_USER,
+            payload : res.data[0]
+          })
+        })
+    }
+  }
+
   render(){
     return (
       <Provider store={store}>

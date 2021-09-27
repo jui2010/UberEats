@@ -1,4 +1,4 @@
-import { LOGIN_USER, EDIT_PROFILE} from '../types'
+import { LOGIN_USER, EDIT_PROFILE, GET_AUTHENTICATED_USER} from '../types'
 
 const initialState = {
     authenticatedUser : {
@@ -23,9 +23,18 @@ export default function(state = initialState , action){
                 authenticated : true
             } 
 
+        case GET_AUTHENTICATED_USER :
+            return {
+                authenticatedUser : action.payload,
+                authenticated : true
+            } 
+
         case EDIT_PROFILE :
             return {
-                authenticatedUser : '',
+                ...state, 
+                authenticatedUser : {
+                    ...action.payload
+                }
             } 
  
         default : 

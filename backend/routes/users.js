@@ -37,6 +37,8 @@ exports.loginUser = (req, res) => {
 
     con.query(`select * from users where email = ? and password = ?`, [email, password],(error, results) => {
         if(results.length > 0){
+            res.cookie('cookie', email, {maxAge: 900000, httpOnly: false, path : '/'});
+            req.session.user = results
             res.end(JSON.stringify(results))
         }
         else
@@ -60,7 +62,22 @@ exports.editProfile = (req, res) => {
 
     con.query(`update users set phone = ?, nickname = ?, dob = ?, about = ?, city = ?, state = ?, country = ?  WHERE email = ? `, 
         [phone, nickname, dob, about, city, state, country, email],(error, results) => {
-            console.log("Record Updated!!");
-            console.log(results);
+            console.log("Record Updated!!")
+            console.log(results)
+            res.end(JSON.stringify(results))
         })
+}
+
+// get authenticated user
+exports.authenticatedUser = (req, res) => {
+    let email = req.body.email
+
+    console.log(JSON.stringify("authenticatedUser function: "+email))
+    con.query(`select * from users where email = ? `, [email],(error, results) => {
+        if(results.length > 0){
+            res.end(JSON.stringify(results))
+        }
+        else
+            res.end({error : "Incorrect username or password"})
+    })
 }
