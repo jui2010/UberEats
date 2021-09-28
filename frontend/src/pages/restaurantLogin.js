@@ -1,12 +1,48 @@
 import React, { Component } from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'    
-import axios from 'axios'    
 import Grid from '@material-ui/core/Grid'
-import InputBase from '@material-ui/core/InputBase'
+import TextField from '@material-ui/core/TextField'
+import Typography from '@material-ui/core/Typography'
 import { Button } from '@material-ui/core'
+
+import { Link } from 'react-router-dom'
+
+//redux
+import {connect} from 'react-redux'
+import {loginRestaurant} from '../redux/actions/restaurantActions'
 
 const styles = (theme) => ({
     ...theme.spread,
+    text1 : {
+        fontSize : '29px',
+        marginTop : '100px',
+        fontWeight : '600'
+    },
+    text2 : {
+        fontSize : '20px',
+        marginTop : '12px'
+    },
+    create : {
+        color : '#3FC060',
+        textDecoration : 'none', 
+        marginLeft :'10px',
+        fontSize : '15px',
+    },
+    new : {
+        textDecoration : 'none', 
+        fontSize : '15px',
+    }, 
+    textField : {
+        marginTop : '10px',
+    },
+    submit : {
+        marginTop : '10px',
+        backgroundColor : '#3FC060',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
+    },
+    text3 : {
+        marginTop : '10px'
+    }
 })
 
 class restaurantLogin extends Component {
@@ -28,62 +64,73 @@ class restaurantLogin extends Component {
             email : this.state.email,
             password : this.state.password
         }
-        axios.post('/login', newRestaurant)
-            .then(res => {
-                console.log("login successful")
-            })
-            .catch(err => {
-                console.log(err)
-            })
+        this.props.loginRestaurant(newRestaurant, this.props.history)
     }
 
     render() {
         const { classes } = this.props
         return (
-            <Grid container>
-                <Grid item sm={12}>
-                    Uber Eats
-                </Grid>
-                <Grid item sm={12}>
-                    Welcome back
+            <Grid container direction="row">
+                <Grid item sm={4}>
                 </Grid>
 
-                <Grid item sm={12}>
-                    Log in with your email address.
+                <Grid item sm={4}>
+                    <Grid item sm={12} className={classes.text1}>
+                        Welcome back to restaurant login
+                    </Grid>
+
+                    <Grid item sm={12} className={classes.text2}>
+                        Log in with your email address.
+                    </Grid>
+                    
+                    <form noValidate onSubmit ={this.handleSubmit }>
+                        <TextField 
+                            id ="email" 
+                            name="email" 
+                            placeholder="Email" 
+                            type="email"
+                            className={classes.textField}
+                            variant="outlined"
+                            value={this.state.email} 
+                            onChange= {this.handleChange} fullWidth 
+                        />
+
+                        <TextField 
+                            id ="password" 
+                            name="password" 
+                            placeholder="Password" 
+                            type="password"
+                            className={classes.textField}
+                            variant="outlined"
+                            value={this.state.password} 
+                            onChange= {this.handleChange} fullWidth 
+                        />
+
+                        <Button type="submit" variant="contained" fullWidth className={classes.submit} >
+                            Login
+                        </Button>
+                        <br/>
+                        
+                        <Typography type="submit" className={classes.text3}>
+                            <span className={classes.new} >
+                                New to Uber Eats? 
+                            </span>
+                            <Typography className={classes.create} component = {Link} to="/signup" >
+                                Create an account
+                            </Typography>
+                        </Typography>
+                    </form>
                 </Grid>
-                
-                <form noValidate onSubmit ={this.handleSubmit }>
-                    <InputBase 
-                        id ="email" 
-                        name="email" 
-                        placeholder="Email" 
-                        type="email"
-                        className={classes.textField}
-                        variant="outlined"
-                        value={this.state.email} 
-                        onChange= {this.handleChange} fullWidth 
-                        color ='secondary'
-                    />
 
-                    <InputBase 
-                        id ="password" 
-                        name="password" 
-                        placeholder="Password" 
-                        type="password"
-                        className={classes.textField}
-                        variant="outlined"
-                        value={this.state.password} 
-                        onChange= {this.handleChange} fullWidth 
-                        color ='secondary'
-                    />
-
-                    <Button type="submit">
-                        Login as a restaurant
-                    </Button>
-                </form>
+                <Grid item sm={4}>
+                </Grid>
             </Grid>
         )
     }
 }
 
-export default (withStyles(styles)(restaurantLogin))
+const mapStateToProps = (state) => ({
+    user : state.user
+})
+
+export default connect(mapStateToProps, {loginRestaurant} )(withStyles(styles)(restaurantLogin))

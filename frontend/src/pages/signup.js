@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import withStyles from '@material-ui/core/styles/withStyles' 
 import Grid from '@material-ui/core/Grid'
+import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
 import { Button } from '@material-ui/core'
+import { Link } from 'react-router-dom'
 
 //redux
 import {connect} from 'react-redux'
@@ -23,6 +25,19 @@ const styles = (theme) => ({
         backgroundColor : '#3FC060',
         fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
     },
+    create : {
+        color : '#3FC060',
+        textDecoration : 'none', 
+        marginLeft :'10px',
+        fontSize : '15px',
+    },
+    new : {
+        textDecoration : 'none', 
+        fontSize : '15px',
+    }, 
+    text3 : {
+        marginTop : '10px'
+    }
 })
 
 class signup extends Component {
@@ -115,6 +130,15 @@ class signup extends Component {
                         <Button type="submit" variant="contained" fullWidth className={classes.submit} >
                             Signup
                         </Button>
+
+                        <Typography type="submit" className={classes.text3}>
+                            <span className={classes.new} >
+                                Already a member? 
+                            </span>
+                            <Typography className={classes.create} component = {Link} to="/signup" >
+                                Login here
+                            </Typography>
+                        </Typography>
                     </form>
                 </Grid>
 

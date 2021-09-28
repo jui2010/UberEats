@@ -1,25 +1,30 @@
-import {SET_NOTIFICATIONS, MARK_ALL_READ} from '../types'
+import { LOGIN_RESTAURANT } from '../types'
 import axios from 'axios'
 
-//get all the questions posted 
-export const getNotifications = () => (dispatch) => {
-  axios.post('/notifications' )
-  .then(res => {
-      dispatch({
-          type : SET_NOTIFICATIONS,
-          payload : res.data
-      })
-  })
-  .catch(err => console.log(err) )
+export const signupRestaurant = (newRestaurant, history) => (dispatch) => {
+  axios.post('/restaurantSignup', newRestaurant)
+    .then(res => {
+      history.push('/restaurantLogin')
+      console.log("signup successful")
+    })
+    .catch(err => {
+      console.log(err)
+    })
 }
 
-//mark all notifications as read 
-export const markAllRead = () => (dispatch) => {
-  axios.post('/notifications/markAllRead' )
-  .then(() => {
+export const loginRestaurant = (newRestaurant, history) => (dispatch) => {
+  axios.post('/restaurantLogin', newRestaurant)
+    .then(res => {
       dispatch({
-        type : MARK_ALL_READ
+        type : LOGIN_RESTAURANT,
+        payload : res.data[0]
       })
-  })
-  .catch(err => console.log(err) )
+      console.log("LOGIN_RESTAURANT"+res.data[0])
+
+      history.push('/')
+      console.log("restaurant login successful")
+    })
+    .catch(err => {
+      console.log(err)
+    })
 }
