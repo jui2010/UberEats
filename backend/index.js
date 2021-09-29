@@ -11,6 +11,7 @@ const {editProfile} = require('./routes/users')
 const {authenticatedUser} = require('./routes/users')
 const {signupRestaurant} = require('./routes/restaurants')
 const {loginRestaurant} = require('./routes/restaurants')
+const {getAllRestaurants} = require('./routes/restaurants')
 
 var mysql = require('mysql')
 var config = require('./config.json')
@@ -48,6 +49,7 @@ app.post('/api/edit' , editProfile)
 app.post('/api/getAuthenticatedUser' , authenticatedUser)
 app.post('/api/restaurantLogin' , loginRestaurant)
 app.post('/api/restaurantSignup' , signupRestaurant)
+app.get('/api/getAllRestaurants' , getAllRestaurants)
 
 var con = mysql.createPool({                                                                                                                                                                                                                                    
   host: config.DB.host,

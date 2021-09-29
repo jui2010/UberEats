@@ -1,4 +1,4 @@
-import {LOGIN_RESTAURANT} from '../types'
+import {LOGIN_RESTAURANT, GET_ALL_RESTAURANTS} from '../types'
 
 const initialState = {
   restaurants : [],
@@ -16,7 +16,13 @@ export default function (state = initialState, action){
           authenticatedRestaurant : action.payload,
           authenticated : true
         }
-       
+      
+      case GET_ALL_RESTAURANTS:
+        return {
+          ...state,
+          restaurants : action.payload
+        }
+
       default : 
         return {
           ...state

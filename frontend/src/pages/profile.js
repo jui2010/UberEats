@@ -8,10 +8,6 @@ import TextField from '@material-ui/core/TextField'
 import {connect} from 'react-redux'
 import {editProfile} from '../redux/actions/userActions'
 
-// import {  EDIT_PROFILE, TRYME } from '../redux/types'
-// import axios from 'axios'
-// import store from '../redux/store'
-
 const styles = (theme) => ({
     ...theme.spread,
     avatar : {

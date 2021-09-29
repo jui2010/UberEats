@@ -44,3 +44,16 @@ exports.loginRestaurant = (req, res) => {
             res.end({error : "Incorrect username or password"})
     })
 }
+
+// Get all restaurants
+exports.getAllRestaurants = (req, res) => {
+    console.log(JSON.stringify("getAllRestaurants function: "))
+
+    con.query(`select * from restaurants `,(error, results) => {
+        if(results.length > 0){
+            res.end(JSON.stringify(results))
+        }
+        else
+            res.end({error : "Unauthenticated"})
+    })
+}
