@@ -15,6 +15,7 @@ import signup from './pages/signup'
 import profile from './pages/profile'
 import restaurantLogin from './pages/restaurantLogin'
 import restaurantSignup from './pages/restaurantSignup'
+import restaurant from './pages/restaurant'
 
 import NavigationBar from './components/NavigationBar'
 
@@ -46,6 +47,7 @@ class App extends Component{
               <Route exact path="/profile" component={profile} />
               <Route exact path="/restaurantLogin" component={restaurantLogin} />
               <Route exact path="/restaurantSignup" component={restaurantSignup} />
+              <Route exact path="/restaurant/:restaurantName" component={restaurant} />
             </Switch>
           </div>
         </Router>

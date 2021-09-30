@@ -57,3 +57,16 @@ exports.getAllRestaurants = (req, res) => {
             res.end({error : "Unauthenticated"})
     })
 }
+
+// Get all restaurants
+exports.getRestaurantData = (req, res) => {
+    console.log(JSON.stringify("getRestaurantData function: "+ req.params.restaurantName))
+
+    con.query(`select * from restaurants where restaurantName = ? `, [req.params.restaurantName],(error, results) => {
+        if(results.length > 0){
+            res.end(JSON.stringify(results))
+        }
+        else
+            res.end({error : "Unauthenticated"})
+    })
+}

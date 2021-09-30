@@ -1,4 +1,4 @@
-import {LOGIN_RESTAURANT, GET_ALL_RESTAURANTS} from '../types'
+import {LOGIN_RESTAURANT, GET_ALL_RESTAURANTS, GET_RESTAURANT_DATA} from '../types'
 
 const initialState = {
   restaurants : [],
@@ -21,6 +21,12 @@ export default function (state = initialState, action){
         return {
           ...state,
           restaurants : action.payload
+        }
+
+      case GET_RESTAURANT_DATA:
+        return {
+          ...state,
+          selectedRestaurant : action.payload
         }
 
       default : 
