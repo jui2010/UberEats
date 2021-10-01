@@ -1,16 +1,7 @@
 import { LOGIN_USER, EDIT_PROFILE, GET_AUTHENTICATED_USER} from '../types'
 
 const initialState = {
-    authenticatedUser : {
-        // firstname : "j", lastname : "j" , email: "j", 
-        // phone  : '',
-        // nickname : '',
-        // dob : '',
-        // about : '',
-        // city : '',
-        // state : '',
-        // country : ''
-    },
+    authenticatedUser : {},
     authenticated : false
 }
 

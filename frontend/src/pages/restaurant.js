@@ -7,6 +7,11 @@ import {getRestaurantData} from '../redux/actions/restaurantActions'
 
 const styles = (theme) => ({
     ...theme.spread,
+    bottomLeft : {
+        position: 'absolute',
+        bottom: '250px',
+        left: '16px',
+    }
 })
 
 class home extends Component {
@@ -19,17 +24,26 @@ class home extends Component {
     }
 
     render() {
-        const {restaurantName, location } = this.props.restaurant.selectedRestaurant
+        const {restaurantName, location, tile } = this.props.restaurant.selectedRestaurant
+        const { classes } = this.props
 
         return (
             <Grid direction="row" container>
-                <Grid container item sm={4} style={{border: '1px solid black'}}>
+                {/* <Grid container item sm={4} style={{border: '1px solid black'}}>
                     {restaurantName}
                     {location}
                 </Grid>
 
                 <Grid container item sm={8}>
-                </Grid>
+                </Grid> */}
+
+                <div class="container">
+                    <img src={tile} alt="Snow" style={{width : "1000px", height : '300px'}}/>
+                    <div className={classes.bottomLeft}>{restaurantName}</div>
+                </div>
+
+                {location}
+
             </Grid>
         )
     }
