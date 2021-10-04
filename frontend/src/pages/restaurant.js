@@ -7,10 +7,33 @@ import {getRestaurantData} from '../redux/actions/restaurantActions'
 
 const styles = (theme) => ({
     ...theme.spread,
-    bottomLeft : {
+    nameLoc : {
         position: 'absolute',
-        bottom: '250px',
-        left: '16px',
+        top: '240px',
+        left: '30px',
+        fontWeight: '800',
+        fontSize : '40px',
+        // color : 'white'
+    }, 
+    delTime : {
+        position: 'absolute',
+        top: '290px',
+        left: '30px',
+        fontWeight: '900',
+        fontSize : '20px',
+        // color : 'white'
+    },
+    tile : {
+        width:'1400px',
+        height:'250px',
+        objectFit: 'cover',
+        position: 'relative'
+    },
+    description : {
+        padding : '20px 40px 10px 40px'
+    },
+    address : {
+        padding : '0px 40px 20px 40px'
     }
 })
 
@@ -24,26 +47,38 @@ class home extends Component {
     }
 
     render() {
-        const {restaurantName, location, tile } = this.props.restaurant.selectedRestaurant
+        const {restaurantName, location, tile, description, address , dishes } = this.props.restaurant.selectedRestaurant
         const { classes } = this.props
 
         return (
             <Grid direction="row" container>
-                {/* <Grid container item sm={4} style={{border: '1px solid black'}}>
-                    {restaurantName}
-                    {location}
+                <Grid item sm={12}>
+                    <div>
+                        <img src={tile} alt={restaurantName} className={classes.tile} />
+                        <div className={classes.nameLoc}>{restaurantName} ({location})</div>
+                        <div className={classes.delTime}>• $0.99 Delivery Fee • 15-25 Min </div>
+                    </div>
+                </Grid> 
+                
+                <Grid direction="row" container item>
+                    <Grid item sm={11}>
+                        <div className={classes.description}>
+                            {description}
+                        </div>
+                        <div className={classes.address}>
+                            {address}
+                        </div>
+                    </Grid>
+                    <Grid item sm={1}>
+                        <div className={classes.description}>
+                            Edit Profile
+                        </div>
+                    </Grid>
                 </Grid>
-
-                <Grid container item sm={8}>
-                </Grid> */}
-
-                <div class="container">
-                    <img src={tile} alt="Snow" style={{width : "1000px", height : '300px'}}/>
-                    <div className={classes.bottomLeft}>{restaurantName}</div>
-                </div>
-
-                {location}
-
+                
+                <Grid item sm={12}>
+                    Dishes
+                </Grid> 
             </Grid>
         )
     }

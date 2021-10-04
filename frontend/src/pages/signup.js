@@ -135,8 +135,17 @@ class signup extends Component {
                             <span className={classes.new} >
                                 Already a member? 
                             </span>
-                            <Typography className={classes.create} component = {Link} to="/signup" >
+                            <Typography className={classes.create} component = {Link} to="/login" >
                                 Login here
+                            </Typography>
+                        </Typography>
+
+                        <Typography type="submit" className={classes.text3}>
+                            <span className={classes.new} >
+                                Are you a restaurant?
+                            </span>
+                            <Typography className={classes.create} component = {Link} to="/restaurantSignup" >
+                                Create an account here
                             </Typography>
                         </Typography>
                     </form>

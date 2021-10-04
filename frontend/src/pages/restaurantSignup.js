@@ -75,7 +75,7 @@ class restaurantSignup extends Component {
 
                 <Grid item sm={4}>
                     <Grid item sm={12}  className={classes.text1}>
-                        Sign up with your email address
+                        Sign up your restaurant
                     </Grid>
                     
                     <form noValidate onSubmit = {this.handleSubmit }>
@@ -135,7 +135,7 @@ class restaurantSignup extends Component {
                             <span className={classes.new} >
                                 Already a member? 
                             </span>
-                            <Typography className={classes.create} component = {Link} to="/signup" >
+                            <Typography className={classes.create} component = {Link} to="/restaurantLogin" >
                                 Login here
                             </Typography>
                         </Typography>

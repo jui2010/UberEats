@@ -115,7 +115,7 @@ class restaurantLogin extends Component {
                             <span className={classes.new} >
                                 New to Uber Eats? 
                             </span>
-                            <Typography className={classes.create} component = {Link} to="/signup" >
+                            <Typography className={classes.create} component = {Link} to="/restaurantSignup" >
                                 Create an account
                             </Typography>
                         </Typography>

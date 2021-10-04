@@ -18,12 +18,24 @@ exports.signupUser = (req, res) => {
 
     console.log(JSON.stringify("signupUser function: "+firstname+" "+lastname+" "+email+" "+password))
 
-    con.query(`insert into users(firstname, lastname, email, password)
-    values (?,?,?,?)`, [firstname, lastname , email, password],(error, results) => {
-        if(error)
+    con.query(`select * from users where email = ?`, [email],(error, results) => {
+        if(error){
+            res.status(500).json(error)
             console.log(error)
+        }
         else{ 
-            res.end(JSON.stringify(results))
+            if(results.length > 0){
+                res.end({error : "This email id already exists."})
+            } else {
+                con.query(`insert into users(firstname, lastname, email, password)
+                values (?,?,?,?)`, [firstname, lastname , email, password], (error, results) => {
+                    if(error)
+                        console.log(error)
+                    else{ 
+                        res.end(JSON.stringify(results))
+                    }
+                })
+            }
         }
     })
 }
@@ -36,13 +48,17 @@ exports.loginUser = (req, res) => {
     console.log(JSON.stringify("loginUser function: "+email+" "+password))
 
     con.query(`select * from users where email = ? and password = ?`, [email, password],(error, results) => {
-        if(results.length > 0){
-            res.cookie('cookie', email, {maxAge: 900000, httpOnly: false, path : '/'});
-            req.session.user = results
-            res.end(JSON.stringify(results))
+        if(error){
+            console.log(error)
+        } else {
+            if(results.length > 0){
+                res.cookie('cookie', email, {maxAge: 900000, httpOnly: false, path : '/'});
+                req.session.user = results
+                res.end(JSON.stringify(results))
+            }
+            else
+                res.end({error : "Incorrect username or password"})
         }
-        else
-            res.end({error : "Incorrect username or password"})
     })
 }
 

@@ -63,8 +63,19 @@ exports.getRestaurantData = (req, res) => {
     console.log(JSON.stringify("getRestaurantData function: "+ req.params.restaurantName))
 
     con.query(`select * from restaurants where restaurantName = ? `, [req.params.restaurantName],(error, results) => {
+        
+        let restaurantData= ''
         if(results.length > 0){
-            res.end(JSON.stringify(results))
+            restaurantData = results[0]
+
+            restaurantid = restaurantData.restaurantid
+
+            con.query(`select * from dishes where restaurantid = ? `, [restaurantid],(error, results) => {
+                restaurantData.dishes = []
+                restaurantData.dishes = results
+
+                res.end(JSON.stringify(restaurantData))
+            })
         }
         else
             res.end({error : "Unauthenticated"})

@@ -39,11 +39,11 @@ class home extends Component {
     render() {
         return (
             <Grid direction="row" container>
-                <Grid container item sm={4}>
+                <Grid container item sm={3}>
                     Filters
                 </Grid>
 
-                <Grid container item sm={8}>
+                <Grid container item sm={9}>
                     {this.displayRestaurants()}
                 </Grid>
             </Grid>

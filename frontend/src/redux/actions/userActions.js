@@ -1,9 +1,13 @@
-import { LOGIN_USER, EDIT_PROFILE } from '../types'
+import { SIGNUP_USER, LOGIN_USER, EDIT_PROFILE } from '../types'
 import axios from 'axios'
 
 export const signupUser = (newUser, history) => (dispatch) => {
     axios.post('/signup', newUser)
         .then(res => {
+            dispatch({
+                type : SIGNUP_USER,
+                payload : "User signup successful"
+            })
             history.push('/login')
             console.log("signup successful")
         })
