@@ -5,6 +5,8 @@ import {connect} from 'react-redux'
 import Grid from '@material-ui/core/Grid'
 import {getRestaurantData} from '../redux/actions/restaurantActions'
 
+import Dishes from '../components/Dishes'
+
 const styles = (theme) => ({
     ...theme.spread,
     nameLoc : {
@@ -30,10 +32,10 @@ const styles = (theme) => ({
         position: 'relative'
     },
     description : {
-        padding : '20px 40px 10px 40px'
+        padding : '20px 30px 10px 30px'
     },
     address : {
-        padding : '0px 40px 20px 40px'
+        padding : '0px 30px 20px 30px'
     }
 })
 
@@ -77,7 +79,7 @@ class home extends Component {
                 </Grid>
                 
                 <Grid item sm={12}>
-                    Dishes
+                    <Dishes dishes = {dishes}/>
                 </Grid> 
             </Grid>
         )
