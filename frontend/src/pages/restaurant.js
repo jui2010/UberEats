@@ -6,6 +6,7 @@ import Grid from '@material-ui/core/Grid'
 import {getRestaurantData} from '../redux/actions/restaurantActions'
 
 import Dishes from '../components/Dishes'
+import EditRestaurantProfile from '../components/EditRestaurantProfile'
 
 const styles = (theme) => ({
     ...theme.spread,
@@ -49,7 +50,7 @@ class home extends Component {
     }
 
     render() {
-        const {restaurantName, location, tile, description, address , dishes } = this.props.restaurant.selectedRestaurant
+        const {restaurantName, location, tile, description, address , dishes, deliveryFee, timing  } = this.props.restaurant.selectedRestaurant
         const { classes } = this.props
 
         return (
@@ -58,7 +59,7 @@ class home extends Component {
                     <div>
                         <img src={tile} alt={restaurantName} className={classes.tile} />
                         <div className={classes.nameLoc}>{restaurantName} ({location})</div>
-                        <div className={classes.delTime}>• $0.99 Delivery Fee • 15-25 Min </div>
+                        <div className={classes.delTime}>• ${deliveryFee === null ? '0' : deliveryFee } Delivery Fee • {timing === null ? '0' : timing} Min </div>
                     </div>
                 </Grid> 
                 
@@ -73,7 +74,9 @@ class home extends Component {
                     </Grid>
                     <Grid item sm={1}>
                         <div className={classes.description}>
-                            Edit Profile
+                            {this.props.restaurant.authenticated && 
+                            this.props.restaurant.authenticatedRestaurant.email === this.props.restaurant.selectedRestaurant.email &&
+                            <EditRestaurantProfile/> }
                         </div>
                     </Grid>
                 </Grid>

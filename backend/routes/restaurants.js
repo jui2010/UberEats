@@ -81,3 +81,25 @@ exports.getRestaurantData = (req, res) => {
             res.end({error : "Unauthenticated"})
     })
 }
+
+// Edit profile for a logged in restaurant
+exports.editRestaurantProfile = (req, res) => {
+    let restaurantName = req.body.restaurantName
+    let email = req.body.email
+    let phone = req.body.phone
+    let location = req.body.location
+    let address = req.body.address
+    let description = req.body.description
+    let deliveryFee = req.body.deliveryFee
+    let timing = req.body.timing
+
+    console.log(JSON.stringify("editRestaurantProfile function: "+email))
+    console.log(JSON.stringify("editRestaurantProfile function: "+restaurantName+" "+phone+" "+location+" "+address+" "+description+" "+deliveryFee+" "+timing))
+
+    con.query(`update restaurants set restaurantName = ?, phone = ?, location = ?, address = ?, description = ?, deliveryFee = ?, timing = ?  WHERE email = ? `, 
+        [restaurantName, phone, location, address, description, deliveryFee, timing, email],(error, results) => {
+            console.log("Record Updated!!")
+            console.log(results)
+            res.end(JSON.stringify(results))
+        })
+}
