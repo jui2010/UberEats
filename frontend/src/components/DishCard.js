@@ -1,6 +1,13 @@
 import React, { Component } from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
 import Grid from '@material-ui/core/Grid'
+import Button from '@material-ui/core/Button'
+import TextField from '@material-ui/core/TextField'
+import Dialog from '@material-ui/core/Dialog'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import DialogContent from '@material-ui/core/DialogContent'
+import AddCircle from '@material-ui/icons/AddCircle'
+import RemoveCircle from '@material-ui/icons/RemoveCircle'
 // import {Link } from 'react-router-dom'
 
 const styles = (theme) => ({
@@ -38,14 +45,62 @@ const styles = (theme) => ({
         fontSize : '13px',
         color : '#363535'
     },
+    dishDescDialog : {
+        fontSize : '15px',
+        color : '#363535',
+        paddingBottom : '25px'
+    },
     dishPrice : {
         fontWeight : '500',
         paddingTop: '30px'
+    },
+    icons : {
+        fontSize : '40px',
+        color : '#b5b5b5'
+    }, 
+    button : {
+        alignText : 'center',
+        backgroundColor : 'black',
+        color : 'white',
+        width : '100%',
+        borderRadius : '0',
+        paddingTop : '10px',
+        paddingRight : '110px',
+        paddingLeft : '110px',
+        marginRight : '10px'
     }
 })
 
 class DishCard extends Component {
 
+    state = {
+        open : false,
+        orderSize : 1
+    }
+
+    handleOpen = () => {
+        this.setState({
+            open : true
+        })
+    }
+
+    handleClose = () => {
+        this.setState({
+            open : false
+        })
+    }
+
+    handleDecrease = () => {
+        this.setState({
+            orderSize : this.state.orderSize === 1 ? 1 : this.state.orderSize - 1
+        })
+    }
+
+    handleIncrease = () => {
+        this.setState({
+            orderSize : this.state.orderSize + 1
+        })
+    }
 
     render(){
         const { classes } = this.props
@@ -53,8 +108,8 @@ class DishCard extends Component {
 
         console.log("dishcard "+dishName)
         return (         
-            <Grid container item xs={12} className={classes.dish}>
-                <Grid container item xs={8} className={classes.card}>
+            <Grid container item xs={12} className={classes.dish} onClick={this.handleOpen}>
+                <Grid container item xs={8} className={classes.card} >
                     <Grid item xs={12} className={classes.dishName}>
                         {dishName}
                     </Grid>
@@ -69,6 +124,31 @@ class DishCard extends Component {
                 <Grid container item xs={4} className={classes.dishPicture} style={{backgroundImage : `url(${dishPicture})`,}}>
                     
                 </Grid>
+
+                <Dialog open={this.state.open} onClose={this.handleClose}>
+                    <DialogTitle style={{backgroundImage : `url(${dishPicture})`, height: '270px', width: '500px'}} className={classes.dishPicture} >
+                    </DialogTitle>
+                    <DialogTitle>
+                        <div>{dishName}</div>
+                    </DialogTitle>
+                    <DialogContent className={classes.dishDescDialog}>
+                        {dishDescription}
+                    </DialogContent>
+
+                    <Grid container direction='row'>
+                        <Grid item xs={1}><RemoveCircle onClick={this.handleDecrease} className={classes.icons} style={{marginLeft: '18px'}}/>
+                        </Grid>
+                        <Grid item xs={1} style={{paddingLeft: '24px', fontSize : '25px', fontWeight : '600' }}>{this.state.orderSize}
+                        </Grid>
+                        <Grid item xs={1}><AddCircle onClick={this.handleIncrease} className={classes.icons}/>
+                        </Grid>
+                        <Grid item xs={8}>
+                            <Button type="submit" variant="contained" className={classes.button}>
+                                Schedule Order
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </Dialog>
             </Grid>
         )
     }
