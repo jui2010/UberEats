@@ -1,10 +1,11 @@
-import {SIGNUP_RESTAURANT, LOGIN_RESTAURANT, GET_ALL_RESTAURANTS, GET_RESTAURANT_DATA, EDIT_RESTAURANT_PROFILE, ADD_DISH} from '../types'
+import {SIGNUP_RESTAURANT, LOGIN_RESTAURANT, GET_ALL_RESTAURANTS, GET_RESTAURANT_DATA, EDIT_RESTAURANT_PROFILE, ADD_DISH, ADD_TO_CART} from '../types'
 
 const initialState = {
   restaurants : [],
   selectedRestaurant : {}, 
   authenticatedRestaurant : {},
-  authenticated : false
+  authenticated : false,
+  cart : []
 }
 
 // eslint-disable-next-line import/no-anonymous-default-export
@@ -58,6 +59,25 @@ export default function (state = initialState, action){
               ...state.selectedRestaurant.dishes
             ]
           }
+        }
+      
+      case ADD_TO_CART :
+        let index = state.cart.findIndex(
+          cartItem => cartItem.dishName === action.payload.dishName
+        )
+
+        if(index === -1){
+          state.cart[state.cart.length] = action.payload
+        } else {
+          state.cart[index] = {
+            ...state.cart[index],
+            dishQuantity : parseInt(state.cart[index].dishQuantity) + parseInt(action.payload.dishQuantity),
+            dishPrice : state.cart[index].dishPrice + action.payload.dishPrice,
+          }
+        }
+        
+        return {
+          ...state,
         }
         
       default : 

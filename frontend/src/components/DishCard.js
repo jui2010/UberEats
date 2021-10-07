@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
 import Grid from '@material-ui/core/Grid'
-import Button from '@material-ui/core/Button'
-import TextField from '@material-ui/core/TextField'
 import Dialog from '@material-ui/core/Dialog'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import DialogContent from '@material-ui/core/DialogContent'
 import AddCircle from '@material-ui/icons/AddCircle'
 import RemoveCircle from '@material-ui/icons/RemoveCircle'
-// import {Link } from 'react-router-dom'
+
+import {connect} from 'react-redux'
+import {addToCart} from '../redux/actions/restaurantActions'
 
 const styles = (theme) => ({
     ...theme.spread,
@@ -63,17 +63,12 @@ const styles = (theme) => ({
         backgroundColor : 'black',
         color : 'white',
         width : '100%',
-        // borderRadius : '0',
         paddingTop : '10px',
         paddingBottom : '10px',
-        // paddingRight : '110px',
-        // paddingLeft : '110px',
         marginRight : '10px',
         display: 'flex',
         justifyContent: 'space-around',
-        "&:hover": {
-            cursor : 'pointer',
-        },
+        cursor : 'pointer',
     }
 })
 
@@ -81,7 +76,7 @@ class DishCard extends Component {
 
     state = {
         open : false,
-        orderSize : 1
+        dishQuantity : 1
     }
 
     handleOpen = () => {
@@ -98,18 +93,29 @@ class DishCard extends Component {
 
     handleDecrease = () => {
         this.setState({
-            orderSize : this.state.orderSize === 1 ? 1 : this.state.orderSize - 1
+            dishQuantity : this.state.dishQuantity === 1 ? 1 : this.state.dishQuantity - 1
         })
     }
 
     handleIncrease = () => {
         this.setState({
-            orderSize : this.state.orderSize + 1
+            dishQuantity : this.state.dishQuantity + 1
         })
     }
 
-    handleSubmit = (event) => {
-        event.preventDefault()
+    handleAddToCart = () => {
+        let orderedDish = {
+            restaurantid : this.props.restaurant.selectedRestaurant.restaurantid,
+            userid : this.props.user.authenticated.userid,
+            dishid : this.props.dish.dishid,
+            dishName : this.props.dish.dishName,
+            dishQuantity : this.state.dishQuantity,
+            dishPrice : Math.round(this.props.dish.dishPrice * this.state.dishQuantity * 100)/100,
+            deliveryOrPickup : '',
+            orderStatus : 'New Order'
+        } 
+
+        this.props.addToCart(orderedDish)
         this.handleClose()
     }
 
@@ -117,7 +123,6 @@ class DishCard extends Component {
         const { classes } = this.props
         const { dishName, dishPicture, dishDescription, dishPrice } = this.props.dish
 
-        console.log("dishcard "+dishName)
         return (         
             <Grid container item xs={12} className={classes.dish} onClick={this.handleOpen}>
                 <Grid container item xs={8} className={classes.card} >
@@ -149,18 +154,18 @@ class DishCard extends Component {
                     <Grid container direction='row'>
                         <Grid item xs={1}><RemoveCircle onClick={this.handleDecrease} className={classes.icons} style={{marginLeft: '18px'}}/>
                         </Grid>
-                        <Grid item xs={1} style={{paddingLeft: '24px', fontSize : '25px', fontWeight : '600' }}>{this.state.orderSize}
+                        <Grid item xs={1} style={{paddingLeft: '24px', fontSize : '25px', fontWeight : '600' }}>{this.state.dishQuantity}
                         </Grid>
                         <Grid item xs={1}><AddCircle onClick={this.handleIncrease} className={classes.icons}/>
                         </Grid>
                         <Grid item xs={8}>
                             {/* <Button type="submit" variant="contained" className={classes.button}>
-                                Add {this.state.orderSize} to order  <div style={{display: 'flex', justifyContent: 'flex-end'}}>${dishPrice * this.state.orderSize}</div>
+                                Add {this.state.dishQuantity} to order  <div style={{display: 'flex', justifyContent: 'flex-end'}}>${dishPrice * this.state.dishQuantity}</div>
                             </Button> */}
-                            <div role="button" type="submit" className={classes.button} onClick={this.handleSubmit}>
+                            <div role="button" type="submit" className={classes.button} onClick={this.handleAddToCart}>
                                 <div></div>
-                                <div> Add {this.state.orderSize} to order </div>
-                                <div>${Math.round(dishPrice * this.state.orderSize * 100)/100}</div>
+                                <div> Add {this.state.dishQuantity} to order </div>
+                                <div>${Math.round(dishPrice * this.state.dishQuantity * 100)/100}</div>
                             </div>
                         </Grid>
                     </Grid>
@@ -170,4 +175,9 @@ class DishCard extends Component {
     }
 }
 
-export default withStyles(styles)(DishCard)
+const mapStateToProps = (state) => ({
+    user : state.user,
+    restaurant : state.restaurant
+})
+
+export default connect(mapStateToProps, {addToCart})(withStyles(styles)(DishCard))

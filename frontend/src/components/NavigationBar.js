@@ -4,10 +4,12 @@ import Toolbar from '@material-ui/core/Toolbar'
 import Tooltip from '@material-ui/core/Tooltip'
 import Button from '@material-ui/core/Button'
 import Avatar from '@material-ui/core/Avatar'
+import Badge from '@material-ui/core/Badge'
 import withStyles from '@material-ui/core/styles/withStyles'
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 import ExitToAppIcon  from '@material-ui/icons/ExitToApp'
 import MenuIcon from '@material-ui/icons/Menu'
+
+import Cart from './Cart'
 
 import { Link } from 'react-router-dom'
 
@@ -39,6 +41,9 @@ const styles = (theme) => ({
         fontSize : '25px',
         marginLeft: '15px',
         marginTop : '10px'
+    },
+    cart : {
+        paddingTop : '22px'
     }
 })
 
@@ -70,11 +75,11 @@ class NavigationBar extends Component {
 
                         {/* dashboard */}                        
                         {authenticated && ( 
-                            <Tooltip title="Cart" >
-                                <Button component = {Link} to="/cart" >
-                                    <ShoppingCartIcon/> Cart
-                                </Button>
-                            </Tooltip>
+                            <Button className={classes.cart}>
+                                <Badge badgeContent={this.props.restaurant.cart.length} color="error">
+                                    <Cart/>
+                                </Badge>
+                            </Button>
                         )}
 
                         {/* profile */}                        
@@ -102,7 +107,8 @@ class NavigationBar extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    user : state.user
+    user : state.user,
+    restaurant : state.restaurant,
 })
 
 export default connect(mapStateToProps, {} )(withStyles(styles)(NavigationBar))

@@ -1,4 +1,4 @@
-import { SIGNUP_RESTAURANT, LOGIN_RESTAURANT, GET_RESTAURANT_DATA, EDIT_RESTAURANT_PROFILE, ADD_DISH} from '../types'
+import { SIGNUP_RESTAURANT, LOGIN_RESTAURANT, GET_RESTAURANT_DATA, EDIT_RESTAURANT_PROFILE, ADD_DISH, ADD_TO_CART} from '../types'
 import axios from 'axios'
 
 export const signupRestaurant = (newRestaurant, history) => (dispatch) => {
@@ -64,4 +64,12 @@ export const addDish = (newDish) => (dispatch) => {
       })
     })
     .catch(err => console.log(err) )
+}
+
+//add dish to the cart
+export const addToCart = (orderedDish) => (dispatch) => {
+  dispatch({
+    type : ADD_TO_CART,
+    payload : orderedDish
+  })
 }
