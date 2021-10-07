@@ -63,11 +63,17 @@ const styles = (theme) => ({
         backgroundColor : 'black',
         color : 'white',
         width : '100%',
-        borderRadius : '0',
+        // borderRadius : '0',
         paddingTop : '10px',
-        paddingRight : '110px',
-        paddingLeft : '110px',
-        marginRight : '10px'
+        paddingBottom : '10px',
+        // paddingRight : '110px',
+        // paddingLeft : '110px',
+        marginRight : '10px',
+        display: 'flex',
+        justifyContent: 'space-around',
+        "&:hover": {
+            cursor : 'pointer',
+        },
     }
 })
 
@@ -100,6 +106,11 @@ class DishCard extends Component {
         this.setState({
             orderSize : this.state.orderSize + 1
         })
+    }
+
+    handleSubmit = (event) => {
+        event.preventDefault()
+        this.handleClose()
     }
 
     render(){
@@ -143,9 +154,14 @@ class DishCard extends Component {
                         <Grid item xs={1}><AddCircle onClick={this.handleIncrease} className={classes.icons}/>
                         </Grid>
                         <Grid item xs={8}>
-                            <Button type="submit" variant="contained" className={classes.button}>
-                                Schedule Order
-                            </Button>
+                            {/* <Button type="submit" variant="contained" className={classes.button}>
+                                Add {this.state.orderSize} to order  <div style={{display: 'flex', justifyContent: 'flex-end'}}>${dishPrice * this.state.orderSize}</div>
+                            </Button> */}
+                            <div role="button" type="submit" className={classes.button} onClick={this.handleSubmit}>
+                                <div></div>
+                                <div> Add {this.state.orderSize} to order </div>
+                                <div>${Math.round(dishPrice * this.state.orderSize * 100)/100}</div>
+                            </div>
                         </Grid>
                     </Grid>
                 </Dialog>

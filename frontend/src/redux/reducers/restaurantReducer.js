@@ -1,4 +1,4 @@
-import {SIGNUP_RESTAURANT, LOGIN_RESTAURANT, GET_ALL_RESTAURANTS, GET_RESTAURANT_DATA, EDIT_RESTAURANT_PROFILE} from '../types'
+import {SIGNUP_RESTAURANT, LOGIN_RESTAURANT, GET_ALL_RESTAURANTS, GET_RESTAURANT_DATA, EDIT_RESTAURANT_PROFILE, ADD_DISH} from '../types'
 
 const initialState = {
   restaurants : [],
@@ -48,6 +48,18 @@ export default function (state = initialState, action){
           }
         } 
 
+      case ADD_DISH : 
+        return {
+          ...state, 
+          selectedRestaurant : {
+            ...state.selectedRestaurant,
+            dishes : [
+              action.payload,
+              ...state.selectedRestaurant.dishes
+            ]
+          }
+        }
+        
       default : 
         return {
           ...state

@@ -11,8 +11,8 @@ const styles = (theme) => ({
     },
     mainGrid : {
         paddingLeft : '30px',
-        paddingRight : '30px',
-        borderTop: '1px solid #a3a3a3'
+        // paddingRight : '30px',
+        // borderTop: '1px solid #a3a3a3'
     },
     dishCat : {
         paddingTop : '40px',

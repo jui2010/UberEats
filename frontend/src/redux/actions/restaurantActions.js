@@ -1,4 +1,4 @@
-import { SIGNUP_RESTAURANT, LOGIN_RESTAURANT, GET_RESTAURANT_DATA, EDIT_RESTAURANT_PROFILE} from '../types'
+import { SIGNUP_RESTAURANT, LOGIN_RESTAURANT, GET_RESTAURANT_DATA, EDIT_RESTAURANT_PROFILE, ADD_DISH} from '../types'
 import axios from 'axios'
 
 export const signupRestaurant = (newRestaurant, history) => (dispatch) => {
@@ -55,3 +55,13 @@ export const editRestaurantProfile = (restaurantDetails) => (dispatch) => {
     .catch(err => console.log(err) )
 }
 
+export const addDish = (newDish) => (dispatch) => {
+  axios.post(`/addDish/`, newDish)
+    .then(res => {
+      dispatch({
+        type : ADD_DISH,
+        payload : newDish
+      })
+    })
+    .catch(err => console.log(err) )
+}

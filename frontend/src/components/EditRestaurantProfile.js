@@ -6,6 +6,7 @@ import TextField from '@material-ui/core/TextField'
 import Dialog from '@material-ui/core/Dialog'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import EditIcon from '@material-ui/icons/Edit'
+import Tooltip from '@material-ui/core/Tooltip'
 
 import {connect} from 'react-redux'
 import {editRestaurantProfile} from '../redux/actions/restaurantActions'
@@ -70,7 +71,9 @@ class EditRestaurantProfile extends Component {
         return (
             <Fragment>
                 <div onClick={this.handleOpen} className={classes.button}>
-                    <EditIcon/>
+                    <Tooltip title="Edit restaurant profile">
+                        <EditIcon/>
+                    </Tooltip>
                 </div>
                 
                 <Dialog open={this.state.open} onClose={this.handleClose}>

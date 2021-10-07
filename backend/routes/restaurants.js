@@ -103,3 +103,25 @@ exports.editRestaurantProfile = (req, res) => {
             res.end(JSON.stringify(results))
         })
 }
+
+//Add a new dish for a particular restaurant
+exports.addDish = (req, res) => {
+    let restaurantid = req.body.restaurantid
+    let dishName = req.body.dishName
+    let dishPrice = req.body.dishPrice
+    let dishDescription = req.body.dishDescription
+    let dishCategory = req.body.dishCategory
+    let dishPicture = req.body.dishPicture
+    let dishType = req.body.dishType
+    let cuisine = req.body.cuisine
+
+    console.log(JSON.stringify("addDish function: "+dishName))
+
+    con.query(`insert into dishes(restaurantid, dishName, dishPrice, dishDescription, dishCategory, dishPicture, cuisine, dishType)
+    values (?,?,?,?,?,?,?,?)`, [restaurantid, dishName, dishPrice, dishDescription, dishCategory, dishPicture, cuisine, dishType],(error, results) => {
+        if(error)
+            console.log(error)
+        else 
+            res.end(JSON.stringify(results))
+    })
+}

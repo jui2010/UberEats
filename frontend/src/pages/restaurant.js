@@ -7,6 +7,7 @@ import {getRestaurantData} from '../redux/actions/restaurantActions'
 
 import Dishes from '../components/Dishes'
 import EditRestaurantProfile from '../components/EditRestaurantProfile'
+import AddDish from '../components/AddDish'
 
 const styles = (theme) => ({
     ...theme.spread,
@@ -27,7 +28,7 @@ const styles = (theme) => ({
         // color : 'white'
     },
     tile : {
-        width:'1400px',
+        width:'1349px',
         height:'250px',
         objectFit: 'cover',
         position: 'relative'
@@ -81,8 +82,17 @@ class home extends Component {
                     </Grid>
                 </Grid>
                 
-                <Grid item sm={12}>
-                    <Dishes dishes = {dishes}/>
+                <Grid container item sm={12}>
+
+                    <Grid item sm={11}>
+                        <Dishes dishes = {dishes}/>
+                    </Grid> 
+
+                    <Grid item sm={1}>
+                            {this.props.restaurant.authenticated && 
+                            this.props.restaurant.authenticatedRestaurant.email === this.props.restaurant.selectedRestaurant.email &&
+                            <AddDish/> }
+                    </Grid> 
                 </Grid> 
             </Grid>
         )

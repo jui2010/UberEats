@@ -62,6 +62,12 @@ class NavigationBar extends Component {
                                 Login
                             </Button>)}
 
+                        {/* restaurant login */}
+                        {!authenticated && (
+                            <Button className={classes.button} component = {Link} to="/restaurantLogin" >
+                                Restaurant Login
+                            </Button>)}
+
                         {/* dashboard */}                        
                         {authenticated && ( 
                             <Tooltip title="Cart" >
