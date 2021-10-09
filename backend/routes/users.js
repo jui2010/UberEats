@@ -97,3 +97,24 @@ exports.authenticatedUser = (req, res) => {
             res.end({error : "Incorrect username or password"})
     })
 }
+
+// Get all orders for a particular user
+exports.getOrders = (req, res) => {
+    let userid = req.body.userid
+
+    console.log(JSON.stringify("getOrders function: "+userid))
+
+    con.query(`
+    select a.*, b.restaurantName, b.location, c.dishName from
+(select * from orders where userid = ?) a
+left join 
+(select restaurantid , restaurantName, location from restaurants) b
+on a.restaurantid = b.restaurantid
+left join
+(select dishid , dishName from dishes) c
+on a.dishid = c.dishid `, [userid],(error, results) => {
+            console.log("Orders fetched!!")
+            console.log(results)
+            res.end(JSON.stringify(results))
+        })
+}

@@ -72,10 +72,13 @@ const styles = (theme) => ({
 class checkout extends Component {
 
     state = {
-        maxOrderId : 0
+        maxOrderId : 0,
+        total : 0
     }
 
     componentDidMount(){
+        const { cart } = this.props.restaurant
+
         axios.get('/getMaxOrderId')
             .then(res => {
                 console.log('res'+JSON.stringify(res.data))
@@ -84,12 +87,16 @@ class checkout extends Component {
                 })
             })
 
-        console.log("maxOrderId"+this.state.maxOrderId.maxOrderId)
+        cart.forEach(cartElement => {
+            console.log('state'+this.state.total)
+            this.setState({
+                total : this.state.total + cartElement.dishPrice
+            })
+        })
     }
     
     handleCheckout = () => {
         const { cart } = this.props.restaurant
-        // console.log("maxOrderId"+JSON.stringify(this.state.maxOrderId))
 
         const orderid = parseInt(this.state.maxOrderId) 
         console.log("orderid"+JSON.stringify(this.state.maxOrderId))
@@ -106,9 +113,7 @@ class checkout extends Component {
                 orderStatus : ''
             }
             console.log(JSON.stringify(order))
-
             this.props.createOrder(order)
-
         })
         
         store.dispatch({
@@ -122,7 +127,7 @@ class checkout extends Component {
         if(this.props.restaurant.cart.length > 0){
             console.log("display dish orders")
             return cart.map(cartItem => (
-                    <Grid container item xs={12} key={cartItem.dishQuantity} className={classes.list}>
+                    <Grid container item xs={12} key={cartItem.dishid} className={classes.list}>
                         <Grid item xs={1} className={classes.dishQuantity} >
                             {cartItem.dishQuantity}
                         </Grid>
@@ -166,7 +171,11 @@ class checkout extends Component {
                                 <div className={classes.checkout}>Place Order</div>
                             </Link>
                         </div>
-                        
+{/*                         
+                        <div >
+                            <div> Subtotal</div>
+                            <div>${this.state.total}</div>
+                        </div> */}
                     </Grid>
                     <Grid item sm={1} className={classes.itemsList}>
                     </Grid>

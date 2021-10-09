@@ -17,6 +17,7 @@ const {editRestaurantProfile} = require('./routes/restaurants')
 const {addDish} = require('./routes/restaurants')
 const {getMaxOrderId} = require('./routes/restaurants')
 const {createOrder} = require('./routes/restaurants')
+const {getOrders} = require('./routes/users')
 
 var mysql = require('mysql')
 var config = require('./config.json')
@@ -60,6 +61,7 @@ app.post('/api/editRestaurantProfile' , editRestaurantProfile)
 app.post('/api/addDish' , addDish)
 app.get('/api/getMaxOrderId' , getMaxOrderId)
 app.post('/api/createOrder' , createOrder)
+app.post('/api/getOrders' , getOrders)
 
 var con = mysql.createPool({                                                                                                                                                                                                                                    
   host: config.DB.host,

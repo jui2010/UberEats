@@ -65,7 +65,7 @@ class Dishes extends Component {
         //checking if a particular dish category exists for the restauarnt and then looping through that dish category array to display them
         if(appetizerDishes.length > 0){
             allDishes.push(
-                <Grid item xs={12} className={classes.dishCat}>Appetizer</Grid>
+                <Grid key={"appetizer"} item xs={12} className={classes.dishCat}>Appetizer</Grid>
             )
             allDishes.push(
                 appetizerDishes.map(appetizerDish => (      
@@ -76,7 +76,7 @@ class Dishes extends Component {
 
         if(saladDishes.length > 0){
             allDishes.push(
-                <Grid item xs={12} className={classes.dishCat}>Salad</Grid>
+                <Grid key={"salad"} item xs={12} className={classes.dishCat}>Salad</Grid>
             )
             allDishes.push(
                 saladDishes.map(saladDish => (      
@@ -87,7 +87,7 @@ class Dishes extends Component {
 
         if(mainCourseDishes.length > 0){
             allDishes.push(
-                <Grid item xs={12} className={classes.dishCat}>Main Course</Grid>
+                <Grid key={"mainCourse"} item xs={12} className={classes.dishCat}>Main Course</Grid>
             )
             allDishes.push(
                 mainCourseDishes.map(mainCourseDish => (      
@@ -98,7 +98,7 @@ class Dishes extends Component {
 
         if(dessertDishes.length > 0){
             allDishes.push(
-                <Grid item xs={12} className={classes.dishCat}>Dessert</Grid>
+                <Grid key={"dessert"} item xs={12} className={classes.dishCat}>Dessert</Grid>
             )
             allDishes.push(
                 dessertDishes.map(dessertDish => (      
@@ -109,7 +109,7 @@ class Dishes extends Component {
 
         if(beverageDishes.length > 0){
             allDishes.push(
-                <Grid item xs={12} className={classes.dishCat}>Beverage</Grid>
+                <Grid key={"beverage"} item xs={12} className={classes.dishCat}>Beverage</Grid>
             )
             allDishes.push(
                 beverageDishes.map(beverageDish => (      

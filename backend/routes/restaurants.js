@@ -151,11 +151,12 @@ exports.createOrder = (req, res) => {
     let orderStatus = req.body.orderStatus
     console.log(JSON.stringify("createOrder function: "+orderid))
 
-    con.query(`insert into orders(orderid, userid,dishid, restaurantid, dishQuantity, dishPrice, deliveryOrPickup, orderStatus)
-    values (?,?,?,?,?,?,?,?)`, [orderid, userid,dishid, restaurantid, dishQuantity, dishPrice, deliveryOrPickup, orderStatus],(error, results) => {
+    con.query(`insert into orders(orderid, userid,dishid, restaurantid, dishQuantity, dishPrice, deliveryOrPickup, orderStatus, orderDate, orderTime)
+    values (?,?,?,?,?,?,?,?, current_date(), current_time())`, [orderid, userid,dishid, restaurantid, dishQuantity, dishPrice, deliveryOrPickup, orderStatus],(error, results) => {
         if(error)
             console.log(error)
         else 
             res.end(JSON.stringify(results))
     })
 }
+
