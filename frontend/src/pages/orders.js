@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
 
-import {  GET_ALL_RESTAURANTS } from '../redux/types'
+import { GET_ALL_ORDERS } from '../redux/types'
 import axios from 'axios'
 import store from '../redux/store'
 import {connect} from 'react-redux'
@@ -21,30 +21,21 @@ class orders extends Component {
             axios.get('/getOrders')
                 .then(res => {
                     store.dispatch({
-                        type : GET_ALL_RESTAURANTS,
+                        type : GET_ALL_ORDERS,
                         payload : res.data
                     })
             })
         // }
     }
 
-    displayRestaurants(){
-        if(this.props.restaurant.restaurants.length > 0){
-            console.log("display restaurants")
-            const { restaurants } = this.props.restaurant
-            return restaurants.map(restaurant => <RestaurantCard key={restaurant.restaurantid} restaurant = {restaurant} />)
-        }
-    }
-
     render() {
         return (
             <Grid direction="row" container>
-                <Grid container item sm={3}>
+                <Grid container item sm={12}>
                     Filters
                 </Grid>
 
-                <Grid container item sm={9}>
-                    {this.displayRestaurants()}
+                <Grid container item sm={12}>
                 </Grid>
             </Grid>
         )

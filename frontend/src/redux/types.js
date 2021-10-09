@@ -3,6 +3,7 @@ export const LOGIN_USER = 'LOGIN_USER'
 export const SIGNUP_USER = 'SIGNUP_USER'
 export const EDIT_PROFILE = 'EDIT_PROFILE'
 export const GET_AUTHENTICATED_USER = 'GET_AUTHENTICATED_USER'
+export const CHANGE_MODE = 'CHANGE_MODE'
 
 //restaurant reducer types 
 export const LOGIN_RESTAURANT = 'LOGIN_RESTAURANT'
@@ -12,3 +13,4 @@ export const GET_RESTAURANT_DATA = 'GET_RESTAURANT_DATA'
 export const EDIT_RESTAURANT_PROFILE = 'EDIT_RESTAURANT_PROFILE'
 export const ADD_DISH = 'ADD_DISH'
 export const ADD_TO_CART = 'ADD_TO_CART'
+export const GET_ALL_ORDERS = 'GET_ALL_ORDERS'

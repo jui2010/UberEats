@@ -16,6 +16,8 @@ import profile from './pages/profile'
 import restaurantLogin from './pages/restaurantLogin'
 import restaurantSignup from './pages/restaurantSignup'
 import restaurant from './pages/restaurant'
+import orders from './pages/orders'
+import checkout from './pages/checkout'
 
 import NavigationBar from './components/NavigationBar'
 
@@ -48,6 +50,8 @@ class App extends Component{
               <Route exact path="/restaurantLogin" component={restaurantLogin} />
               <Route exact path="/restaurantSignup" component={restaurantSignup} />
               <Route exact path="/restaurant/:restaurantName" component={restaurant} />
+              <Route exact path="/orders" component={orders} />
+              <Route exact path="/checkout" component={checkout} />
             </Switch>
           </div>
         </Router>

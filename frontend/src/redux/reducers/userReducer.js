@@ -1,9 +1,10 @@
-import { SIGNUP_USER, LOGIN_USER, EDIT_PROFILE, GET_AUTHENTICATED_USER} from '../types'
+import { SIGNUP_USER, LOGIN_USER, EDIT_PROFILE, GET_AUTHENTICATED_USER, CHANGE_MODE} from '../types'
 
 const initialState = {
     authenticatedUser : {},
     authenticated : false,
-    message : ''
+    message : '',
+    mode : 'delivery'
 }
 
 // eslint-disable-next-line import/no-anonymous-default-export
@@ -37,6 +38,12 @@ export default function(state = initialState , action){
                 }
             } 
  
+        case CHANGE_MODE: 
+            return {
+                ...state,
+                mode : action.payload
+            }
+            
         default : 
             return {
                 ...state

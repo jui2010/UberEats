@@ -16,8 +16,8 @@ const styles = (theme) => ({
     button : {
         // paddingLeft : '30px',
         cursor : 'pointer',
-        color : '#808080',
-        fontSize : '30px'
+        color : 'white',
+        fontSize : '20px'
         // paddingTop : '40px',
     },
     nameLoc : {
@@ -117,7 +117,6 @@ class Cart extends Component {
             total = total + cartItem.dishPrice
         })
 
-
         return (
             <Fragment>
                 <div onClick={this.handleOpen} >
@@ -127,19 +126,32 @@ class Cart extends Component {
                 </div>
                 
                 <Dialog fullWidth open={this.state.open} onClose={this.handleClose} className={classes.dialog}>
-                    <DialogTitle>
-                        <div className={classes.nameLoc}>{selectedRestaurant.restaurantName} ({selectedRestaurant.location})</div>
-                    </DialogTitle>
-                    <div className={classes.itemsList} >
-                        <Grid container>
-                            {this.displayDishOrders()}
-                        </Grid>
-                    </div>
-                    <div role="button" onClick={this.handleClose}>
-                        <Link to="/checkout" style={{textDecoration: 'none'}}>
-                            <div className={classes.checkout} >Go to checkout • ${Math.round(total *100)/100}</div>
-                        </Link>
-                    </div>
+                    {this.props.restaurant.cart.length > 0 ? (
+                        <Fragment>
+                            <DialogTitle>
+                                <div className={classes.nameLoc}>{selectedRestaurant.restaurantName} ({selectedRestaurant.location})</div>
+                            </DialogTitle>
+                            <div className={classes.itemsList} >
+                                <Grid container>
+                                    {this.displayDishOrders()}
+                                </Grid>
+                            </div>
+                            <div role="button" onClick={this.handleClose}>
+                                <Link to="/checkout" style={{textDecoration: 'none'}}>
+                                    <div className={classes.checkout} >Go to checkout • ${Math.round(total *100)/100}</div>
+                                </Link>
+                            </div>
+                        </Fragment>
+                    ) : (
+                        <Fragment>
+                            <DialogTitle>
+                                <ShoppingCartIcon style={{fontSize: '70px', padding : '80px 40px 10px 240px'}}/>
+                            </DialogTitle>
+                            <Grid item style={{height : '250px', padding : '10px 40px 10px 40px'}}  className={classes.dishName}>
+                                Add items from a restaurant or store to start a new cart
+                            </Grid>
+                        </Fragment>
+                    )}
                 </Dialog>
             </Fragment>
         )
