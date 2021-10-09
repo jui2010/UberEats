@@ -1,4 +1,4 @@
-import { SIGNUP_USER, LOGIN_USER, EDIT_PROFILE, GET_AUTHENTICATED_USER, CHANGE_MODE} from '../types'
+import { SIGNUP_USER, LOGIN_USER, EDIT_PROFILE, GET_AUTHENTICATED_USER, CHANGE_MODE, CREATE_ORDER} from '../types'
 
 const initialState = {
     authenticatedUser : {},
@@ -42,6 +42,11 @@ export default function(state = initialState , action){
             return {
                 ...state,
                 mode : action.payload
+            }
+          
+        case CREATE_ORDER: 
+            return {
+                ...state,
             }
             
         default : 

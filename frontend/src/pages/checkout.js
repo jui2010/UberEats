@@ -4,6 +4,10 @@ import withStyles from '@material-ui/core/styles/withStyles'
 import {connect} from 'react-redux'
 import Grid from '@material-ui/core/Grid'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
+import {createOrder} from '../redux/actions/userActions'
+import store from '../redux/store'
+import {EMPTY_CART} from '../redux/types'
 
 const styles = (theme) => ({
     ...theme.spread,
@@ -67,12 +71,49 @@ const styles = (theme) => ({
 
 class checkout extends Component {
 
-    handleCheckout(){
-        let order = {
-            restaurantid : this.props.restaurant.selectedRestaurant.restaurantid,
-            userid : this.props.user.authenticatedUser.restaurantid,
+    state = {
+        maxOrderId : 0
+    }
 
-        }
+    componentDidMount(){
+        axios.get('/getMaxOrderId')
+            .then(res => {
+                console.log('res'+JSON.stringify(res.data))
+                this.setState({
+                    maxOrderId : res.data[0].maxOrderId
+                })
+            })
+
+        console.log("maxOrderId"+this.state.maxOrderId.maxOrderId)
+    }
+    
+    handleCheckout = () => {
+        const { cart } = this.props.restaurant
+        // console.log("maxOrderId"+JSON.stringify(this.state.maxOrderId))
+
+        const orderid = parseInt(this.state.maxOrderId) 
+        console.log("orderid"+JSON.stringify(this.state.maxOrderId))
+
+        cart.forEach(cartElement => {
+            let order = {
+                orderid : orderid + 1,
+                restaurantid : this.props.restaurant.selectedRestaurant.restaurantid,
+                userid : this.props.user.authenticatedUser.userid,
+                dishid : cartElement.dishid,
+                dishQuantity : cartElement.dishQuantity,
+                dishPrice : cartElement.dishPrice,
+                deliveryOrPickup : this.props.user.mode,
+                orderStatus : ''
+            }
+            console.log(JSON.stringify(order))
+
+            this.props.createOrder(order)
+
+        })
+        
+        store.dispatch({
+            type : EMPTY_CART
+        })
     }
 
     displayDishOrders(){
@@ -140,4 +181,4 @@ const mapStateToProps = (state) => ({
     restaurant : state.restaurant
 })
 
-export default connect(mapStateToProps, {} )(withStyles(styles)(checkout))
+export default connect(mapStateToProps, {createOrder} )(withStyles(styles)(checkout))

@@ -1,12 +1,8 @@
 import React, { Component } from 'react'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
-import Tooltip from '@material-ui/core/Tooltip'
 import Button from '@material-ui/core/Button'
-import Avatar from '@material-ui/core/Avatar'
-import Badge from '@material-ui/core/Badge'
 import withStyles from '@material-ui/core/styles/withStyles'
-import ExitToAppIcon  from '@material-ui/icons/ExitToApp'
 import MenuIcon from '@material-ui/icons/Menu'
 
 import Cart from './Cart'
@@ -142,7 +138,7 @@ class NavigationBar extends Component {
 
     render(){
         const { classes } = this.props
-        const {authenticatedUser , authenticated} = this.props.user
+        const {authenticated} = this.props.user
 
         return (
             <div >

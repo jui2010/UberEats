@@ -125,3 +125,37 @@ exports.addDish = (req, res) => {
             res.end(JSON.stringify(results))
     })
 }
+
+// get the maximum orderid from orders table
+exports.getMaxOrderId = (req, res) => {
+    console.log(JSON.stringify("getMaxOrderId function: "))
+
+    con.query(`select max(orderid) as maxOrderId from orders`,(error, results) => {
+        if(results.length > 0){
+            res.end(JSON.stringify(results))
+        }
+        else
+            res.end({error : "Unauthenticated"})
+    })
+}
+
+//Create a new order
+exports.createOrder = (req, res) => {
+    let orderid = req.body.orderid
+    let userid = req.body.userid
+    let dishid = req.body.dishid
+    let restaurantid = req.body.restaurantid
+    let dishQuantity = req.body.dishQuantity
+    let dishPrice = req.body.dishPrice
+    let deliveryOrPickup = req.body.deliveryOrPickup
+    let orderStatus = req.body.orderStatus
+    console.log(JSON.stringify("createOrder function: "+orderid))
+
+    con.query(`insert into orders(orderid, userid,dishid, restaurantid, dishQuantity, dishPrice, deliveryOrPickup, orderStatus)
+    values (?,?,?,?,?,?,?,?)`, [orderid, userid,dishid, restaurantid, dishQuantity, dishPrice, deliveryOrPickup, orderStatus],(error, results) => {
+        if(error)
+            console.log(error)
+        else 
+            res.end(JSON.stringify(results))
+    })
+}

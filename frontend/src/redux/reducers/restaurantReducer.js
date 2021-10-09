@@ -1,4 +1,5 @@
-import {SIGNUP_RESTAURANT, LOGIN_RESTAURANT, GET_ALL_RESTAURANTS, GET_RESTAURANT_DATA, EDIT_RESTAURANT_PROFILE, ADD_DISH, ADD_TO_CART} from '../types'
+import {SIGNUP_RESTAURANT, LOGIN_RESTAURANT, GET_ALL_RESTAURANTS, GET_RESTAURANT_DATA, EDIT_RESTAURANT_PROFILE, 
+  ADD_DISH, ADD_TO_CART, EMPTY_CART} from '../types'
 
 const initialState = {
   restaurants : [],
@@ -78,6 +79,12 @@ export default function (state = initialState, action){
         
         return {
           ...state,
+        }
+      
+      case EMPTY_CART: 
+        return {
+          ...state,
+          cart : []
         }
         
       default : 

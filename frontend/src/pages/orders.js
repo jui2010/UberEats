@@ -7,8 +7,6 @@ import store from '../redux/store'
 import {connect} from 'react-redux'
 import Grid from '@material-ui/core/Grid'
 
-import RestaurantCard from '../components/RestaurantCard'
-
 const styles = (theme) => ({
     ...theme.spread,
 })
