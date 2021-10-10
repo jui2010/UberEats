@@ -114,15 +114,17 @@ exports.editRestaurantProfile = (req, res) => {
     let deliveryFee = req.body.deliveryFee
     let timing = req.body.timing
     let tile = req.body.tile
+    let typeOfRestaurant = req.body.typeOfRestaurant
+    let typeOfFood = req.body.typeOfFood
 
     console.log(JSON.stringify("editRestaurantProfile function: "+email))
-    console.log(JSON.stringify("editRestaurantProfile function: "+restaurantName+" "+phone+" "+location+" "+address+" "+description+" "+deliveryFee+" "+timing+" " +tile))
+    console.log(JSON.stringify("editRestaurantProfile function: "+restaurantName+" "+phone+" "+location+" "+address+" "+description+" "+deliveryFee+" "+timing+" " +tile+ " "+typeOfRestaurant+" "+typeOfFood))
     
-    con.query(`SET SQL_SAFE_UPDATES = 0`,(error, results) => {
-        res.end(JSON.stringify(results))
-    })
-    con.query(`update restaurants set restaurantName = ?, phone = ?, location = ?, address = ?, description = ?, deliveryFee = ?, timing = ?, tile = ?  WHERE email = ? `, 
-        [restaurantName, phone, location, address, description, deliveryFee, timing, tile, email ],(error, results) => {
+    // con.query(`SET SQL_SAFE_UPDATES = 0`,(error, results) => {
+    //     res.end(JSON.stringify(results))
+    // })
+    con.query(`update restaurants set restaurantName = ?, phone = ?, location = ?, address = ?, description = ?, deliveryFee = ?, timing = ?, tile = ?, typeOfRestaurant = ?, typeOfFood = ?  WHERE email = ? `, 
+        [restaurantName, phone, location, address, description, deliveryFee, timing, tile, typeOfRestaurant, typeOfFood, email ],(error, results) => {
             console.log("Record Updated - restaurant!!")
             console.log(results)
             res.end(JSON.stringify(results))

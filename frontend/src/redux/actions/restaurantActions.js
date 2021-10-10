@@ -26,7 +26,8 @@ export const loginRestaurant  = (newRestaurant, history) => (dispatch) => {
       })
       console.log("LOGIN_RESTAURANT"+res.data[0])
 
-      history.push('/')
+  axios.post('/restaurantLogin', newRestaurant)
+  history.push(`/restaurant/${res.data[0].restaurantName}`)
       console.log("restaurant login successful")
     })
     .catch(err => {

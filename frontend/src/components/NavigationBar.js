@@ -4,14 +4,15 @@ import Toolbar from '@material-ui/core/Toolbar'
 import Button from '@material-ui/core/Button'
 import withStyles from '@material-ui/core/styles/withStyles'
 import MenuIcon from '@material-ui/icons/Menu'
-
+import AddLocationIcon from '@material-ui/icons/AddLocation'
+import InputBase from '@material-ui/core/InputBase'
 import Cart from './Cart'
 
 import { Link } from 'react-router-dom'
 
 import {connect} from 'react-redux'
 import store from '../redux/store'
-import {CHANGE_MODE} from '../redux/types'
+import {CHANGE_MODE, LOCATION_FILTER} from '../redux/types'
 
 const styles = (theme) => ({
     ...theme.spread,
@@ -74,7 +75,7 @@ const styles = (theme) => ({
         fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
         fontWeight : '600',
         backgroundColor : '#e8e8e8',
-        padding : '15px 15px',
+        padding : '10px 15px',
         cursor : 'pointer',
         marginRight : '60px'
     },
@@ -111,7 +112,8 @@ const styles = (theme) => ({
 class NavigationBar extends Component {
     state = {
         delBg : 'white',
-        pickBg : '#e8e8e8'
+        pickBg : '#e8e8e8',
+        location : ''
     }
 
     handleDelBg = () => {
@@ -136,6 +138,17 @@ class NavigationBar extends Component {
         })
     }
 
+    handleChange = (event) => {
+        this.setState({
+            [event.target.name] : event.target.value 
+        })
+
+        store.dispatch({
+            type : LOCATION_FILTER,
+            payload : this.state.location
+        })
+    }
+
     render(){
         const { classes } = this.props
         const {authenticated} = this.props.user
@@ -154,9 +167,15 @@ class NavigationBar extends Component {
                             <div className={classes.pick} onClick={this.handlePickBg} style={{backgroundColor : this.state.pickBg}} >Pickup</div>
                         </div>
 
-                        <div className={classes.location}  >
-                            San Jose
-                        </div>
+                        <InputBase
+                            id="location"
+                            name="location"
+                            className={classes.location}
+                            placeholder="Location"
+                            inputProps={{ 'aria-label': 'Enter location' }}
+                            onChange={this.handleChange}
+                            startAdornment={<AddLocationIcon style={{color : '#2b2b2b'}} />}
+                        />
 
                         <div className={classes.craving}  >
                             What are you craving?

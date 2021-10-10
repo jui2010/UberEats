@@ -1,4 +1,4 @@
-import { SIGNUP_USER, LOGIN_USER, EDIT_PROFILE, CREATE_ORDER } from '../types'
+import { SIGNUP_USER, LOGIN_USER, EDIT_PROFILE, CREATE_ORDER , GET_SELECTED_USER} from '../types'
 import axios from 'axios'
 
 export const signupUser = (newUser, history) => (dispatch) => {
@@ -32,6 +32,17 @@ export const loginUser = (newUser, history) => (dispatch) => {
             console.log(err)
         })
 }
+
+export const getSelectedUser = (userid) => (dispatch) => {
+    axios.get(`/getSelectedUser/${userid}`)
+        .then(res => {
+            dispatch({
+                type : GET_SELECTED_USER,
+                payload : res.data[0]
+            })
+        })
+        .catch(err => console.log(err) )
+    }
 
 export const editProfile = (userDetails) => (dispatch) => {
     axios.post('/edit', userDetails)

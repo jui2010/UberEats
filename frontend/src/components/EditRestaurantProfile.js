@@ -29,7 +29,9 @@ class EditRestaurantProfile extends Component {
         description : this.props.restaurant.authenticatedRestaurant.description,
         deliveryFee : this.props.restaurant.authenticatedRestaurant.deliveryFee,
         timing : this.props.restaurant.authenticatedRestaurant.timing,
-        tile : this.props.restaurant.authenticatedRestaurant.tile
+        tile : this.props.restaurant.authenticatedRestaurant.tile,
+        typeOfRestaurant : this.props.restaurant.authenticatedRestaurant.typeOfRestaurant,
+        typeOfFood : this.props.restaurant.authenticatedRestaurant.typeOfFood,
     }
 
     handleOpen = () => {
@@ -61,7 +63,9 @@ class EditRestaurantProfile extends Component {
             description : this.state.description,
             deliveryFee : this.state.deliveryFee,
             timing : this.state.timing,
-            tile : this.state.tile
+            tile : this.state.tile,
+            typeOfRestaurant : this.state.typeOfRestaurant,
+            typeOfFood : this.state.typeOfFood
         }
         this.props.editRestaurantProfile(restaurantDetails)
         console.log("restaurantDetails "+JSON.stringify(restaurantDetails))
@@ -107,6 +111,12 @@ class EditRestaurantProfile extends Component {
                         
                         <TextField name="tile" id="tile" label="Restaurant picture" type="text" onChange={this.handleChange}
                             style={{marginBottom: '10px'}} value={this.state.tile} variant="outlined" fullWidth />
+                        
+                        <TextField name="typeOfRestaurant" id="typeOfRestaurant" label="Type Of Restaurant" type="text" onChange={this.handleChange}
+                            style={{marginBottom: '10px'}} value={this.state.typeOfRestaurant} variant="outlined" fullWidth />
+                        
+                        <TextField name="typeOfFood" id="typeOfFood" label="Type Of Food" type="text" onChange={this.handleChange}
+                            style={{marginBottom: '10px'}} value={this.state.typeOfFood} variant="outlined" fullWidth />
                         
                         <Button type="submit" variant="contained" color="primary"
                             style={{ margin : '10px 5px', fontSize : '16px'}}>

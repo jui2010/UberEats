@@ -98,6 +98,21 @@ exports.authenticatedUser = (req, res) => {
     })
 }
 
+// get selected user
+exports.getSelectedUser = (req, res) => {
+    console.log(JSON.stringify("getSelectedUser function: "+ req.params.userid))
+
+    let userid = req.params.userid
+
+    con.query(`select * from users where userid = ? `, [userid],(error, results) => {
+        if(results.length > 0){
+            res.end(JSON.stringify(results))
+        }
+        else
+            res.end({error : "Incorrect username or password"})
+    })
+}
+
 // Get all orders for a particular user
 exports.getOrders = (req, res) => {
     let userid = req.body.userid

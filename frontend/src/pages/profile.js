@@ -6,7 +6,8 @@ import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 
 import {connect} from 'react-redux'
-import {editProfile} from '../redux/actions/userActions'
+import {editProfile, getSelectedUser} from '../redux/actions/userActions'
+import { GET_AUTHENTICATED_USER } from '../redux/types'
 
 const styles = (theme) => ({
     ...theme.spread,
@@ -29,24 +30,28 @@ class profile extends Component {
     
     state = {
         edit : false,
-        phone  : this.props.user.authenticatedUser.phone,
-        nickname : this.props.user.authenticatedUser.nickname,
-        dob : this.props.user.authenticatedUser.dob,
-        about : this.props.user.authenticatedUser.about,
-        city : this.props.user.authenticatedUser.city,
-        state : this.props.user.authenticatedUser.state,
-        country : this.props.user.authenticatedUser.country
+        phone  : this.props.user.selectedUser.phone,
+        nickname : this.props.user.selectedUser.nickname,
+        dob : this.props.user.selectedUser.dob,
+        about : this.props.user.selectedUser.about,
+        city : this.props.user.selectedUser.city,
+        state : this.props.user.selectedUser.state,
+        country : this.props.user.selectedUser.country
     }
 
     componentDidMount(){
+        const userid = this.props.match.params.userid
+        //get data for specific user
+        this.props.getSelectedUser(userid)
+
         this.setState({
-            phone  : this.props.user.authenticatedUser.phone,
-            nickname : this.props.user.authenticatedUser.nickname,
-            dob : this.props.user.authenticatedUser.dob,
-            about : this.props.user.authenticatedUser.about,
-            city : this.props.user.authenticatedUser.city,
-            state : this.props.user.authenticatedUser.state,
-            country : this.props.user.authenticatedUser.country
+            phone  : this.props.user.selectedUser.phone,
+            nickname : this.props.user.selectedUser.nickname,
+            dob : this.props.user.selectedUser.dob,
+            about : this.props.user.selectedUser.about,
+            city : this.props.user.selectedUser.city,
+            state : this.props.user.selectedUser.state,
+            country : this.props.user.selectedUser.country
         })
     }
 
@@ -66,10 +71,10 @@ class profile extends Component {
         event.preventDefault()
         
         var userDetails = {
-            userid : this.props.user.authenticatedUser.userid,
-            firstname : this.props.user.authenticatedUser.firstname,
-            lastname : this.props.user.authenticatedUser.lastname,
-            email : this.props.user.authenticatedUser.email,
+            userid : this.props.user.selectedUser.userid,
+            firstname : this.props.user.selectedUser.firstname,
+            lastname : this.props.user.selectedUser.lastname,
+            email : this.props.user.selectedUser.email,
             phone  : this.state.phone,
             nickname : this.state.nickname,
             dob : this.state.dob,
@@ -89,27 +94,51 @@ class profile extends Component {
 
     render() {
         const {classes} = this.props
-        const {authenticatedUser} = this.props.user
+        const {selectedUser} = this.props.user
 
         return (
-            <Grid container direcion="row">
-                <Grid container item sm={4} direcion="row">
-
-                    <Avatar className={classes.avatar}>
-                        {authenticatedUser.firstname && authenticatedUser.firstname.substring(0,1)}{ authenticatedUser.lastname &&  authenticatedUser.lastname.substring(0,1)}
-                    </Avatar>
-
+            <Grid container direcion="row" alignItems="center" justifyContent="center">
+                <Grid container item sm={3} direcion="row" >
+                    <Grid item xs={12}>
+                        <Avatar className={classes.avatar}>
+                            {selectedUser.firstname && selectedUser.firstname.substring(0,1)}{ selectedUser.lastname &&  selectedUser.lastname.substring(0,1)}
+                        </Avatar>
+                    </Grid> 
+                    <Grid item xs={12}>
+                        <div className={classes.field}>
+                            {selectedUser.firstname } {selectedUser.lastname }
+                        </div>
+                    </Grid> 
+                    <Grid item xs={12}>
+                        <div className={classes.field} style={{width: '500px'}}>
+                            {selectedUser.email }
+                        </div>
+                    </Grid> 
+                    
+                    {selectedUser.userid === GET_AUTHENTICATED_USER.userid && (
                     <div onClick={this.handleEdit} className={classes.edit}>
                         Edit Profile
-                    </div>
+                    </div>) }
+                </Grid>
+                <Grid item sm={8} >
+                        <div>
+                            Date of Birth : 
+                        </div>
 
-                    <div className={classes.field}>
-                        {authenticatedUser.firstname } {authenticatedUser.lastname }
-                    </div>
-                    <div className={classes.field} style={{width: '500px'}}>
-                        {authenticatedUser.email }
-                    </div>
-                    
+                        <TextField 
+                            id ="dob" 
+                            name="dob" 
+                            placeholder="Date of Birth " 
+                            type="date"
+                            className={classes.textField}
+                            variant="outlined"
+                            value={this.state.dob} 
+                            onChange= {this.handleChange}  
+                        />
+                </Grid>
+                <Grid item sm={4} >
+                </Grid>
+
                     <form noValidate onSubmit ={this.handleSubmit }>
                         <div>
                             Phone : 
@@ -141,20 +170,7 @@ class profile extends Component {
                             onChange= {this.handleChange}  
                         />
 
-                        <div>
-                            Date of Birth : 
-                        </div>
-
-                        <TextField 
-                            id ="dob" 
-                            name="dob" 
-                            placeholder="Date of Birth " 
-                            type="date"
-                            className={classes.textField}
-                            variant="outlined"
-                            value={this.state.dob} 
-                            onChange= {this.handleChange}  
-                        />
+                        
 
                         <div>
                             About : 
@@ -221,10 +237,9 @@ class profile extends Component {
                             Edit Profile
                         </Button>)}
                     </form>
-                </Grid>
+                {/* </Grid> */}
 
-                <Grid item sm={8} >
-                </Grid>
+                
             </Grid>
         )
     }
@@ -234,4 +249,4 @@ const mapStateToProps = (state) => ({
     user : state.user
 })
 
-export default connect(mapStateToProps, {editProfile} )(withStyles(styles)(profile))
+export default connect(mapStateToProps, {editProfile, getSelectedUser} )(withStyles(styles)(profile))

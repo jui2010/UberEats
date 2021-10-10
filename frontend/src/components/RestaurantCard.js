@@ -17,7 +17,7 @@ const styles = (theme) => ({
     },
     card : {
         width : '300px',
-        height : '170px',
+        height : '190px',
         position: 'relative',
         display : 'flex',
     },
@@ -37,7 +37,8 @@ const styles = (theme) => ({
         "&:hover": {
             textDecoration : 'none',
         },
-        marginRight : '26px'
+        marginRight : '26px',
+        marginTop : '30px',
     },
     favBorder : {
         color : 'white',

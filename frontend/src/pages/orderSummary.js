@@ -6,17 +6,11 @@ import axios from 'axios'
 import store from '../redux/store'
 import {connect} from 'react-redux'
 import Grid from '@material-ui/core/Grid'
-import InputLabel from '@mui/material/InputLabel'
-import MenuItem from '@mui/material/MenuItem'
-import FormControl from '@mui/material/FormControl'
-import Select from '@mui/material/Select'
-import Button from '@material-ui/core/Button'
-import Dialog from '@material-ui/core/Dialog'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import Paper from '@material-ui/core/Paper'
 import Avatar from '@mui/material/Avatar'
+import {Link } from 'react-router-dom'
 
 import OrderStatus from '../components/OrderStatus'
+import { Button } from '@material-ui/core'
 
 const styles = (theme) => ({
     ...theme.spread,
@@ -118,9 +112,11 @@ class orderSummary extends Component {
             return orders.map(orderItem => (
                 <Grid container item  xs={12} className={classes.orders}>
                     <Grid item xs={1} className={classes.heading}>
-                        <Avatar className={classes.ava}  sx={{ width: 50, height: 50 }}>
-                            {orderItem.firstname.substring(0,1)} {orderItem.lastname.substring(0,1)}
-                        </Avatar>
+                        <Button component = {Link} to={`/profile/${orderItem.userid}`}>
+                            <Avatar className={classes.ava}  sx={{ width: 50, height: 50 }}>
+                                {orderItem.firstname.substring(0,1)} {orderItem.lastname.substring(0,1)}
+                            </Avatar>
+                        </Button>
                     </Grid>
                     <Grid item xs={2} className={classes.heading}>
                         {orderItem.firstname} {orderItem.lastname}

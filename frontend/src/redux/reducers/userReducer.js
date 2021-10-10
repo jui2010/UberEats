@@ -1,10 +1,16 @@
-import { SIGNUP_USER, LOGIN_USER, EDIT_PROFILE, GET_AUTHENTICATED_USER, CHANGE_MODE, CREATE_ORDER, GET_ALL_ORDERS} from '../types'
+import { SIGNUP_USER, LOGIN_USER, EDIT_PROFILE, GET_AUTHENTICATED_USER, CHANGE_MODE, 
+    CREATE_ORDER, GET_ALL_ORDERS, GET_SELECTED_USER, LOCATION_FILTER, VEGETARIAN_FILTER, VEGAN_FILTER, NONVEGETARIAN_FILTER} from '../types'
 
 const initialState = {
     authenticatedUser : {},
+    selectedUser : {},
     authenticated : false,
     message : '',
     mode : 'delivery',
+    location : '',
+    vegetarianFilter : false,
+    veganFilter : false,
+    nonVegetarianFilter : false,
 }
 
 // eslint-disable-next-line import/no-anonymous-default-export
@@ -28,6 +34,12 @@ export default function(state = initialState , action){
                 ...state,
                 authenticatedUser : action.payload,
                 authenticated : true
+            } 
+
+        case GET_SELECTED_USER:
+            return {
+                ...state,
+                selectedUser : action.payload
             } 
 
         case EDIT_PROFILE :
@@ -96,6 +108,30 @@ export default function(state = initialState , action){
                     orders : newOrder
                 }
             }   
+
+        case LOCATION_FILTER :
+            return {
+                ...state, 
+                location : action.payload
+            }
+
+        case VEGETARIAN_FILTER :
+            return {
+                ...state, 
+                vegetarianFilter : !state.vegetarianFilter
+            }
+        
+        case VEGAN_FILTER :
+            return {
+                ...state, 
+                veganFilter : !state.veganFilter
+            }
+
+        case NONVEGETARIAN_FILTER :
+            return {
+                ...state, 
+                nonVegetarianFilter : !state.nonVegetarianFilter
+            }
 
         default : 
             return {
