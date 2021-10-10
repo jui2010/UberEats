@@ -24,6 +24,7 @@ const {getOrderSummary} = require('./routes/restaurants')
 const {changeOrderStatus} = require('./routes/restaurants')
 const {addToFavorite} = require('./routes/users')
 const {addToUnfavorite} = require('./routes/users')
+const {editDish} = require('./routes/restaurants')
 
 var mysql = require('mysql')
 var config = require('./config.json')
@@ -74,6 +75,7 @@ app.post('/api/getOrderSummary' , getOrderSummary)
 app.post('/api/changeOrderStatus' , changeOrderStatus)
 app.post('/api/addToFavorite' , addToFavorite)
 app.post('/api/addToUnfavorite' , addToUnfavorite)
+app.post('/api/editDish' , editDish)
 
 var con = mysql.createPool({                                                                                                                                                                                                                                    
   host: config.DB.host,

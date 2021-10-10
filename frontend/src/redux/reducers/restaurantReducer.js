@@ -1,5 +1,5 @@
 import {SIGNUP_RESTAURANT, LOGIN_RESTAURANT, GET_AUTHENTICATED_RESTAURANT, GET_ALL_RESTAURANTS, GET_RESTAURANT_DATA, EDIT_RESTAURANT_PROFILE, 
-  ADD_DISH, ADD_TO_CART, EMPTY_CART, GET_ORDER_SUMMARY, CHANGE_ORDER_STATUS, MARK_FAVORITE, MARK_UNFAVORITE} from '../types'
+  ADD_DISH, ADD_TO_CART, EMPTY_CART, GET_ORDER_SUMMARY, CHANGE_ORDER_STATUS, MARK_FAVORITE, MARK_UNFAVORITE, EDIT_DISH} from '../types'
 
 const initialState = {
   restaurants : [],
@@ -179,7 +179,18 @@ export default function (state = initialState, action){
         return {
             ...state,
         }
-        
+  
+        case EDIT_DISH :
+          let ind4 = state.selectedRestaurant.dishes.findIndex(
+              dish => dish.dishid === action.payload.dishid
+          )
+
+          state.selectedRestaurant.dishes[ind4] = action.payload
+
+          return {
+            ...state, 
+          }
+
       default : 
         return {
           ...state

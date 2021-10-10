@@ -1,5 +1,5 @@
 import { SIGNUP_RESTAURANT, LOGIN_RESTAURANT, GET_RESTAURANT_DATA, EDIT_RESTAURANT_PROFILE, 
-  ADD_DISH, ADD_TO_CART, CHANGE_ORDER_STATUS, MARK_FAVORITE, MARK_UNFAVORITE} from '../types'
+  ADD_DISH, ADD_TO_CART, CHANGE_ORDER_STATUS, MARK_FAVORITE, MARK_UNFAVORITE, EDIT_DISH} from '../types'
 import axios from 'axios'
 
 export const signupRestaurant = (newRestaurant, history) => (dispatch) => {
@@ -114,4 +114,15 @@ export const addToUnfavorite = (unfavRestaurant) => (dispatch) => {
       .catch(err => {
           console.log(err)
       })
+}
+
+export const editDish = (dishDetails) => (dispatch) => {
+  axios.post(`/editDish/`, dishDetails)
+    .then(res => {
+      dispatch({
+        type : EDIT_DISH,
+        payload : dishDetails
+      })
+    })
+    .catch(err => console.log(err) )
 }

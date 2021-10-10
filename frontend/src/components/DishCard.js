@@ -10,6 +10,8 @@ import RemoveCircle from '@material-ui/icons/RemoveCircle'
 import {connect} from 'react-redux'
 import {addToCart} from '../redux/actions/restaurantActions'
 
+import EditDish from './EditDish'
+
 const styles = (theme) => ({
     ...theme.spread,
     root: {
@@ -121,11 +123,11 @@ class DishCard extends Component {
 
     render(){
         const { classes } = this.props
-        const { dishName, dishPicture, dishDescription, dishPrice } = this.props.dish
+        const { dishid, dishName, dishPicture, dishDescription, dishPrice } = this.props.dish
 
         return (         
-            <Grid container item xs={12} className={classes.dish} onClick={this.handleOpen}>
-                <Grid container item xs={8} className={classes.card} >
+            <Grid container item xs={12} className={classes.dish}>
+                <Grid container item xs={8} className={classes.card}  onClick={this.handleOpen} >
                     <Grid item xs={12} className={classes.dishName}>
                         {dishName}
                     </Grid>
@@ -138,7 +140,7 @@ class DishCard extends Component {
                 </Grid>
 
                 <Grid container item xs={4} className={classes.dishPicture} style={{backgroundImage : `url(${dishPicture})`,}}>
-                    
+                    <EditDish key={dishid} dish={this.props.dish} style={{left : '40px'}}/>
                 </Grid>
 
                 <Dialog open={this.state.open} onClose={this.handleClose}>

@@ -225,3 +225,23 @@ exports.changeOrderStatus = (req, res) => {
             res.end(JSON.stringify(results))
         })
 }
+
+// Change order status
+exports.editDish = (req, res) => {
+    let dishid = req.body.dishid
+    let dishName = req.body.dishName
+    let dishPicture = req.body.dishPicture
+    let dishDescription = req.body.dishDescription
+    let dishCategory = req.body.dishCategory
+    let cuisine = req.body.cuisine
+    let dishType = req.body.dishType
+    let dishPrice = req.body.dishPrice
+    console.log(JSON.stringify("editDish function: "+dishid))
+
+    con.query(`update dishes set dishName = ?, dishPicture = ?, dishDescription = ?, dishDescription = ?, dishCategory = ?, cuisine = ?, dishType = ?, dishPrice = ?  WHERE dishid = ? `, 
+        [ dishName, dishPicture, dishDescription, dishDescription, dishCategory, cuisine, dishType, dishPrice, dishid],(error, results) => {
+            console.log("dish detailes changed!!")
+            console.log(results)
+            res.end(JSON.stringify(results))
+        })
+}

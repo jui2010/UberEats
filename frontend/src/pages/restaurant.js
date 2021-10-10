@@ -52,7 +52,7 @@ class home extends Component {
     }
 
     render() {
-        const {restaurantName, location, tile, description, address , dishes, deliveryFee, timing  } = this.props.restaurant.selectedRestaurant
+        const { restaurantName, location, tile, description, address , dishes, deliveryFee, timing  } = this.props.restaurant.selectedRestaurant
         const { classes } = this.props
 
         return (
