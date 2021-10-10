@@ -1,4 +1,5 @@
-import { SIGNUP_RESTAURANT, LOGIN_RESTAURANT, GET_RESTAURANT_DATA, EDIT_RESTAURANT_PROFILE, ADD_DISH, ADD_TO_CART, CHANGE_ORDER_STATUS} from '../types'
+import { SIGNUP_RESTAURANT, LOGIN_RESTAURANT, GET_RESTAURANT_DATA, EDIT_RESTAURANT_PROFILE, 
+  ADD_DISH, ADD_TO_CART, CHANGE_ORDER_STATUS, MARK_FAVORITE, MARK_UNFAVORITE} from '../types'
 import axios from 'axios'
 
 export const signupRestaurant = (newRestaurant, history) => (dispatch) => {
@@ -84,4 +85,32 @@ export const changeOrderStatus = (newOrderStatus) => (dispatch) => {
       })
     })
     .catch(err => console.log(err) )
+}
+
+export const addToFavorite = (favRestaurant) => (dispatch) => {
+  axios.post('/addToFavorite', favRestaurant)
+      .then(res => {
+          dispatch({
+              type : MARK_FAVORITE,
+              payload : favRestaurant
+          })
+          console.log("favorite add successful")
+      })
+      .catch(err => {
+          console.log(err)
+      })
+}
+
+export const addToUnfavorite = (unfavRestaurant) => (dispatch) => {
+  axios.post('/addToUnfavorite', unfavRestaurant)
+      .then(res => {
+          dispatch({
+              type : MARK_UNFAVORITE,
+              payload : unfavRestaurant
+          })
+          console.log("unfavorite successful")
+      })
+      .catch(err => {
+          console.log(err)
+      })
 }

@@ -31,7 +31,8 @@ const styles = (theme) => ({
         width:'1349px',
         height:'250px',
         objectFit: 'cover',
-        position: 'relative'
+        position: 'relative',
+        backgroundPosition: 'center'
     },
     description : {
         padding : '20px 30px 10px 30px'

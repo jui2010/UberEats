@@ -118,3 +118,35 @@ on a.dishid = c.dishid `, [userid],(error, results) => {
             res.end(JSON.stringify(results))
         })
 }
+
+//Add a favorite restaurant
+exports.addToFavorite = (req, res) => {
+    let userid = req.body.userid
+    let restaurantid = req.body.restaurantid
+    let fav = 1
+
+    console.log(JSON.stringify("addToFavorite function: "+restaurantid))
+
+    con.query(`insert into favorites (userid, restaurantid, fav)
+    values (?,?,?)`, [userid, restaurantid, fav ],(error, results) => {
+        if(error)
+            console.log(error)
+        else 
+            res.end(JSON.stringify(results))
+    })
+}
+
+//Delete a favorite restaurant
+exports.addToUnfavorite = (req, res) => {
+    let userid = req.body.userid
+    let restaurantid = req.body.restaurantid
+
+    console.log(JSON.stringify("addToFavorite function: "+restaurantid))
+
+    con.query(`delete from favorites where userid= ? and restaurantid = ?`, [userid, restaurantid],(error, results) => {
+        if(error)
+            console.log(error)
+        else 
+            res.end(JSON.stringify(results))
+    })
+}

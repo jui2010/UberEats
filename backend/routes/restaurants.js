@@ -61,11 +61,18 @@ exports.getAuthenticatedRestaurant = (req, res) => {
 
 // Get all restaurants
 exports.getAllRestaurants = (req, res) => {
-    console.log(JSON.stringify("getAllRestaurants function: "))
+    let userid = req.body.userid
 
-    con.query(`select * from restaurants `,(error, results) => {
+    console.log(JSON.stringify("getAllRestaurants function: " + userid))
+
+    con.query(`select a.*, b.fav from
+    (select * from restaurants) a 
+    left join
+    (select * from favorites where userid = ?)b
+    on a.restaurantid = b.restaurantid `,[userid], (error, results) => {
         if(results.length > 0){
             res.end(JSON.stringify(results))
+    // console.log(JSON.stringify(results))
         }
         else
             res.end({error : "Unauthenticated"})
@@ -106,13 +113,17 @@ exports.editRestaurantProfile = (req, res) => {
     let description = req.body.description
     let deliveryFee = req.body.deliveryFee
     let timing = req.body.timing
+    let tile = req.body.tile
 
     console.log(JSON.stringify("editRestaurantProfile function: "+email))
-    console.log(JSON.stringify("editRestaurantProfile function: "+restaurantName+" "+phone+" "+location+" "+address+" "+description+" "+deliveryFee+" "+timing))
-
-    con.query(`update restaurants set restaurantName = ?, phone = ?, location = ?, address = ?, description = ?, deliveryFee = ?, timing = ?  WHERE email = ? `, 
-        [restaurantName, phone, location, address, description, deliveryFee, timing, email],(error, results) => {
-            console.log("Record Updated!!")
+    console.log(JSON.stringify("editRestaurantProfile function: "+restaurantName+" "+phone+" "+location+" "+address+" "+description+" "+deliveryFee+" "+timing+" " +tile))
+    
+    con.query(`SET SQL_SAFE_UPDATES = 0`,(error, results) => {
+        res.end(JSON.stringify(results))
+    })
+    con.query(`update restaurants set restaurantName = ?, phone = ?, location = ?, address = ?, description = ?, deliveryFee = ?, timing = ?, tile = ?  WHERE email = ? `, 
+        [restaurantName, phone, location, address, description, deliveryFee, timing, tile, email ],(error, results) => {
+            console.log("Record Updated - restaurant!!")
             console.log(results)
             res.end(JSON.stringify(results))
         })

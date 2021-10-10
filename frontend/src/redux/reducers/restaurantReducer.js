@@ -1,5 +1,5 @@
 import {SIGNUP_RESTAURANT, LOGIN_RESTAURANT, GET_AUTHENTICATED_RESTAURANT, GET_ALL_RESTAURANTS, GET_RESTAURANT_DATA, EDIT_RESTAURANT_PROFILE, 
-  ADD_DISH, ADD_TO_CART, EMPTY_CART, GET_ORDER_SUMMARY, CHANGE_ORDER_STATUS} from '../types'
+  ADD_DISH, ADD_TO_CART, EMPTY_CART, GET_ORDER_SUMMARY, CHANGE_ORDER_STATUS, MARK_FAVORITE, MARK_UNFAVORITE} from '../types'
 
 const initialState = {
   restaurants : [],
@@ -156,6 +156,30 @@ export default function (state = initialState, action){
           ...state,
         }
 
+      case MARK_FAVORITE: 
+        let ind2 = state.restaurants.findIndex(
+            restaurant => restaurant.restaurantid === action.payload.restaurantid
+        )
+        state.restaurants[ind2] = {
+            ...state.restaurants[ind2],
+            fav : 1
+        }
+        return {
+            ...state,
+        }
+      
+      case MARK_UNFAVORITE: 
+        let ind3 = state.restaurants.findIndex(
+            restaurant => restaurant.restaurantid === action.payload.restaurantid
+        )
+        state.restaurants[ind3] = {
+            ...state.restaurants[ind3],
+            fav : null
+        }
+        return {
+            ...state,
+        }
+        
       default : 
         return {
           ...state

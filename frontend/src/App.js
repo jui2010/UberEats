@@ -19,6 +19,7 @@ import restaurant from './pages/restaurant'
 import orders from './pages/orders'
 import orderSummary from './pages/orderSummary'
 import checkout from './pages/checkout'
+import favorites from './pages/favorites'
 
 import NavigationBar from './components/NavigationBar'
 
@@ -67,6 +68,7 @@ class App extends Component{
               <Route exact path="/orders" component={orders} />
               <Route exact path="/orderSummary" component={orderSummary} />
               <Route exact path="/checkout" component={checkout} />
+              <Route exact path="/favorites" component={favorites} />
             </Switch>
           </div>
         </Router>

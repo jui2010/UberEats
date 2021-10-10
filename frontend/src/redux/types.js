@@ -6,6 +6,8 @@ export const GET_AUTHENTICATED_USER = 'GET_AUTHENTICATED_USER'
 export const CHANGE_MODE = 'CHANGE_MODE'
 export const CREATE_ORDER = 'CREATE_ORDER'
 export const GET_ORDER_SUMMARY = 'GET_ORDER_SUMMARY'
+export const MARK_FAVORITE = 'MARK_FAVORITE'
+export const MARK_UNFAVORITE = 'MARK_UNFAVORITE'
 
 //restaurant reducer types 
 export const LOGIN_RESTAURANT = 'LOGIN_RESTAURANT'

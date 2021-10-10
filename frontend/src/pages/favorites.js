@@ -16,10 +16,11 @@ const styles = (theme) => ({
     }
 })
 
-class home extends Component {
+class favorites extends Component {
     componentDidMount(){
-        // setTimeout(()=>{
-            console.log("component "+this.props.user.authenticatedUser.userid)
+        setTimeout(()=>{
+
+            console.log("component "+this.props.user.authenticated)
             console.log('load all restaurants')
             axios.post('/getAllRestaurants', {userid : this.props.user.authenticatedUser.userid})
                 .then(res => {
@@ -28,14 +29,15 @@ class home extends Component {
                         payload : res.data
                     })
             })
-        // },2000) 
+        },2000) 
+        
     }
 
     displayRestaurants(){
         if(this.props.restaurant.restaurants.length > 0){
             console.log("display restaurants")
             const { restaurants } = this.props.restaurant
-            return restaurants.map(restaurant => <RestaurantCard key={restaurant.restaurantid} restaurant = {restaurant} />)
+            return restaurants.map(restaurant => restaurant.fav && <RestaurantCard key={restaurant.restaurantid} restaurant = {restaurant} />)
         }
     }
 
@@ -44,10 +46,6 @@ class home extends Component {
 
         return (
             <Grid direction="row" container className={classes.main}>
-                <Grid container item sm={3}>
-                    Filters
-                </Grid>
-
                 <Grid container item sm={9}>
                     {this.displayRestaurants()}
                 </Grid>
@@ -61,4 +59,4 @@ const mapStateToProps = (state) => ({
     restaurant : state.restaurant
 })
 
-export default connect(mapStateToProps, {} )(withStyles(styles)(home))
+export default connect(mapStateToProps, {} )(withStyles(styles)(favorites))

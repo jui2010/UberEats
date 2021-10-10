@@ -28,7 +28,8 @@ class EditRestaurantProfile extends Component {
         address : this.props.restaurant.authenticatedRestaurant.address,
         description : this.props.restaurant.authenticatedRestaurant.description,
         deliveryFee : this.props.restaurant.authenticatedRestaurant.deliveryFee,
-        timing : this.props.restaurant.authenticatedRestaurant.timing
+        timing : this.props.restaurant.authenticatedRestaurant.timing,
+        tile : this.props.restaurant.authenticatedRestaurant.tile
     }
 
     handleOpen = () => {
@@ -59,7 +60,8 @@ class EditRestaurantProfile extends Component {
             address : this.state.address,
             description : this.state.description,
             deliveryFee : this.state.deliveryFee,
-            timing : this.state.timing
+            timing : this.state.timing,
+            tile : this.state.tile
         }
         this.props.editRestaurantProfile(restaurantDetails)
         console.log("restaurantDetails "+JSON.stringify(restaurantDetails))
@@ -102,6 +104,9 @@ class EditRestaurantProfile extends Component {
                         
                         <TextField name="timing" id="timing" label="Timing" type="text" onChange={this.handleChange}
                             style={{marginBottom: '10px'}} value={this.state.timing} variant="outlined" fullWidth />
+                        
+                        <TextField name="tile" id="tile" label="Restaurant picture" type="text" onChange={this.handleChange}
+                            style={{marginBottom: '10px'}} value={this.state.tile} variant="outlined" fullWidth />
                         
                         <Button type="submit" variant="contained" color="primary"
                             style={{ margin : '10px 5px', fontSize : '16px'}}>
