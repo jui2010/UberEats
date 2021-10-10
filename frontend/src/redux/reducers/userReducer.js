@@ -1,5 +1,6 @@
 import { SIGNUP_USER, LOGIN_USER, EDIT_PROFILE, GET_AUTHENTICATED_USER, CHANGE_MODE, 
-    CREATE_ORDER, GET_ALL_ORDERS, GET_SELECTED_USER, LOCATION_FILTER, VEGETARIAN_FILTER, VEGAN_FILTER, NONVEGETARIAN_FILTER} from '../types'
+    CREATE_ORDER, GET_ALL_ORDERS, GET_SELECTED_USER, LOCATION_FILTER, VEGETARIAN_FILTER, VEGAN_FILTER,
+     NONVEGETARIAN_FILTER, LOGOUT_USER} from '../types'
 
 const initialState = {
     authenticatedUser : {},
@@ -132,6 +133,13 @@ export default function(state = initialState , action){
                 ...state, 
                 nonVegetarianFilter : !state.nonVegetarianFilter
             }
+
+        case LOGOUT_USER :
+            return {
+                ...state, 
+                authenticated : false,
+                authenticatedUser : {}
+            }   
 
         default : 
             return {

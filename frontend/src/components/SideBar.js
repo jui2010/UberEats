@@ -11,6 +11,7 @@ import Avatar from '@material-ui/core/Avatar'
 
 import { Link } from 'react-router-dom'
 import MuiLink from '@material-ui/core/Link'
+import Logout from './Logout'
 
 export default function TemporaryDrawer({firstname, lastname, userid }) { 
   const [state, setState] = React.useState({
@@ -61,7 +62,7 @@ export default function TemporaryDrawer({firstname, lastname, userid }) {
 
             <ListItem button key={'logout'}>
                 <MuiLink component = {Link} to ={ `/login`} style={{color : '#303030'}}> 
-                    <ListItemText>Logout</ListItemText>
+                    <Logout/>
                 </MuiLink>
             </ListItem>
         </List>
