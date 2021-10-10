@@ -7,7 +7,7 @@ import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
 //redux
 import {Provider} from 'react-redux'
 import store from './redux/store'
-import {GET_AUTHENTICATED_USER} from './redux/types'
+import {GET_AUTHENTICATED_USER, GET_AUTHENTICATED_RESTAURANT} from './redux/types'
 
 import home from './pages/home'
 import login from './pages/login'
@@ -17,6 +17,7 @@ import restaurantLogin from './pages/restaurantLogin'
 import restaurantSignup from './pages/restaurantSignup'
 import restaurant from './pages/restaurant'
 import orders from './pages/orders'
+import orderSummary from './pages/orderSummary'
 import checkout from './pages/checkout'
 
 import NavigationBar from './components/NavigationBar'
@@ -34,6 +35,18 @@ class App extends Component{
           })
         })
     }
+
+    if(cookie.load('cookieRestaurant')){
+      let email = cookie.load('cookieRestaurant')
+      console.log('rest cookie', email)
+      axios.post('/getAuthenticatedRestaurant', {email : email})
+        .then(res => {
+          store.dispatch({
+            type : GET_AUTHENTICATED_RESTAURANT,
+            payload : res.data[0]
+          })
+        })
+    }
   }
 
   render(){
@@ -47,10 +60,12 @@ class App extends Component{
               <Route exact path="/login" component={login} />
               <Route exact path="/signup" component={signup} />
               <Route exact path="/profile" component={profile} />
+              <Route exact path="/profile/:userid" component={profile} />
               <Route exact path="/restaurantLogin" component={restaurantLogin} />
               <Route exact path="/restaurantSignup" component={restaurantSignup} />
               <Route exact path="/restaurant/:restaurantName" component={restaurant} />
               <Route exact path="/orders" component={orders} />
+              <Route exact path="/orderSummary" component={orderSummary} />
               <Route exact path="/checkout" component={checkout} />
             </Switch>
           </div>

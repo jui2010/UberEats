@@ -1,5 +1,5 @@
-import {SIGNUP_RESTAURANT, LOGIN_RESTAURANT, GET_ALL_RESTAURANTS, GET_RESTAURANT_DATA, EDIT_RESTAURANT_PROFILE, 
-  ADD_DISH, ADD_TO_CART, EMPTY_CART} from '../types'
+import {SIGNUP_RESTAURANT, LOGIN_RESTAURANT, GET_AUTHENTICATED_RESTAURANT, GET_ALL_RESTAURANTS, GET_RESTAURANT_DATA, EDIT_RESTAURANT_PROFILE, 
+  ADD_DISH, ADD_TO_CART, EMPTY_CART, GET_ORDER_SUMMARY, CHANGE_ORDER_STATUS} from '../types'
 
 const initialState = {
   restaurants : [],
@@ -25,6 +25,13 @@ export default function (state = initialState, action){
           authenticated : true
         }
       
+      case GET_AUTHENTICATED_RESTAURANT:
+        return {
+          ...state,
+          authenticatedRestaurant : action.payload,
+          authenticated : true
+        }
+
       case GET_ALL_RESTAURANTS:
         return {
           ...state,
@@ -86,7 +93,69 @@ export default function (state = initialState, action){
           ...state,
           cart : []
         }
-        
+  
+      case GET_ORDER_SUMMARY: 
+        let oldOrder = action.payload
+        let newOrder = []
+        oldOrder.forEach(oldEl => {
+          newOrder.push({
+            orderid : oldEl.orderid, 
+            userid : oldEl.userid, 
+            firstname : oldEl.firstname,
+            lastname : oldEl.lastname,
+            restaurantid : oldEl.restaurantid, 
+            restaurantName : oldEl.restaurantName, 
+            location : oldEl.location, 
+            deliveryOrPickup: oldEl.deliveryOrPickup,
+            orderStatus: oldEl.orderStatus,
+            orderDate: oldEl.orderDate,
+            orderTime: oldEl.orderTime,
+            orderPriceTotal : 0,
+            dishes : [] })
+        })
+
+        newOrder = newOrder.filter((newOr, index, self) =>
+          index === self.findIndex((t) => (
+            t.orderid === newOr.orderid && t.userid === newOr.userid && t.restaurantid === newOr.restaurantid
+          ))
+        )
+
+        oldOrder.forEach(oldEl => {
+          let dish = {
+            dishid : oldEl.dishid,
+            dishQuantity : oldEl.dishQuantity,
+            dishPrice : oldEl.dishPrice,
+            dishName : oldEl.dishName,
+          }
+
+          let index = newOrder.findIndex(
+            newOr => newOr.orderid === oldEl.orderid && newOr.userid === oldEl.userid && newOr.restaurantid === oldEl.restaurantid
+          )
+
+          newOrder[index].dishes.push(dish)
+          newOrder[index].orderPriceTotal = newOrder[index].orderPriceTotal + dish.dishPrice
+        })
+
+        return {
+          ...state,
+          authenticatedRestaurant : {
+            ...state.authenticatedRestaurant,
+            orders : newOrder
+          }
+        }   
+
+      case CHANGE_ORDER_STATUS : 
+        let ind = state.authenticatedRestaurant.orders.findIndex(
+          order => order.orderid === action.payload.orderid
+        )
+        state.authenticatedRestaurant.orders[ind] = {
+          ...state.authenticatedRestaurant.orders[ind],
+          orderStatus : action.payload.orderStatus
+        }
+        return {
+          ...state,
+        }
+
       default : 
         return {
           ...state

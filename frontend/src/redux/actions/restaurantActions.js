@@ -1,4 +1,4 @@
-import { SIGNUP_RESTAURANT, LOGIN_RESTAURANT, GET_RESTAURANT_DATA, EDIT_RESTAURANT_PROFILE, ADD_DISH, ADD_TO_CART} from '../types'
+import { SIGNUP_RESTAURANT, LOGIN_RESTAURANT, GET_RESTAURANT_DATA, EDIT_RESTAURANT_PROFILE, ADD_DISH, ADD_TO_CART, CHANGE_ORDER_STATUS} from '../types'
 import axios from 'axios'
 
 export const signupRestaurant = (newRestaurant, history) => (dispatch) => {
@@ -72,4 +72,16 @@ export const addToCart = (orderedDish) => (dispatch) => {
     type : ADD_TO_CART,
     payload : orderedDish
   })
+}
+
+// change order status
+export const changeOrderStatus = (newOrderStatus) => (dispatch) => {
+  axios.post(`/changeOrderStatus/`, newOrderStatus)
+    .then(res => {
+      dispatch({
+        type : CHANGE_ORDER_STATUS,
+        payload : newOrderStatus
+      })
+    })
+    .catch(err => console.log(err) )
 }

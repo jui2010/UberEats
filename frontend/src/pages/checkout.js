@@ -110,7 +110,7 @@ class checkout extends Component {
                 dishQuantity : cartElement.dishQuantity,
                 dishPrice : cartElement.dishPrice,
                 deliveryOrPickup : this.props.user.mode,
-                orderStatus : ''
+                orderStatus : 'orderReceived'
             }
             console.log(JSON.stringify(order))
             this.props.createOrder(order)

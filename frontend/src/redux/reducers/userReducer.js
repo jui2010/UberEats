@@ -50,8 +50,6 @@ export default function(state = initialState , action){
             }
 
         case GET_ALL_ORDERS:
-            console.log('GET_ALL_ORDERS' + JSON.stringify(action.payload)) 
-
             let oldOrder = action.payload
             let newOrder = []
             oldOrder.forEach(oldEl => {
@@ -90,8 +88,6 @@ export default function(state = initialState , action){
                 newOrder[index].dishes.push(dish)
                 newOrder[index].orderPriceTotal = newOrder[index].orderPriceTotal + dish.dishPrice
             })
-
-            console.log('NEW' + JSON.stringify(newOrder)) 
 
             return {
                 ...state,

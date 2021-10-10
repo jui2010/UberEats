@@ -45,6 +45,20 @@ exports.loginRestaurant = (req, res) => {
     })
 }
 
+// get authenticated restaurant
+exports.getAuthenticatedRestaurant = (req, res) => {
+    let email = req.body.email
+
+    console.log(JSON.stringify("getAuthenticatedRestaurant function: "+email))
+    con.query(`select * from restaurants where email = ? `, [email],(error, results) => {
+        if(results.length > 0){
+            res.end(JSON.stringify(results))
+        }
+        else
+            res.end({error : "Incorrect username or password"})
+    })
+}
+
 // Get all restaurants
 exports.getAllRestaurants = (req, res) => {
     console.log(JSON.stringify("getAllRestaurants function: "))
@@ -160,3 +174,41 @@ exports.createOrder = (req, res) => {
     })
 }
 
+// Get all orders for a particular restaurant
+exports.getOrderSummary = (req, res) => {
+    let restaurantid = req.body.restaurantid
+
+    console.log(JSON.stringify("getOrderSummary function: "+restaurantid))
+
+    con.query(`
+    select a.*, b.restaurantName, b.location, c.dishName, d.firstname, d.lastname from
+    (select * from orders where restaurantid = ?) a
+    left join 
+    (select restaurantid , restaurantName, location from restaurants) b
+    on a.restaurantid = b.restaurantid
+    left join
+    (select dishid , dishName from dishes) c
+    on a.dishid = c.dishid
+    left join
+    (select userid , firstname, lastname from users) d
+    on a.userid = d.userid; `, [restaurantid],(error, results) => {
+            console.log("Orders fetched!!")
+            console.log(results)
+            res.end(JSON.stringify(results))
+        })
+}
+
+// Change order status
+exports.changeOrderStatus = (req, res) => {
+    let orderid = req.body.orderid
+    let orderStatus = req.body.orderStatus
+
+    console.log(JSON.stringify("changeOrderStatus function: "+orderStatus))
+
+    con.query(`update orders set orderStatus = ? WHERE orderid = ? `, 
+        [orderStatus, orderid],(error, results) => {
+            console.log("Order Status Changed!!")
+            console.log(results)
+            res.end(JSON.stringify(results))
+        })
+}
