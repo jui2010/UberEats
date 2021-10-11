@@ -60,7 +60,7 @@ const styles = (theme) => ({
     },
 })
 
-class home extends Component {
+class restaurant extends Component {
 
     componentDidMount(){
         const restaurantName = this.props.match.params.restaurantName
@@ -147,4 +147,4 @@ const mapStateToProps = (state) => ({
     restaurant : state.restaurant
 })
 
-export default connect(mapStateToProps, {getRestaurantData, addToFavorite, addToUnfavorite} )(withStyles(styles)(home))
+export default connect(mapStateToProps, {getRestaurantData, addToFavorite, addToUnfavorite} )(withStyles(styles)(restaurant))
