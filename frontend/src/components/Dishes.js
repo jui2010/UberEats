@@ -31,7 +31,7 @@ const styles = (theme) => ({
 
 class Dishes extends Component {
     displayDishes(){
-        const { classes, dishes} = this.props
+        const { classes, dishes, restaurantid} = this.props
         let allDishes = [] //array to render all the dishes according to the available dish category
 
         // filtering out each dish type into seperate arrays
@@ -69,7 +69,7 @@ class Dishes extends Component {
             )
             allDishes.push(
                 appetizerDishes.map(appetizerDish => (      
-                    <DishCard key={appetizerDish.dishid} dish={appetizerDish} className={classes.dishCard} />
+                    <DishCard key={appetizerDish.dishid} dish={appetizerDish} className={classes.dishCard} restaurantid={restaurantid} />
                 ))
             )
         }
@@ -80,7 +80,7 @@ class Dishes extends Component {
             )
             allDishes.push(
                 saladDishes.map(saladDish => (      
-                    <DishCard key={saladDish.dishid} dish={saladDish} className={classes.dishCard} />
+                    <DishCard key={saladDish.dishid} dish={saladDish} className={classes.dishCard}  restaurantid={restaurantid}/>
                 ))
             )
         }
@@ -91,7 +91,7 @@ class Dishes extends Component {
             )
             allDishes.push(
                 mainCourseDishes.map(mainCourseDish => (      
-                    <DishCard key={mainCourseDish.dishid} dish={mainCourseDish} className={classes.dishCard} />
+                    <DishCard key={mainCourseDish.dishid} dish={mainCourseDish} className={classes.dishCard}  restaurantid={restaurantid}/>
                 ))
             )
         }
@@ -102,7 +102,7 @@ class Dishes extends Component {
             )
             allDishes.push(
                 dessertDishes.map(dessertDish => (      
-                    <DishCard key={dessertDish.dishid} dish={dessertDish} className={classes.dishCard} />
+                    <DishCard key={dessertDish.dishid} dish={dessertDish} className={classes.dishCard}  restaurantid={restaurantid}/>
                 ))
             )
         }
@@ -113,7 +113,7 @@ class Dishes extends Component {
             )
             allDishes.push(
                 beverageDishes.map(beverageDish => (      
-                    <DishCard key={beverageDish.dishid} dish={beverageDish} className={classes.dishCard} />
+                    <DishCard key={beverageDish.dishid} dish={beverageDish} className={classes.dishCard}  restaurantid={restaurantid}/>
                 ))
             )
         }

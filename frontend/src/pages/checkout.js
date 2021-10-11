@@ -65,8 +65,12 @@ const styles = (theme) => ({
         justifyContent: 'space-around',
         cursor : 'pointer',
         fontSize : '24px',
-        margin : '90px 0 20px 10px',
+        margin : '0px 0 20px 10px',
     },
+    align : {
+        display: 'flex',
+        justifyContent: 'space-around',
+    }
 })
 
 class checkout extends Component {
@@ -143,10 +147,18 @@ class checkout extends Component {
         }
     }
 
+    getSubTotal = () =>{
+        const { cart } = this.props.restaurant
+        let tot = 0
+        cart.map(cartItem => tot = tot + cartItem.dishPrice)
+        console.log(tot)
+        return tot
+    }
     render() {
         const {classes} = this.props
-        const {restaurantName, location} = this.props.restaurant.selectedRestaurant
+        const {restaurantName, location, deliveryFee} = this.props.restaurant.selectedRestaurant
 
+        let subtotal = this.getSubTotal()
         return (
             <Grid direction="row" container>
                 
@@ -163,22 +175,40 @@ class checkout extends Component {
                 </Grid>
 
                 <Grid container item sm={5} className={classes.placeOrderMain}>
-                    <Grid item sm={1} className={classes.itemsList}>
-                    </Grid>
-                    <Grid item  sm={10} className={classes.itemsList}>
-                        <div role="button" onClick={this.handleCheckout}>
-                            <Link to="/orderSuccess" style={{textDecoration: 'none'}}>
-                                <div className={classes.checkout}>Place Order</div>
-                            </Link>
+                    {/* <Grid item sm={1} className={classes.itemsList}>
+                    </Grid> */}
+                    {/* <Grid item  sm={12} className={classes.itemsList}> */}
+                        
+                        <div style={{margin: '40px', fontSize : '20px'}}>
+                            <div className={classes.align}>
+                                <div style={{width: '300px',}}>Subtotal</div> <div>${subtotal}</div>
+                            </div>
+                            <div className={classes.align}>
+                            <div style={{width: '300px',}}>Delivery Fee</div>
+                            <div>${deliveryFee}</div>
+                            </div>
+                            <div className={classes.align}>
+                            <div style={{width: '300px',}}>Service Fee</div>
+                            <div>$5.00</div>
+                            </div>
+                            <div className={classes.align}>
+                            <div style={{width: '300px',}}>CA Driver Benefits</div>
+                            <div>$2.00</div>
+                            </div>
+                            <div className={classes.align}>
+                            <div style={{width: '300px',}}>Taxes</div>
+                            <div>${Math.round(this.state.total * 0.15 *100)/100}</div>
+                            </div>
+                            <div className={classes.align} style={{marginTop : '20px'}}>
+                            <div style={{width: '300px', fontWeight : '700'}}>Total</div>
+                            <div style={{fontWeight : '700'}}>${Math.round((subtotal+ parseInt(deliveryFee) + 7 + this.state.total * 0.15) *100)/100 }</div>
+                            </div>
+                            <div role="button" onClick={this.handleCheckout} style={{marginTop : '120px'}}>
+                                <Link to="/orderSuccess" style={{textDecoration: 'none'}}>
+                                    <div className={classes.checkout}>Place Order</div>
+                                </Link>
+                            </div>
                         </div>
-{/*                         
-                        <div >
-                            <div> Subtotal</div>
-                            <div>${this.state.total}</div>
-                        </div> */}
-                    </Grid>
-                    <Grid item sm={1} className={classes.itemsList}>
-                    </Grid>
                 </Grid>
             </Grid>
         )

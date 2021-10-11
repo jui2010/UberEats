@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom'
 import MuiLink from '@material-ui/core/Link'
 import Logout from './Logout'
 
-export default function TemporaryDrawer({firstname, lastname, userid }) { 
+export default function TemporaryDrawer({authenticatedUser, authenticatedRestaurant, firstname, lastname, userid, restaurantName}) { 
   const [state, setState] = React.useState({
     top: false,
     left: false,
@@ -37,18 +37,38 @@ export default function TemporaryDrawer({firstname, lastname, userid }) {
       onKeyDown={toggleDrawer(anchor, false)}
     >
         <List>
-            <ListItem button key={'profile'}>
-                <MuiLink component = {Link} to ={ `/profile`} style={{color : '#303030',"&:hover": {textDecoration : 'none'}}}> 
-                    <Avatar>
-                        {firstname && firstname.substring(0,1)}{ lastname && lastname.substring(0,1)}
-                    </Avatar>
-                </MuiLink>
-            </ListItem>
-            <ListItem button key={'name'}>
-                {firstname} {lastname}
-            </ListItem>
-            <Divider />
+          {authenticatedUser &&
+          <ListItem button key={'profile'}>
+              <MuiLink component = {Link} to ={ `/profile`} style={{color : '#303030',"&:hover": {textDecoration : 'none'}}}> 
+                  <Avatar>
+                      {firstname && firstname.substring(0,1)}{ lastname && lastname.substring(0,1)}
+                  </Avatar>
+              </MuiLink>
+          </ListItem>}
 
+          {authenticatedRestaurant &&
+          <ListItem button key={'profile'}>
+              <MuiLink component = {Link} to ={ `/profile`} style={{color : '#303030',"&:hover": {textDecoration : 'none'}}}> 
+                  <Avatar>
+                      {restaurantName && restaurantName.substring(0,1)}
+                  </Avatar>
+              </MuiLink>
+          </ListItem>}
+
+          {authenticatedUser &&
+          <ListItem button key={'name'}>
+              {firstname} {lastname}
+          </ListItem>}
+
+          {authenticatedRestaurant &&
+          <ListItem button key={'name'}>
+              {restaurantName}
+          </ListItem>}
+
+          <Divider />
+
+          {authenticatedUser &&
+          <>
             <ListItem button key={'orders'}>
                 <MuiLink component = {Link} to ={ `/orders`}  style={{color : '#303030'}}> 
                     <ListItemText>Orders</ListItemText>
@@ -60,24 +80,36 @@ export default function TemporaryDrawer({firstname, lastname, userid }) {
                 </MuiLink>
             </ListItem>
 
-            <ListItem button key={'logout'}>
-                <MuiLink component = {Link} to ={ `/login`} style={{color : '#303030'}}> 
-                    <Logout/>
-                </MuiLink>
-            </ListItem>
-        </List>
-      <Divider />
-      <List>
-        <ListItem button key={'signupRestaurant'}>
+            <Divider />
+
+          </>}
+
+          <ListItem button key={'signupRestaurant'}>
             <MuiLink component = {Link} to ={ `/restaurantSignup`} style={{color : '#424242'}} > 
                 <ListItemText>Signup Restaurant</ListItemText>
             </MuiLink>
-        </ListItem>
-        <ListItem button key={'loginRestaurant'}>
-            <MuiLink component = {Link} to ={ `/restaurantLogin`} style={{color : '#424242'}} > 
-                <ListItemText>Login Restaurant</ListItemText>
-            </MuiLink>
-        </ListItem>
+          </ListItem>
+          <ListItem button key={'loginRestaurant'}>
+              <MuiLink component = {Link} to ={ `/restaurantLogin`} style={{color : '#424242'}} > 
+                  <ListItemText>Login Restaurant</ListItemText>
+              </MuiLink>
+          </ListItem>
+
+          {authenticatedRestaurant &&
+          <ListItem button key={'loginRestaurant'}>
+              <MuiLink component = {Link} to ={ `/orderSummary`} style={{color : '#424242'}} > 
+                  <ListItemText>Order Summary</ListItemText>
+              </MuiLink>
+          </ListItem>
+          }
+
+          <Divider />
+
+          <ListItem button key={'logout'}>
+              <MuiLink component = {Link} to ={ `/login`} style={{color : '#303030'}}> 
+                  <Logout/>
+              </MuiLink>
+          </ListItem>
       </List>
     </Box>
   )

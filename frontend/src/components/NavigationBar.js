@@ -4,6 +4,7 @@ import Toolbar from '@material-ui/core/Toolbar'
 import Button from '@material-ui/core/Button'
 import withStyles from '@material-ui/core/styles/withStyles'
 import AddLocationIcon from '@material-ui/icons/AddLocation'
+import SearchIcon from '@material-ui/icons/Search'
 import InputBase from '@material-ui/core/InputBase'
 import Cart from './Cart'
 import SideBar from './SideBar'
@@ -92,7 +93,7 @@ const styles = (theme) => ({
         fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
         fontWeight : '600',
         backgroundColor : '#e8e8e8',
-        padding : '15px 15px',
+        padding : '10px 15px',
         cursor : 'pointer',
         marginRight : '20px'
     },
@@ -162,9 +163,13 @@ class NavigationBar extends Component {
                 <AppBar position="relative" color="transparent" className={classes.appbar} >
                     <Toolbar style={{ height: 50}}>
                         <SideBar className={classes.menuicon} 
+                            authenticatedUser={this.props.user.authenticated}
+                            authenticatedRestaurant={this.props.restaurant.authenticated}
                             firstname={authenticated && authenticatedUser.firstname} 
                             lastname={authenticated && authenticatedUser.lastname}
-                            userid={authenticated && authenticatedUser.userid}/>
+                            userid={authenticated && authenticatedUser.userid}
+                            restaurantName={this.props.restaurant.authenticatedRestaurant.restaurantName}
+                            />
                         <MuiLink component = {Link} to ={ `/`} className={classes.title}>
                             <span style={{color : '#162328'}}>Uber</span> <span style={{color : '#3FC060'}}>Eats</span>
                         </MuiLink>
@@ -184,9 +189,16 @@ class NavigationBar extends Component {
                             startAdornment={<AddLocationIcon style={{color : '#2b2b2b'}} />}
                         />
 
-                        <div className={classes.craving}  >
-                            What are you craving?
-                        </div>
+                        <InputBase
+                            id="craving"
+                            name="craving"
+                            className={classes.craving}
+                            placeholder="What are you craving?"
+                            inputProps={{ 'aria-label': 'What are you craving?' }}
+                            // onChange={this.handleChange}
+                            startAdornment={<SearchIcon style={{color : '#2b2b2b'}} />}
+                        />
+
                         {/* login */}
                         {!authenticated && (
                             <Button className={classes.button} component = {Link} to="/login" >

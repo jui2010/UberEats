@@ -3,11 +3,13 @@ import withStyles from '@material-ui/core/styles/withStyles'
 
 import {connect} from 'react-redux'
 import Grid from '@material-ui/core/Grid'
-import {getRestaurantData} from '../redux/actions/restaurantActions'
+import {getRestaurantData, addToFavorite, addToUnfavorite} from '../redux/actions/restaurantActions'
 
 import Dishes from '../components/Dishes'
 import EditRestaurantProfile from '../components/EditRestaurantProfile'
 import AddDish from '../components/AddDish'
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder'
+import FavoriteIcon from '@material-ui/icons/Favorite'
 
 const styles = (theme) => ({
     ...theme.spread,
@@ -39,20 +41,57 @@ const styles = (theme) => ({
     },
     address : {
         padding : '0px 30px 20px 30px'
-    }
+    },
+    favBorder : {
+        position: 'absolute',
+        top: '270px',
+        right: '30px',
+        color : 'black',
+        fontSize : '50px',
+        cursor : 'pointer',
+    },
+    fav : {
+        position: 'absolute',
+        top: '270px',
+        right: '30px',
+        color : 'black',
+        fontSize : '50px',
+        cursor : 'pointer',
+    },
 })
 
 class home extends Component {
 
     componentDidMount(){
         const restaurantName = this.props.match.params.restaurantName
+        const userid = this.props.user.authenticatedUser.userid
         
         //get data for specific restaurant
-        this.props.getRestaurantData(restaurantName)
+        this.props.getRestaurantData(restaurantName, userid)
+    }
+
+    handleAddToFavorite = () => {
+        const { restaurantid} = this.props.restaurant.selectedRestaurant
+        let favRestaurant = {
+            restaurantid : restaurantid,
+            userid : this.props.user.authenticatedUser.userid
+        }
+
+        this.props.addToFavorite(favRestaurant)
+    }
+
+    handleAddToUnfavorite = () => {
+        const { restaurantid} = this.props.restaurant.selectedRestaurant
+        let unfavRestaurant = {
+            restaurantid : restaurantid,
+            userid : this.props.user.authenticatedUser.userid
+        }
+
+        this.props.addToUnfavorite(unfavRestaurant)
     }
 
     render() {
-        const { restaurantName, location, tile, description, address , dishes, deliveryFee, timing  } = this.props.restaurant.selectedRestaurant
+        const { restaurantid, restaurantName, location, tile, description, address , dishes, deliveryFee, timing, fav} = this.props.restaurant.selectedRestaurant
         const { classes } = this.props
 
         return (
@@ -60,6 +99,8 @@ class home extends Component {
                 <Grid item sm={12}>
                     <div>
                         <img src={tile} alt={restaurantName} className={classes.tile} />
+                        {!fav && <FavoriteBorderIcon className={classes.favBorder} onClick={this.handleAddToFavorite}/>}
+                        {fav && <FavoriteIcon className={classes.fav}  onClick={this.handleAddToUnfavorite}/>}
                         <div className={classes.nameLoc}>{restaurantName} ({location})</div>
                         <div className={classes.delTime}>• ${deliveryFee === null ? '0' : deliveryFee } Delivery Fee • {timing === null ? '0' : timing} Min </div>
                     </div>
@@ -67,6 +108,7 @@ class home extends Component {
                 
                 <Grid direction="row" container item>
                     <Grid item sm={11}>
+                    
                         <div className={classes.description}>
                             {description}
                         </div>
@@ -86,7 +128,7 @@ class home extends Component {
                 <Grid container item sm={12}>
 
                     <Grid item sm={11}>
-                        <Dishes dishes = {dishes}/>
+                        <Dishes dishes = {dishes} restaurantid={restaurantid} />
                     </Grid> 
 
                     <Grid item sm={1}>
@@ -105,4 +147,4 @@ const mapStateToProps = (state) => ({
     restaurant : state.restaurant
 })
 
-export default connect(mapStateToProps, {getRestaurantData} )(withStyles(styles)(home))
+export default connect(mapStateToProps, {getRestaurantData, addToFavorite, addToUnfavorite} )(withStyles(styles)(home))

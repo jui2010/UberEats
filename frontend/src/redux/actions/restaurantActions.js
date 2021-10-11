@@ -35,8 +35,8 @@ export const loginRestaurant  = (newRestaurant, history) => (dispatch) => {
     })
 }
 
-export const getRestaurantData = (restaurantName) => (dispatch) => {
-  axios.get(`/restaurant/${restaurantName}`)
+export const getRestaurantData = (restaurantName, userid) => (dispatch) => {
+  axios.post(`/restaurant/${restaurantName}`, {userid : userid})
     .then(res => {
         dispatch({
             type : GET_RESTAURANT_DATA,

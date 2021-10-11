@@ -7,6 +7,10 @@ import Dialog from '@material-ui/core/Dialog'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import EditIcon from '@material-ui/icons/Edit'
 import Tooltip from '@material-ui/core/Tooltip'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import FormControl from '@mui/material/FormControl'
+import Select from '@mui/material/Select'
 
 import {connect} from 'react-redux'
 import {editRestaurantProfile} from '../redux/actions/restaurantActions'
@@ -112,12 +116,38 @@ class EditRestaurantProfile extends Component {
                         <TextField name="tile" id="tile" label="Restaurant picture" type="text" onChange={this.handleChange}
                             style={{marginBottom: '10px'}} value={this.state.tile} variant="outlined" fullWidth />
                         
-                        <TextField name="typeOfRestaurant" id="typeOfRestaurant" label="Type Of Restaurant" type="text" onChange={this.handleChange}
-                            style={{marginBottom: '10px'}} value={this.state.typeOfRestaurant} variant="outlined" fullWidth />
-                        
-                        <TextField name="typeOfFood" id="typeOfFood" label="Type Of Food" type="text" onChange={this.handleChange}
-                            style={{marginBottom: '10px'}} value={this.state.typeOfFood} variant="outlined" fullWidth />
-                        
+                        <FormControl >
+                        <InputLabel id="type of rest">Type Of Restaurant</InputLabel>
+                            <Select
+                                name="typeOfRestaurant"
+                                id="typeOfRestaurant"
+                                value={this.state.typeOfRestaurant}
+                                onChange={this.handleChange}
+                                fullWidth
+                                style={{width: '550px'}}
+                                >
+                                <MenuItem value={"pickup"}>Pickup</MenuItem>
+                                <MenuItem value={"delivery"} >Delivery</MenuItem>
+                                <MenuItem value={"both"} >Both</MenuItem>
+                            </Select>
+                        </FormControl>
+
+                        <FormControl >
+                        <InputLabel id="demo-simple-select-label">Type Of Food</InputLabel>
+                            <Select
+                                name="typeOfFood"
+                                id="typeOfFood"
+                                value={this.state.typeOfFood}
+                                onChange={this.handleChange}
+                                fullWidth
+                                style={{width: '550px', marginTop : '10px'}}
+                                >
+                                <MenuItem value={"vegetarian"}>Vegetarian</MenuItem>
+                                <MenuItem value={"vegan"} >Vegan</MenuItem>
+                                <MenuItem value={"both"} >All</MenuItem>
+                            </Select>
+                        </FormControl>
+
                         <Button type="submit" variant="contained" color="primary"
                             style={{ margin : '10px 5px', fontSize : '16px'}}>
                             Submit

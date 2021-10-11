@@ -125,7 +125,7 @@ class orderSummary extends Component {
                         {this.renderOrderItems(orderItem.dishes)}
                     </Grid>
                     <Grid item xs={1} className={classes.heading}>
-                        ${orderItem.orderPriceTotal}
+                        ${Math.round(orderItem.orderPriceTotal * 100)/100}
                     </Grid>
                     <Grid item xs={3} className={classes.heading}>
                         <OrderStatus key={orderItem} orderItem={orderItem}/>

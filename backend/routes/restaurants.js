@@ -81,9 +81,14 @@ exports.getAllRestaurants = (req, res) => {
 
 // Get all restaurants
 exports.getRestaurantData = (req, res) => {
+    let userid = req.body.userid
     console.log(JSON.stringify("getRestaurantData function: "+ req.params.restaurantName))
 
-    con.query(`select * from restaurants where restaurantName = ? `, [req.params.restaurantName],(error, results) => {
+    con.query(`select a.*, b.fav from
+    (select * from restaurants  where restaurantName = ?) a 
+    left join
+    (select * from favorites where userid = ?)b
+    on a.restaurantid = b.restaurantid `, [req.params.restaurantName, userid],(error, results) => {
         
         let restaurantData= ''
         if(results.length > 0){

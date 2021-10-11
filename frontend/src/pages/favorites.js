@@ -13,7 +13,13 @@ const styles = (theme) => ({
     ...theme.spread,
     main : {
         padding : '30px'
-    }
+    },
+    fav : {
+        padding: '10px',
+        fontWeight: '700',
+        fontSize : '23px',
+        color : '#171717'
+    },
 })
 
 class favorites extends Component {
@@ -46,7 +52,10 @@ class favorites extends Component {
 
         return (
             <Grid direction="row" container className={classes.main}>
-                <Grid container item sm={9}>
+                <Grid item xs={12} className={classes.fav}>
+                    Your favorite restaurants
+                </Grid>
+                <Grid container item sm={12}>
                     {this.displayRestaurants()}
                 </Grid>
             </Grid>

@@ -10,6 +10,8 @@ import RemoveCircle from '@material-ui/icons/RemoveCircle'
 import {connect} from 'react-redux'
 import {addToCart} from '../redux/actions/restaurantActions'
 
+import store from '../redux/store'
+import {EMPTY_CART} from '../redux/types'
 import EditDish from './EditDish'
 
 const styles = (theme) => ({
@@ -71,6 +73,21 @@ const styles = (theme) => ({
         display: 'flex',
         justifyContent: 'space-around',
         cursor : 'pointer',
+    }, 
+    newOrder : {
+        alignText : 'center',
+        backgroundColor : 'black',
+        color : 'white',
+        width : '550px',
+        paddingTop : '10px',
+        paddingBottom : '10px',
+        display: 'flex',
+        justifyContent: 'space-around',
+        cursor : 'pointer',
+        marginTop : '30px',
+        fontSize : '20px'
+    },
+    cartError : {
     }
 })
 
@@ -78,7 +95,8 @@ class DishCard extends Component {
 
     state = {
         open : false,
-        dishQuantity : 1
+        dishQuantity : 1,
+        cartError : false
     }
 
     handleOpen = () => {
@@ -90,6 +108,12 @@ class DishCard extends Component {
     handleClose = () => {
         this.setState({
             open : false
+        })
+    }
+
+    handleCloseCart = () => {
+        this.setState({
+            cartError : false
         })
     }
 
@@ -108,6 +132,7 @@ class DishCard extends Component {
     handleAddToCart = () => {
         let orderedDish = {
             restaurantid : this.props.restaurant.selectedRestaurant.restaurantid,
+            restaurantName : this.props.restaurant.selectedRestaurant.restaurantName,
             userid : this.props.user.authenticated.userid,
             dishid : this.props.dish.dishid,
             dishName : this.props.dish.dishName,
@@ -117,12 +142,25 @@ class DishCard extends Component {
             orderStatus : 'New Order'
         } 
 
-        this.props.addToCart(orderedDish)
+        this.props.restaurant.cart.length === 0 ||
+        this.props.restaurant.selectedRestaurant.restaurantid === this.props.restaurant.cart[0].restaurantid ?
+        this.props.addToCart(orderedDish) : 
+        this.setState({
+            cartError : true
+        })
+
         this.handleClose()
     }
 
+    handleCartEmpty = () => {
+        store.dispatch({
+            type : EMPTY_CART
+        })
+        this.handleCloseCart()
+    }
+
     render(){
-        const { classes } = this.props
+        const { classes ,  restaurantid} = this.props
         const { dishid, dishName, dishPicture, dishDescription, dishPrice } = this.props.dish
 
         return (         
@@ -140,7 +178,9 @@ class DishCard extends Component {
                 </Grid>
 
                 <Grid container item xs={4} className={classes.dishPicture} style={{backgroundImage : `url(${dishPicture})`,}}>
-                    <EditDish key={dishid} dish={this.props.dish} style={{left : '40px'}}/>
+                    
+                    {restaurantid === this.props.restaurant.authenticatedRestaurant.restaurantid && 
+                    (<EditDish key={dishid} dish={this.props.dish} style={{left : '40px'}}/>) }
                 </Grid>
 
                 <Dialog open={this.state.open} onClose={this.handleClose}>
@@ -161,9 +201,6 @@ class DishCard extends Component {
                         <Grid item xs={1}><AddCircle onClick={this.handleIncrease} className={classes.icons}/>
                         </Grid>
                         <Grid item xs={8}>
-                            {/* <Button type="submit" variant="contained" className={classes.button}>
-                                Add {this.state.dishQuantity} to order  <div style={{display: 'flex', justifyContent: 'flex-end'}}>${dishPrice * this.state.dishQuantity}</div>
-                            </Button> */}
                             <div role="button" type="submit" className={classes.button} onClick={this.handleAddToCart}>
                                 <div></div>
                                 <div> Add {this.state.dishQuantity} to order </div>
@@ -171,6 +208,27 @@ class DishCard extends Component {
                             </div>
                         </Grid>
                     </Grid>
+                </Dialog>
+
+                <Dialog open={this.state.cartError} onClose={this.handleCloseCart} className={classes.cartError} maxWidth="sm">
+                    <DialogTitle>
+                        Create new order ?
+                    </DialogTitle>
+                    <DialogContent className={classes.dishDescDialog}>
+                        <Grid container direction='row'>
+                            <Grid item xs={12} style={{fontSize : '18px', }}>
+                                Your order contains items from <b>{this.props.restaurant.cart.length > 0 && this.props.restaurant.cart[0].restaurantName}</b>. Create a new order to add items from <b>{this.props.restaurant.selectedRestaurant.restaurantName}</b> 
+                            </Grid>
+                            <Grid item xs={8}>
+                                <div role="button" type="submit" className={classes.newOrder} onClick={this.handleCartEmpty}>
+                                    <div></div>
+                                    <div>New order </div>
+                                    <div></div>
+                                </div>
+                            </Grid>
+                        </Grid>
+                    </DialogContent>
+                    
                 </Dialog>
             </Grid>
         )

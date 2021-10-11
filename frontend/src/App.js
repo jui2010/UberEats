@@ -20,7 +20,7 @@ import orders from './pages/orders'
 import orderSummary from './pages/orderSummary'
 import checkout from './pages/checkout'
 import favorites from './pages/favorites'
-import sidebar from './components/SideBar'
+import orderSuccess from './pages/orderSuccess'
 
 import NavigationBar from './components/NavigationBar'
 
@@ -70,7 +70,7 @@ class App extends Component{
               <Route exact path="/orderSummary" component={orderSummary} />
               <Route exact path="/checkout" component={checkout} />
               <Route exact path="/favorites" component={favorites} />
-              <Route exact path="/sidebar" component={sidebar} />
+              <Route exact path="/orderSuccess" component={orderSuccess} />
             </Switch>
           </div>
         </Router>

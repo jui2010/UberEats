@@ -9,6 +9,9 @@ import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
 import DialogTitle from '@material-ui/core/DialogTitle'
+import MenuItem from '@mui/material/MenuItem'
+import FormControl from '@mui/material/FormControl'
+import Select from '@mui/material/Select'
 
 const styles = (theme) => ({
     ...theme.spread,
@@ -78,7 +81,8 @@ const styles = (theme) => ({
 
 class orders extends Component {
     state = {
-        open : false
+        open : false,
+        orderStatus : 'all'
     }
 
     handleOpen = () => {
@@ -95,7 +99,7 @@ class orders extends Component {
 
     componentDidMount(){
         setTimeout(()=>{
-            console.log('get orders')
+            // console.log('get orders')
             axios.post('/getOrders', {userid : this.props.user.authenticatedUser.userid})
                 .then(res => {
                     store.dispatch({
@@ -124,7 +128,7 @@ class orders extends Component {
                 </Grid>
                 <Grid item xs={1}>
                     <div className={classes.dishPrice}>
-                        ${dish.dishPrice}
+                        ${Math.round(dish.dishPrice * 100 ) /100}
                     </div>
                 </Grid>
             </Grid>
@@ -150,16 +154,20 @@ class orders extends Component {
             12 : 'Dec'
         }
 
-        console.log("orderJSON "+JSON.stringify(this.props.user.authenticatedUser))
+        // console.log("orderJSON "+JSON.stringify(this.props.user.authenticatedUser))
 
         if(this.props.user.authenticatedUser.orders && this.props.user.authenticatedUser.orders.length > 0){
-            return orders.map(orderItem => (
+
+            let filteredOrders = this.state.orderStatus === "all" ? orders : 
+                orders.filter((or) => {return or.orderStatus === this.state.orderStatus})
+
+            return filteredOrders.map(orderItem => (
                 <Grid container>
                     <Grid item xs={12} className={classes.heading}>
                         {orderItem.restaurantName} ({orderItem.location})
                     </Grid>
                     <Grid item xs={12} className={classes.det}>
-                        {orderItem.dishes.length} {orderItem.dishes.length === 1 ? 'item' : 'items'} for ${orderItem.orderPriceTotal} • {month[orderItem.orderDate.split("-")[1]]} {orderItem.orderDate.split("-")[2].split("T")[0]} at {orderItem.orderTime.split(':')[0]}:{orderItem.orderTime.split(':')[1]} • <Button className={classes.rec} onClick={this.handleOpen}>View receipt</Button>
+                        {orderItem.dishes.length} {orderItem.dishes.length === 1 ? 'item' : 'items'} for ${Math.round(orderItem.orderPriceTotal * 100)/100} • {month[orderItem.orderDate.split("-")[1]]} {orderItem.orderDate.split("-")[2].split("T")[0]} at {orderItem.orderTime.split(':')[0]}:{orderItem.orderTime.split(':')[1]} • <Button className={classes.rec} onClick={this.handleOpen}>View receipt</Button>
                     </Grid>
                     <Dialog open={this.state.open} onClose={this.handleClose}>
                         <DialogTitle style={{borderBottom : '1px solid #cfcfcf'}}>
@@ -170,22 +178,77 @@ class orders extends Component {
                                 Total
                             </Grid>
                             <Grid item xs={3} className={classes.totalPrice}>
-                                ${orderItem.orderPriceTotal} 
+                                ${Math.round(orderItem.orderPriceTotal * 100)/100} 
                             </Grid>
                         </Grid>
-                        {this.renderReceipt(orderItem.dishes)}
+                        {/* {this.renderReceipt(orderItem.dishes)} */}
+                        {/* {console.log(JSON.stringify(orderItem.dishes))} */}
+                        
+                        {
+                        orderItem.dishes.map(dish => (
+                            <Grid container  className={classes.dish} >
+                                <Grid item xs={1}>
+                                    <div className={classes.dishQuantity} >
+                                        {dish.dishQuantity}
+                                    </div>
+                                </Grid>
+                                <Grid item xs={9} className={classes.dishName}>
+                                    <div>
+                                        {dish.dishName} 
+                                    </div>
+                                </Grid>
+                                <Grid item xs={1}>
+                                    <div className={classes.dishPrice}>
+                                        ${Math.round(dish.dishPrice * 100 ) /100}
+                                    </div>
+                                </Grid>
+                            </Grid>
+                        ))}
                     </Dialog>
                 </Grid>
             ))
         }
     }
 
+    handleStatusChange = (stat) => {
+        this.setState({
+            orderStatus : stat
+        })
+    }
+
+    handleChange = (event) => {
+        this.setState({
+            [event.target.name] : event.target.value
+        })
+    }
+
     render() {
         const {classes } = this.props
+
+        console.log(this.state.orderStatus)
+
         return (
             <Grid direction="row" container className={classes.main}>
                 <Grid container item sm={12} className={classes.past} >
                     Past Orders
+                </Grid>
+                <Grid container item sm={12}>
+                    <div style={{fontSize : '20px', margin : '10px'}}>Select filter: </div>
+                <FormControl >
+                        <Select
+                            name="orderStatus"
+                            id="orderStatus"
+                            value={this.state.orderStatus}
+                            onChange={this.handleChange}
+                            >
+                            <MenuItem value={"all"}>All Orders</MenuItem>
+                            <MenuItem value={"orderReceived"} >Order Received</MenuItem>
+                            <MenuItem value={"preparing"} >Preparing</MenuItem>
+                            <MenuItem value={"onTheWay"} >On the way</MenuItem>
+                            <MenuItem value={"delivered"} >Delivered</MenuItem>
+                            <MenuItem value={"cancelled"} >Cancelled</MenuItem>
+                        </Select>
+                    </FormControl>
                 </Grid>
                 <Grid container item sm={12}>
                     {this.renderOrders()}
