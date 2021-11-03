@@ -181,7 +181,7 @@ class checkout extends Component {
                         
                         <div style={{margin: '40px', fontSize : '20px'}}>
                             <div className={classes.align}>
-                                <div style={{width: '300px',}}>Subtotal</div> <div>${subtotal}</div>
+                                <div style={{width: '300px',}}>Subtotal</div> <div>${Math.round(subtotal*100)/100}</div>
                             </div>
                             <div className={classes.align}>
                             <div style={{width: '300px',}}>Delivery Fee</div>

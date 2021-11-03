@@ -1,5 +1,5 @@
 import { SIGNUP_RESTAURANT, LOGIN_RESTAURANT, GET_RESTAURANT_DATA, EDIT_RESTAURANT_PROFILE, 
-  ADD_DISH, ADD_TO_CART, CHANGE_ORDER_STATUS, MARK_FAVORITE, MARK_UNFAVORITE, EDIT_DISH} from '../types'
+  ADD_DISH, ADD_TO_CART, CHANGE_ORDER_STATUS, MARK_FAVORITE, MARK_UNFAVORITE, EDIT_DISH, SET_LOGIN_REST_ERROR, CLEAR_LOGIN_REST_ERROR} from '../types'
 import axios from 'axios'
 
 export const signupRestaurant = (newRestaurant, history) => (dispatch) => {
@@ -20,15 +20,25 @@ export const signupRestaurant = (newRestaurant, history) => (dispatch) => {
 export const loginRestaurant  = (newRestaurant, history) => (dispatch) => {
   axios.post('/restaurantLogin', newRestaurant)
     .then(res => {
-      dispatch({
-        type : LOGIN_RESTAURANT,
-        payload : res.data[0]
-      })
-      console.log("LOGIN_RESTAURANT"+res.data[0])
+      if(res.data.loginRestError){
+        dispatch({
+          type : SET_LOGIN_REST_ERROR,
+          payload : res.data.loginRestError
+        })
+      }
+      else{
+        dispatch({
+          type : LOGIN_RESTAURANT,
+          payload : res.data[0]
+        })
+        console.log("LOGIN_RESTAURANT"+res.data[0])
+        dispatch({
+          type : CLEAR_LOGIN_REST_ERROR
+        })
 
-  axios.post('/restaurantLogin', newRestaurant)
-  history.push(`/restaurant/${res.data[0].restaurantName}`)
-      console.log("restaurant login successful")
+        history.push(`/restaurant/${res.data[0].restaurantName}`)
+        console.log("restaurant login successful")
+      }
     })
     .catch(err => {
       console.log(err)

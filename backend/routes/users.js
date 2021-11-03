@@ -1,19 +1,14 @@
 var mysql = require('mysql')
-var config = require('../config.json')
-
-var con = mysql.createPool({                                                                                                                                                                                                                                    
-    host: config.DB.host,
-    user: config.DB.username,
-    password: config.DB.password,
-    port: config.DB.port,
-    database: config.DB.database
-})
+const bcrypt = require('bcrypt-nodejs')
+var passwordHash = require('password-hash')
+const con = require('../config/config')
 
 //Signup a new user
 exports.signupUser = (req, res) => {
     let firstname = req.body.firstname.trim()
     let lastname = req.body.lastname.trim()
     let email = req.body.email.trim()
+    // const salt = bcrypt.genSalt(10)
     let password = req.body.password
 
     console.log(JSON.stringify("signupUser function: "+firstname+" "+lastname+" "+email+" "+password))
@@ -29,8 +24,13 @@ exports.signupUser = (req, res) => {
             } else {
                 con.query(`insert into users(firstname, lastname, email, password)
                 values (?,?,?,?)`, [firstname, lastname , email, password], (error, results) => {
-                    if(error)
+                    if(error){
+                        res.writeHead(400, {
+                            'Content-type': 'text/plain'
+                        })
                         console.log(error)
+                        res.end(error + "")
+                    }    
                     else{ 
                         res.end(JSON.stringify(results))
                     }
@@ -45,19 +45,24 @@ exports.loginUser = (req, res) => {
     let email = req.body.email
     let password = req.body.password
 
-    console.log(JSON.stringify("loginUser function: "+email+" "+password))
-
-    con.query(`select * from users where email = ? and password = ?`, [email, password],(error, results) => {
+    con.query(`select * from users where email = ? `, [email],(error, results) => {
+        let hp = passwordHash.generate(results[0].password)
+        
+        console.log(JSON.stringify("loginUser function: "+email+" "+password+" "+ results[0].password+" "))
         if(error){
-            console.log(error)
+            res.status(401).send({error : 'Unauthorized'})
         } else {
-            if(results.length > 0){
+            if(results.length == 0){
+                res.send({loginError : "Username not found"})
+            }
+            else if(password != results[0].password){
+                res.send({loginError : "Incorrect username or password"})
+            }
+            else if(results.length > 0 ){
                 res.cookie('cookie', email, {maxAge: 900000, httpOnly: false, path : '/'});
                 req.session.user = results
                 res.end(JSON.stringify(results))
             }
-            else
-                res.end({error : "Incorrect username or password"})
         }
     })
 }

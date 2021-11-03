@@ -1,4 +1,4 @@
-import { SIGNUP_USER, LOGIN_USER, EDIT_PROFILE, CREATE_ORDER , GET_SELECTED_USER} from '../types'
+import { SIGNUP_USER, LOGIN_USER, EDIT_PROFILE, CREATE_ORDER , GET_SELECTED_USER, SET_LOGIN_ERROR, CLEAR_LOGIN_ERROR} from '../types'
 import axios from 'axios'
 
 export const signupUser = (newUser, history) => (dispatch) => {
@@ -19,14 +19,28 @@ export const signupUser = (newUser, history) => (dispatch) => {
 export const loginUser = (newUser, history) => (dispatch) => {
     axios.post('/login', newUser)
         .then(res => {
-            dispatch({
-                type : LOGIN_USER,
-                payload : res.data[0]
-            })
-            console.log("LOGIN_USER"+res.data[0])
+            console.log("LOGIN_USER"+ JSON.stringify(res.data))
 
-            history.push('/')
-            console.log("login successful")
+            if(res.data.loginError){
+                dispatch({
+                    type : SET_LOGIN_ERROR,
+                    payload : res.data.loginError
+                })
+            }
+            else {
+                dispatch({
+                    type : LOGIN_USER,
+                    payload : res.data[0]
+                })
+                console.log("LOGIN_USER"+ JSON.stringify(res.data[0]))
+    
+                dispatch({
+                    type : CLEAR_LOGIN_ERROR
+                })
+
+                history.push('/')
+                console.log("login successful")
+            }
         })
         .catch(err => {
             console.log(err)

@@ -3,6 +3,7 @@ import thunk from 'redux-thunk'
 
 import userReducer from './reducers/userReducer'
 import restaurantReducer from './reducers/restaurantReducer'
+import errorsReducer from './reducers/errorsReducer'
 
 const initialState ={}
 
@@ -10,7 +11,8 @@ const middleware = [thunk]
 
 const reducers = combineReducers({
     user : userReducer,
-    restaurant : restaurantReducer
+    restaurant : restaurantReducer,
+    errors : errorsReducer
 })
 
 const store = createStore( reducers, initialState, compose(

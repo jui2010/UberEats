@@ -42,6 +42,10 @@ const styles = (theme) => ({
     },
     text3 : {
         marginTop : '10px'
+    },
+    errors : {
+        fontSize : '14px',
+        color : "red"
     }
 })
 
@@ -111,6 +115,10 @@ class login extends Component {
                         </Button>
                         <br/>
                         
+                        <Typography className={classes.errors}>
+                            {this.props.errors.loginError ? this.props.errors.loginError : ''}
+                        </Typography>
+
                         <Typography type="submit" className={classes.text3}>
                             <span className={classes.new} >
                                 New to Uber Eats? 
@@ -131,7 +139,8 @@ class login extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    user : state.user
+    user : state.user,
+    errors : state.errors
 })
 
 export default connect(mapStateToProps, {loginUser} )(withStyles(styles)(login))

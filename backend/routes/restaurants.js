@@ -34,14 +34,23 @@ exports.loginRestaurant = (req, res) => {
 
     console.log(JSON.stringify("loginRestaurant function: "+email+" "+password))
 
-    con.query(`select * from restaurants where email = ? and password = ?`, [email, password],(error, results) => {
-        if(results.length > 0){
-            res.cookie('cookieRestaurant', email, {maxAge: 900000, httpOnly: false, path : '/'});
-            req.session.user = results
-            res.end(JSON.stringify(results))
+    con.query(`select * from restaurants where email = ? `, [email],(error, results) => {
+
+        if(error){
+            res.status(401).send({error : 'Unauthorized'})
+        } else {
+            if(results.length == 0){
+                res.send({loginRestError : "Restaurant username not found"})
+            }
+            else if(password != results[0].password){
+                res.send({loginRestError : "Incorrect restaurant username or password"})
+            }
+            else if(results.length > 0){
+                res.cookie('cookieRestaurant', email, {maxAge: 900000, httpOnly: false, path : '/'});
+                req.session.user = results
+                res.end(JSON.stringify(results))
+            }
         }
-        else
-            res.end({error : "Incorrect username or password"})
     })
 }
 

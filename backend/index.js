@@ -82,7 +82,8 @@ var con = mysql.createPool({
   user: config.DB.username,
   password: config.DB.password,
   port: config.DB.port,
-  database: config.DB.database
+  database: config.DB.database,
+  connectionLimit : 50
 })
 
 app.listen(5000)
