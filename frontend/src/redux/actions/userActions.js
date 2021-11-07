@@ -1,4 +1,4 @@
-import { SIGNUP_USER, LOGIN_USER, EDIT_PROFILE, CREATE_ORDER , GET_SELECTED_USER, SET_LOGIN_ERROR, CLEAR_LOGIN_ERROR} from '../types'
+import { SIGNUP_USER, GET_AUTHENTICATED_USER, LOGIN_USER, EDIT_PROFILE, CREATE_ORDER , GET_SELECTED_USER, SET_LOGIN_ERROR, CLEAR_LOGIN_ERROR, SET_SIGNUP_ERROR, CLEAR_SIGNUP_ERROR, LOGOUT_USER} from '../types'
 import axios from 'axios'
 
 export const signupUser = (newUser, history) => (dispatch) => {
@@ -8,11 +8,20 @@ export const signupUser = (newUser, history) => (dispatch) => {
                 type : SIGNUP_USER,
                 payload : "User signup successful"
             })
+
+            dispatch({
+                type : CLEAR_SIGNUP_ERROR
+            })
+
             history.push('/login')
             console.log("signup successful")
         })
         .catch(err => {
-            console.log(err)
+            console.log("signup error "+ JSON.stringify(err))
+            dispatch({
+                type: SET_SIGNUP_ERROR,
+                payload: err.response.data.signupError,
+            })
         })
 }
 
@@ -28,12 +37,12 @@ export const loginUser = (newUser, history) => (dispatch) => {
                 })
             }
             else {
-                dispatch({
-                    type : LOGIN_USER,
-                    payload : res.data[0]
-                })
-                console.log("LOGIN_USER"+ JSON.stringify(res.data[0]))
-    
+                let token = res.data
+                localStorage.setItem('userToken' , token )
+                axios.defaults.headers.common['Authorization'] = token
+
+                dispatch(getAuthenticatedUserData())
+                
                 dispatch({
                     type : CLEAR_LOGIN_ERROR
                 })
@@ -45,6 +54,17 @@ export const loginUser = (newUser, history) => (dispatch) => {
         .catch(err => {
             console.log(err)
         })
+}
+
+export const getAuthenticatedUserData = () => (dispatch) => {
+    axios.get('/auth/getAuthenticatedUserData/')
+    .then(res => {
+        dispatch({
+            type : GET_AUTHENTICATED_USER,
+            payload : res.data
+        })
+    })
+    .catch(err => console.log(err) )
 }
 
 export const getSelectedUser = (userid) => (dispatch) => {
@@ -86,3 +106,11 @@ export const createOrder = (createOrder) => (dispatch) => {
         })
 }
 
+export const logoutUser = () => (dispatch) => {
+    localStorage.removeItem('userToken')
+    delete axios.defaults.headers.common['Authorization']
+
+    dispatch({
+        type : LOGOUT_USER
+    })
+}

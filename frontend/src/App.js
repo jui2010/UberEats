@@ -7,7 +7,8 @@ import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
 //redux
 import {Provider} from 'react-redux'
 import store from './redux/store'
-import {GET_AUTHENTICATED_USER, GET_AUTHENTICATED_RESTAURANT} from './redux/types'
+import {SET_AUTHENTICATED, GET_AUTHENTICATED_USER, GET_AUTHENTICATED_RESTAURANT} from './redux/types'
+import {getAuthenticatedUserData, logoutUser} from './redux/actions/userActions'
 
 import home from './pages/home'
 import login from './pages/login'
@@ -22,7 +23,26 @@ import checkout from './pages/checkout'
 import favorites from './pages/favorites'
 import orderSuccess from './pages/orderSuccess'
 
+import jwtDecode from 'jwt-decode'
+
 import NavigationBar from './components/NavigationBar'
+
+//verify token, if token has not expired get the userdata
+const token = localStorage.userToken
+if(token){
+  const decodedToken = jwtDecode(token)
+  if(decodedToken.exp * 1000 < Date.now()){
+    store.dispatch(logoutUser())
+    window.location.href = './login'
+  }
+  else {
+    store.dispatch({
+      type : SET_AUTHENTICATED
+    })
+    axios.defaults.headers.common['Authorization'] = token
+    store.dispatch(getAuthenticatedUserData())
+  }
+}
 
 class App extends Component{
   componentDidMount(){

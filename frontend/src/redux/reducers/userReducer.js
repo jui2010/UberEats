@@ -1,4 +1,4 @@
-import { SIGNUP_USER, LOGIN_USER, EDIT_PROFILE, GET_AUTHENTICATED_USER, CHANGE_MODE, 
+import {SET_AUTHENTICATED, SIGNUP_USER, LOGIN_USER, EDIT_PROFILE, GET_AUTHENTICATED_USER, CHANGE_MODE, 
     CREATE_ORDER, GET_ALL_ORDERS, GET_SELECTED_USER, LOCATION_FILTER, VEGETARIAN_FILTER, VEGAN_FILTER,
      NONVEGETARIAN_FILTER, LOGOUT_USER} from '../types'
 
@@ -17,6 +17,12 @@ const initialState = {
 // eslint-disable-next-line import/no-anonymous-default-export
 export default function(state = initialState , action){
     switch(action.type){
+        case SET_AUTHENTICATED:
+            return {
+                ...state,
+                authenticated : true
+            } 
+
         case SIGNUP_USER : 
             return {
                 ...state,
