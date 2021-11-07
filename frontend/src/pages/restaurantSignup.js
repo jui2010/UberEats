@@ -37,6 +37,10 @@ const styles = (theme) => ({
     }, 
     text3 : {
         marginTop : '10px'
+    },
+    errors : {
+        fontSize : '14px',
+        color : "red"
     }
 })
 
@@ -131,6 +135,10 @@ class restaurantSignup extends Component {
                             Signup
                         </Button>
 
+                        <Typography className={classes.errors}>
+                            {this.props.errors.signupRestError ? this.props.errors.signupRestError : ''}
+                        </Typography>
+
                         <Typography type="submit" className={classes.text3}>
                             <span className={classes.new} >
                                 Already a member? 
@@ -151,7 +159,7 @@ class restaurantSignup extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    
+    errors : state.errors
 })
 
 export default connect(mapStateToProps, {signupRestaurant} )(withStyles(styles)(restaurantSignup))

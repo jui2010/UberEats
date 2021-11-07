@@ -180,7 +180,7 @@ class NavigationBar extends Component {
                         </div>
 
                         <InputBase
-                            id="location"
+                            id="locationIcon"
                             name="location"
                             className={classes.location}
                             placeholder="Location"

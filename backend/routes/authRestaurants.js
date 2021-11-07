@@ -6,14 +6,14 @@ let Order = require('../models/orderModel')
 let Favorite = require('../models/favoriteModel')
 let Dish = require('../models/dishModel')
 
-//get authenticated user data
-router.route('/getAuthenticatedUserData').get((req, res) => {
-    console.log(JSON.stringify("getAuthenticatedUserData function"))
-    console.log("userid :"+JSON.stringify(req.userid))
+//get authenticated restaurant data
+router.route('/getAuthenticatedRestaurantData').get((req, res) => {
+    console.log(JSON.stringify("getAuthenticatedRestaurantData function"))
+    console.log("restaurantid :"+JSON.stringify(req.restaurantid))
 
-    User.findById(req.userid)
-        .then((user) => {
-            res.json(user) 
+    Restaurant.findById(req.restaurantid)
+        .then((restaurant) => {
+            res.json(restaurant) 
         })
         .catch(err => res.status(400).json({ error : err}))
 })

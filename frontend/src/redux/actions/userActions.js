@@ -1,8 +1,8 @@
-import { SIGNUP_USER, GET_AUTHENTICATED_USER, LOGIN_USER, EDIT_PROFILE, CREATE_ORDER , GET_SELECTED_USER, SET_LOGIN_ERROR, CLEAR_LOGIN_ERROR, SET_SIGNUP_ERROR, CLEAR_SIGNUP_ERROR, LOGOUT_USER} from '../types'
+import { SIGNUP_USER, GET_AUTHENTICATED_USER, EDIT_PROFILE, CREATE_ORDER , GET_SELECTED_USER, SET_LOGIN_ERROR, CLEAR_LOGIN_ERROR, SET_SIGNUP_ERROR, CLEAR_SIGNUP_ERROR, LOGOUT_USER} from '../types'
 import axios from 'axios'
 
 export const signupUser = (newUser, history) => (dispatch) => {
-    axios.post('/signup', newUser)
+    axios.post('/user/signup', newUser)
         .then(res => {
             dispatch({
                 type : SIGNUP_USER,
@@ -26,7 +26,7 @@ export const signupUser = (newUser, history) => (dispatch) => {
 }
 
 export const loginUser = (newUser, history) => (dispatch) => {
-    axios.post('/login', newUser)
+    axios.post('/user/login', newUser)
         .then(res => {
             console.log("LOGIN_USER"+ JSON.stringify(res.data))
 
@@ -57,7 +57,7 @@ export const loginUser = (newUser, history) => (dispatch) => {
 }
 
 export const getAuthenticatedUserData = () => (dispatch) => {
-    axios.get('/auth/getAuthenticatedUserData/')
+    axios.get('/authUser/getAuthenticatedUserData/')
     .then(res => {
         dispatch({
             type : GET_AUTHENTICATED_USER,

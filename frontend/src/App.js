@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
 import './App.css'
-import cookie from 'react-cookies'
 import axios from 'axios'
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
 
 //redux
 import {Provider} from 'react-redux'
 import store from './redux/store'
-import {SET_AUTHENTICATED, GET_AUTHENTICATED_USER, GET_AUTHENTICATED_RESTAURANT} from './redux/types'
+import {SET_AUTHENTICATED, SET_AUTHENTICATED_REST} from './redux/types'
 import {getAuthenticatedUserData, logoutUser} from './redux/actions/userActions'
+import {getAuthenticatedRestaurantData, logoutRestaurant} from './redux/actions/restaurantActions'
 
 import home from './pages/home'
 import login from './pages/login'
@@ -44,33 +44,24 @@ if(token){
   }
 }
 
-class App extends Component{
-  componentDidMount(){
-    if(cookie.load('cookie')){
-      let email = cookie.load('cookie')
-      console.log('app cookie', email)
-      axios.post('/getAuthenticatedUser', {email : email})
-        .then(res => {
-          store.dispatch({
-            type : GET_AUTHENTICATED_USER,
-            payload : res.data[0]
-          })
-        })
-    }
-
-    if(cookie.load('cookieRestaurant')){
-      let email = cookie.load('cookieRestaurant')
-      console.log('rest cookie', email)
-      axios.post('/getAuthenticatedRestaurant', {email : email})
-        .then(res => {
-          store.dispatch({
-            type : GET_AUTHENTICATED_RESTAURANT,
-            payload : res.data[0]
-          })
-        })
-    }
+//verify token, if token has not expired get the userdata
+const restToken = localStorage.restaurantToken
+if(restToken){
+  const decodedToken = jwtDecode(restToken)
+  if(decodedToken.exp * 1000 < Date.now()){
+    store.dispatch(logoutRestaurant())
+    window.location.href = './restaurantLogin'
   }
+  else {
+    store.dispatch({
+      type : SET_AUTHENTICATED_REST
+    })
+    axios.defaults.headers.common['Authorization'] = restToken
+    store.dispatch(getAuthenticatedRestaurantData())
+  }
+}
 
+class App extends Component{
   render(){
     return (
       <Provider store={store}>

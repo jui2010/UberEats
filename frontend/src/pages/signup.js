@@ -170,7 +170,6 @@ class signup extends Component {
 const mapStateToProps = (state) => ({
     user : state.user,
     errors : state.errors
-
 })
 
 export default connect(mapStateToProps, {signupUser} )(withStyles(styles)(signup))

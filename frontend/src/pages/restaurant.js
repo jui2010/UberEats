@@ -3,7 +3,7 @@ import withStyles from '@material-ui/core/styles/withStyles'
 
 import {connect} from 'react-redux'
 import Grid from '@material-ui/core/Grid'
-import {getRestaurantData, addToFavorite, addToUnfavorite} from '../redux/actions/restaurantActions'
+import {getAuthenticatedRestaurantData, addToFavorite, addToUnfavorite} from '../redux/actions/restaurantActions'
 
 import Dishes from '../components/Dishes'
 import EditRestaurantProfile from '../components/EditRestaurantProfile'
@@ -67,7 +67,7 @@ class restaurant extends Component {
         const userid = this.props.user.authenticatedUser.userid
         
         //get data for specific restaurant
-        this.props.getRestaurantData(restaurantName, userid)
+        this.props.getAuthenticatedRestaurantData(restaurantName, userid)
     }
 
     handleAddToFavorite = () => {
@@ -147,4 +147,4 @@ const mapStateToProps = (state) => ({
     restaurant : state.restaurant
 })
 
-export default connect(mapStateToProps, {getRestaurantData, addToFavorite, addToUnfavorite} )(withStyles(styles)(restaurant))
+export default connect(mapStateToProps, {getAuthenticatedRestaurantData, addToFavorite, addToUnfavorite} )(withStyles(styles)(restaurant))

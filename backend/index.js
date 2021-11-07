@@ -14,8 +14,10 @@ const port = process.env.PORT || 5000
 // Routes
 const usersRouter = require('./routes/users')
 const authUsersRouter = require('./routes/authUsers')
-// const restaurantsRouter = require('./routes/restaurants')
+const restaurantsRouter = require('./routes/restaurants')
+const authRestaurantsRouter = require('./routes/authRestaurants')
 const mongoAuth = require('./routes/mongoAuth')
+const mongoRestAuth = require('./routes/mongoRestAuth')
 
 //Middleware for cors and parsing json
 app.use(cors())
@@ -25,9 +27,10 @@ const uri = process.env.ATLAS_URI
 mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology : true})
 const connection = mongoose.connection
 
-app.use('/api/' , usersRouter)
-app.use('/api/auth/' , mongoAuth, authUsersRouter)
-// app.use('/api/', restaurantsRouter)
+app.use('/api/user/' , usersRouter)
+app.use('/api/authUser/' , mongoAuth, authUsersRouter)
+app.use('/api/restaurant/', restaurantsRouter)
+app.use('/api/authRestaurant/' , mongoRestAuth, authRestaurantsRouter)
 
 connection.once('open' , () => {
     console.log("connected to mongo")

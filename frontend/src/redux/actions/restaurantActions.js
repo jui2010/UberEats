@@ -1,24 +1,34 @@
-import { SIGNUP_RESTAURANT, LOGIN_RESTAURANT, GET_RESTAURANT_DATA, EDIT_RESTAURANT_PROFILE, 
-  ADD_DISH, ADD_TO_CART, CHANGE_ORDER_STATUS, MARK_FAVORITE, MARK_UNFAVORITE, EDIT_DISH, SET_LOGIN_REST_ERROR, CLEAR_LOGIN_REST_ERROR} from '../types'
+import { SIGNUP_RESTAURANT, GET_RESTAURANT_DATA, EDIT_RESTAURANT_PROFILE, ADD_DISH, ADD_TO_CART, CHANGE_ORDER_STATUS, 
+  MARK_FAVORITE, MARK_UNFAVORITE, EDIT_DISH, SET_LOGIN_REST_ERROR, CLEAR_LOGIN_REST_ERROR, 
+  SET_SIGNUP_REST_ERROR, CLEAR_SIGNUP_REST_ERROR, LOGOUT_RESTAURANT} from '../types'
 import axios from 'axios'
 
 export const signupRestaurant = (newRestaurant, history) => (dispatch) => {
-  axios.post('/restaurantSignup', newRestaurant)
+  axios.post('/restaurant/restaurantSignup', newRestaurant)
     .then(res => {
       dispatch({
         type : SIGNUP_RESTAURANT,
         payload : "Restaurant signup successful"
       })
+
+      dispatch({
+        type : CLEAR_SIGNUP_REST_ERROR
+      })
+
       history.push('/restaurantLogin')
       console.log("signup successful")
     })
     .catch(err => {
-      console.log(err)
+      console.log("restaurant signup error "+ JSON.stringify(err))
+      dispatch({
+        type: SET_SIGNUP_REST_ERROR,
+        payload: err.response.data.signupRestError,
+      })
     })
 }
 
 export const loginRestaurant  = (newRestaurant, history) => (dispatch) => {
-  axios.post('/restaurantLogin', newRestaurant)
+  axios.post('/restaurant/restaurantLogin', newRestaurant)
     .then(res => {
       if(res.data.loginRestError){
         dispatch({
@@ -27,30 +37,40 @@ export const loginRestaurant  = (newRestaurant, history) => (dispatch) => {
         })
       }
       else{
-        dispatch({
-          type : LOGIN_RESTAURANT,
-          payload : res.data[0]
-        })
-        console.log("LOGIN_RESTAURANT"+res.data[0])
+        let token = res.data
+
+      console.log("restaurant signup error "+ JSON.stringify(token))
+
+
+        localStorage.setItem('restaurantToken' , token )
+        axios.defaults.headers.common['Authorization'] = token
+
+        dispatch(getAuthenticatedRestaurantData())
+        
         dispatch({
           type : CLEAR_LOGIN_REST_ERROR
         })
 
-        history.push(`/restaurant/${res.data[0].restaurantName}`)
+        history.push('/')
         console.log("restaurant login successful")
       }
     })
     .catch(err => {
-      console.log(err)
+      console.log("restaurant login error "+ JSON.stringify(err))
+      dispatch({
+        type: SET_LOGIN_REST_ERROR,
+        payload: err.response.data.loginRestError,
+      })
     })
 }
 
-export const getRestaurantData = (restaurantName, userid) => (dispatch) => {
-  axios.post(`/restaurant/${restaurantName}`, {userid : userid})
+export const getAuthenticatedRestaurantData = () => (dispatch) => {
+  axios.get('/authRestaurant/getAuthenticatedRestaurantData')
     .then(res => {
+      console.log("getAuthenticatedRestaurantData")
         dispatch({
-            type : GET_RESTAURANT_DATA,
-            payload : res.data
+          type : GET_RESTAURANT_DATA,
+          payload : res.data
         })
     })
     .catch(err => console.log(err) )
@@ -135,4 +155,13 @@ export const editDish = (dishDetails) => (dispatch) => {
       })
     })
     .catch(err => console.log(err) )
+}
+
+export const logoutRestaurant = () => (dispatch) => {
+  localStorage.removeItem('userToken')
+  delete axios.defaults.headers.common['Authorization']
+
+  dispatch({
+      type : LOGOUT_RESTAURANT
+  })
 }

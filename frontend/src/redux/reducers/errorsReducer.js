@@ -1,4 +1,5 @@
-import {SET_LOGIN_ERROR, CLEAR_LOGIN_ERROR, SET_LOGIN_REST_ERROR, CLEAR_LOGIN_REST_ERROR, SET_SIGNUP_ERROR, CLEAR_SIGNUP_ERROR} from '../types'
+import {SET_LOGIN_ERROR, CLEAR_LOGIN_ERROR, SET_LOGIN_REST_ERROR, CLEAR_LOGIN_REST_ERROR, SET_SIGNUP_ERROR, 
+  CLEAR_SIGNUP_ERROR, SET_SIGNUP_REST_ERROR, CLEAR_SIGNUP_REST_ERROR} from '../types'
 
 const initialState = {
   errors : {}
@@ -42,6 +43,19 @@ export default function (state = initialState, action){
         return {
           ...state
         }
+      
+      case SET_SIGNUP_REST_ERROR : 
+        return {
+          ...state,
+          signupRestError : action.payload
+        }
+
+      case CLEAR_SIGNUP_REST_ERROR : 
+        delete state.signupRestError
+        return {
+          ...state
+        }
+
       default : 
         return {
           ...state

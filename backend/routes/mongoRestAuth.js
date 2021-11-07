@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-let User = require('../models/userModel')
+let Restaurant = require('../models/restaurantModel')
 
 module.exports = (req, res, next ) => {
     let idToken = ''
@@ -12,14 +12,14 @@ module.exports = (req, res, next ) => {
 
     const decodedToken = jwt.verify(idToken, process.env.TOKEN_SECRET)
 
-    User.findById(decodedToken._id)
-        .then(user => {
-            // console.log("mongoAuth function"+JSON.stringify(user))
+    Restaurant.findById(decodedToken._id)
+        .then(restaurant => {
+            // console.log("mongoRestAuth function"+JSON.stringify(restaurant))
 
-            req.email = user.email
-            req.userid = user._id
-            req.firstname = user.firstname
-            req.lastname = user.lastname
+            req.email = restaurant.email
+            req.restaurantid = restaurant._id
+            req.firstname = restaurant.firstname
+            req.lastname = restaurant.lastname
             return next()
         })
         .catch(err => {

@@ -1,10 +1,6 @@
 const router = require('express').Router()
 const jwt = require('jsonwebtoken')
 let User = require('../models/userModel')
-let Restaurant = require('../models/restaurantModel')
-let Order = require('../models/orderModel')
-let Favorite = require('../models/favoriteModel')
-let Dish = require('../models/dishModel')
 
 //signup a user
 router.route('/signup').post((req, res) => {
@@ -48,18 +44,6 @@ router.route('/login').post((req, res) => {
             }
         })
         .catch(err => res.status(500).send(err))
-})
-
-//login a user
-router.route('/getAuthenticatedUserData').get((req, res) => {
-    console.log(JSON.stringify("getAuthenticatedUserData function"))
-    console.log(JSON.stringify(req.params))
-
-    User.findById(req.userId)
-        .then((user) => {
-            res.json(user) 
-        })
-        .catch(err => res.status(400).json({ error : err}))
 })
 
 module.exports = router
