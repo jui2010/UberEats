@@ -52,7 +52,7 @@ class EditDish extends Component {
     handleSubmit = (event) => {
         event.preventDefault()
         const dishDetails = {
-            dishid : this.props.dish.dishid,
+            dishid : this.props.dish._id,
             restaurantid : this.props.restaurant.authenticatedRestaurant.restaurantid,
             dishName : this.state.dishName,
             dishPicture : this.state.dishPicture,

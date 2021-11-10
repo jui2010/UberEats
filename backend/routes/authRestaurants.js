@@ -18,4 +18,66 @@ router.route('/getAuthenticatedRestaurantData').get((req, res) => {
         .catch(err => res.status(400).json({ error : err}))
 })
 
+// edit restaurant details
+router.route('/editRestaurantProfile').post((req, res) => {
+    Restaurant.findById(req.restaurantid)
+        .then((restaurant) => {
+            restaurant.restaurantName = req.body.restaurantName
+            restaurant.email = req.email
+            restaurant.phone = req.body.phone
+            restaurant.location = req.body.location
+            restaurant.address = req.body.address
+            restaurant.description = req.body.description
+            restaurant.deliveryFee = req.body.deliveryFee
+            restaurant.timing = req.body.timing
+            restaurant.tile = req.body.tile
+            restaurant.typeOfRestaurant = req.body.typeOfRestaurant
+            restaurant.typeOfFood = req.body.typeOfFood
+            
+            restaurant.save()
+                .then(() => res.json(restaurant) )
+                .catch(err => res.status(400).json({ error : err}))
+        })
+        .catch(err => res.status(400).json({ error : err}))
+})
+
+// edit restaurant details
+router.route('/addDish').post((req, res) => {
+    let dishDetails = {
+        restaurantid : req.restaurantid,
+        dishName : req.body.dishName,
+        dishPrice : req.body.dishPrice,
+        dishDescription : req.body.dishDescription,
+        dishCategory : req.body.dishCategory,
+        dishPicture : req.body.dishPicture,
+        dishType : req.body.dishType,
+        cuisine : req.body.cuisine
+    }
+    const newDish = new Dish(dishDetails)
+
+    newDish.save()
+        .then(() => res.json(newDish))
+        .catch(err => res.status(400).json({ error : err}))
+})
+
+// edit dish details
+router.route('/editDish').post((req, res) => {
+
+    Dish.findById(req.body.dishid)
+        .then((dish) => {
+            dish.dishid = req.body.dishid
+            dish.dishName = req.body.dishName
+            dish.dishPicture = req.body.dishPicture
+            dish.dishDescription = req.body.dishDescription
+            dish.dishCategory = req.body.dishCategory
+            dish.cuisine = req.body.cuisine
+            dish.dishType = req.body.dishType
+            dish.dishPrice = req.body.dishPrice
+            dish.save()
+                .then(() => res.json(dish) )
+                .catch(err => res.status(400).json({ error : err}))
+        })
+        .catch(err => res.status(400).json({ error : err}))
+})
+
 module.exports = router

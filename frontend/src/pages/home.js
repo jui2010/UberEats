@@ -19,17 +19,15 @@ const styles = (theme) => ({
 
 class home extends Component {
     componentDidMount(){
-        // setTimeout(()=>{
-            console.log("component "+this.props.user.authenticatedUser.userid)
-            console.log('load all restaurants')
-            axios.post('/getAllRestaurants', {userid : this.props.user.authenticatedUser.userid})
-                .then(res => {
-                    store.dispatch({
-                        type : GET_ALL_RESTAURANTS,
-                        payload : res.data
-                    })
-            })
-        // },2000) 
+        console.log('load all restaurants'+this.props.user.authenticatedUser._id)
+        axios.post('/restaurant/getAllRestaurants', {userid : this.props.user.authenticatedUser._id})
+            .then(res => {
+                console.log('load all restaurants'+JSON.stringify(res.data))
+                store.dispatch({
+                    type : GET_ALL_RESTAURANTS,
+                    payload : res.data
+                })
+        })
     }
 
     displayRestaurants(){
@@ -49,14 +47,14 @@ class home extends Component {
                 && rest.location.includes(this.props.user.location) && (foodType === rest.typeOfFood)
             })
 
-            return restaurants.map(restaurant => <RestaurantCard key={restaurant.restaurantid} restaurant = {restaurant} />)
+            return restaurants.map(restaurant => <RestaurantCard key={restaurant._id} restaurant = {restaurant} />)
         }
     }
 
     render() {
         const { classes } = this.props
 
-        return (
+        return (    
             <Grid direction="row" container className={classes.main}>
                 <Grid container item sm={3}>
                     <Filter/>

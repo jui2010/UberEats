@@ -1,4 +1,4 @@
-import { SIGNUP_RESTAURANT, GET_RESTAURANT_DATA, EDIT_RESTAURANT_PROFILE, ADD_DISH, ADD_TO_CART, CHANGE_ORDER_STATUS, 
+import { GET_AUTHENTICATED_RESTAURANT, SIGNUP_RESTAURANT, LOGIN_RESTAURANT, GET_RESTAURANT_DATA, EDIT_RESTAURANT_PROFILE, ADD_DISH, ADD_TO_CART, CHANGE_ORDER_STATUS, 
   MARK_FAVORITE, MARK_UNFAVORITE, EDIT_DISH, SET_LOGIN_REST_ERROR, CLEAR_LOGIN_REST_ERROR, 
   SET_SIGNUP_REST_ERROR, CLEAR_SIGNUP_REST_ERROR, LOGOUT_RESTAURANT} from '../types'
 import axios from 'axios'
@@ -38,21 +38,31 @@ export const loginRestaurant  = (newRestaurant, history) => (dispatch) => {
       }
       else{
         let token = res.data
-
-      console.log("restaurant signup error "+ JSON.stringify(token))
-
-
+        console.log("restaurant signup error "+ JSON.stringify(token))
         localStorage.setItem('restaurantToken' , token )
         axios.defaults.headers.common['Authorization'] = token
 
-        dispatch(getAuthenticatedRestaurantData())
-        
-        dispatch({
-          type : CLEAR_LOGIN_REST_ERROR
-        })
+        axios.get('/authRestaurant/getAuthenticatedRestaurantData')
+          .then(res => {
+            console.log("getAuthenticatedRestaurantData")
+              dispatch({
+                type : GET_RESTAURANT_DATA,
+                payload : res.data
+              })
+              
+              dispatch({
+                type : LOGIN_RESTAURANT,
+                payload : res.data
+              })
 
-        history.push('/')
-        console.log("restaurant login successful")
+              dispatch({
+                type : CLEAR_LOGIN_REST_ERROR
+              })
+      
+              history.push(`/restaurant/${res.data.restaurantName}`)
+              console.log("restaurant login successful")
+          })
+          .catch(err => console.log(err) )
       }
     })
     .catch(err => {
@@ -69,6 +79,18 @@ export const getAuthenticatedRestaurantData = () => (dispatch) => {
     .then(res => {
       console.log("getAuthenticatedRestaurantData")
         dispatch({
+          type : GET_AUTHENTICATED_RESTAURANT,
+          payload : res.data
+        })
+    })
+    .catch(err => console.log(err) )
+}
+
+export const getSelectedRestaurantData = (details) => (dispatch) => {
+  axios.post('/restaurant/getSelectedRestaurantData', details)
+    .then(res => {
+      console.log("getSelectedRestaurantData" + JSON.stringify(res.data))
+        dispatch({
           type : GET_RESTAURANT_DATA,
           payload : res.data
         })
@@ -77,7 +99,7 @@ export const getAuthenticatedRestaurantData = () => (dispatch) => {
 }
 
 export const editRestaurantProfile = (restaurantDetails) => (dispatch) => {
-  axios.post(`/editRestaurantProfile/`, restaurantDetails)
+  axios.post(`/authRestaurant/editRestaurantProfile/`, restaurantDetails)
     .then(res => {
       dispatch({
         type : EDIT_RESTAURANT_PROFILE,
@@ -88,7 +110,7 @@ export const editRestaurantProfile = (restaurantDetails) => (dispatch) => {
 }
 
 export const addDish = (newDish) => (dispatch) => {
-  axios.post(`/addDish/`, newDish)
+  axios.post(`/authRestaurant/addDish/`, newDish)
     .then(res => {
       dispatch({
         type : ADD_DISH,
@@ -119,7 +141,7 @@ export const changeOrderStatus = (newOrderStatus) => (dispatch) => {
 }
 
 export const addToFavorite = (favRestaurant) => (dispatch) => {
-  axios.post('/addToFavorite', favRestaurant)
+  axios.post('/authUser/addToFavorite', favRestaurant)
       .then(res => {
           dispatch({
               type : MARK_FAVORITE,
@@ -133,7 +155,7 @@ export const addToFavorite = (favRestaurant) => (dispatch) => {
 }
 
 export const addToUnfavorite = (unfavRestaurant) => (dispatch) => {
-  axios.post('/addToUnfavorite', unfavRestaurant)
+  axios.post('/authUser/addToUnfavorite', unfavRestaurant)
       .then(res => {
           dispatch({
               type : MARK_UNFAVORITE,
@@ -147,7 +169,7 @@ export const addToUnfavorite = (unfavRestaurant) => (dispatch) => {
 }
 
 export const editDish = (dishDetails) => (dispatch) => {
-  axios.post(`/editDish/`, dishDetails)
+  axios.post(`/authRestaurant/editDish/`, dishDetails)
     .then(res => {
       dispatch({
         type : EDIT_DISH,

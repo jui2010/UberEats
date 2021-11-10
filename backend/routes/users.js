@@ -1,6 +1,10 @@
 const router = require('express').Router()
 const jwt = require('jsonwebtoken')
 let User = require('../models/userModel')
+let Restaurant = require('../models/restaurantModel')
+let Order = require('../models/orderModel')
+let Favorite = require('../models/favoriteModel')
+let Dish = require('../models/dishModel')
 
 //signup a user
 router.route('/signup').post((req, res) => {

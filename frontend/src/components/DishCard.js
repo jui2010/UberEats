@@ -131,10 +131,10 @@ class DishCard extends Component {
 
     handleAddToCart = () => {
         let orderedDish = {
-            restaurantid : this.props.restaurant.selectedRestaurant.restaurantid,
+            restaurantid : this.props.restaurant.selectedRestaurant._id,
             restaurantName : this.props.restaurant.selectedRestaurant.restaurantName,
-            userid : this.props.user.authenticated.userid,
-            dishid : this.props.dish.dishid,
+            userid : this.props.user.authenticated._id,
+            dishid : this.props.dish._id,
             dishName : this.props.dish.dishName,
             dishQuantity : this.state.dishQuantity,
             dishPrice : Math.round(this.props.dish.dishPrice * this.state.dishQuantity * 100)/100,
@@ -143,7 +143,7 @@ class DishCard extends Component {
         } 
 
         this.props.restaurant.cart.length === 0 ||
-        this.props.restaurant.selectedRestaurant.restaurantid === this.props.restaurant.cart[0].restaurantid ?
+        this.props.restaurant.selectedRestaurant._id === this.props.restaurant.cart[0].restaurantid ?
         this.props.addToCart(orderedDish) : 
         this.setState({
             cartError : true
@@ -161,7 +161,7 @@ class DishCard extends Component {
 
     render(){
         const { classes ,  restaurantid} = this.props
-        const { dishid, dishName, dishPicture, dishDescription, dishPrice } = this.props.dish
+        const { _id, dishName, dishPicture, dishDescription, dishPrice } = this.props.dish
 
         return (         
             <Grid container item xs={12} className={classes.dish}>
@@ -179,8 +179,8 @@ class DishCard extends Component {
 
                 <Grid container item xs={4} className={classes.dishPicture} style={{backgroundImage : `url(${dishPicture})`,}}>
                     
-                    {restaurantid === this.props.restaurant.authenticatedRestaurant.restaurantid && 
-                    (<EditDish key={dishid} dish={this.props.dish} style={{left : '40px'}}/>) }
+                    {restaurantid === this.props.restaurant.authenticatedRestaurant._id && 
+                    (<EditDish key={_id} dish={this.props.dish} style={{left : '40px'}}/>) }
                 </Grid>
 
                 <Dialog open={this.state.open} onClose={this.handleClose}>

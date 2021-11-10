@@ -197,7 +197,7 @@ export default function (state = initialState, action){
   
       case EDIT_DISH :
         let ind4 = state.selectedRestaurant.dishes.findIndex(
-            dish => dish.dishid === action.payload.dishid
+            dish => dish._id === action.payload.dishid
         )
 
         state.selectedRestaurant.dishes[ind4] = action.payload

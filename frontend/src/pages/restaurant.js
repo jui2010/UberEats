@@ -3,7 +3,7 @@ import withStyles from '@material-ui/core/styles/withStyles'
 
 import {connect} from 'react-redux'
 import Grid from '@material-ui/core/Grid'
-import {getAuthenticatedRestaurantData, addToFavorite, addToUnfavorite} from '../redux/actions/restaurantActions'
+import {getSelectedRestaurantData, addToFavorite, addToUnfavorite} from '../redux/actions/restaurantActions'
 
 import Dishes from '../components/Dishes'
 import EditRestaurantProfile from '../components/EditRestaurantProfile'
@@ -63,37 +63,42 @@ const styles = (theme) => ({
 class restaurant extends Component {
 
     componentDidMount(){
-        const restaurantName = this.props.match.params.restaurantName
-        const userid = this.props.user.authenticatedUser.userid
-        
+        setTimeout(() =>
+        {const details = {
+            restaurantName : this.props.match.params.restaurantName,
+            userid : this.props.user.authenticatedUser._id
+        }
         //get data for specific restaurant
-        this.props.getAuthenticatedRestaurantData(restaurantName, userid)
+        console.log("getSelectedRestaurantData"+JSON.stringify(details))
+        this.props.getSelectedRestaurantData(details)}
+        ,100)
     }
 
     handleAddToFavorite = () => {
-        const { restaurantid} = this.props.restaurant.selectedRestaurant
+        const { _id } = this.props.restaurant.selectedRestaurant
         let favRestaurant = {
-            restaurantid : restaurantid,
-            userid : this.props.user.authenticatedUser.userid
+            restaurantid : _id,
+            userid : this.props.user.authenticatedUser._id
         }
 
         this.props.addToFavorite(favRestaurant)
     }
 
     handleAddToUnfavorite = () => {
-        const { restaurantid} = this.props.restaurant.selectedRestaurant
+        const { _id} = this.props.restaurant.selectedRestaurant
         let unfavRestaurant = {
-            restaurantid : restaurantid,
-            userid : this.props.user.authenticatedUser.userid
+            restaurantid : _id,
+            userid : this.props.user.authenticatedUser._id
         }
 
         this.props.addToUnfavorite(unfavRestaurant)
     }
 
     render() {
-        const { restaurantid, restaurantName, location, tile, description, address , dishes, deliveryFee, timing, fav} = this.props.restaurant.selectedRestaurant
+        const { _id, restaurantName, location, tile, description, address , dishes, deliveryFee, timing, fav} = this.props.restaurant.selectedRestaurant
         const { classes } = this.props
 
+        let restaurantid = _id
         return (
             <Grid direction="row" container>
                 <Grid item sm={12}>
@@ -147,4 +152,4 @@ const mapStateToProps = (state) => ({
     restaurant : state.restaurant
 })
 
-export default connect(mapStateToProps, {getAuthenticatedRestaurantData, addToFavorite, addToUnfavorite} )(withStyles(styles)(restaurant))
+export default connect(mapStateToProps, {getSelectedRestaurantData, addToFavorite, addToUnfavorite} )(withStyles(styles)(restaurant))

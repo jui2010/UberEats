@@ -12,6 +12,10 @@ const favoriteSchema = new Schema({
         type : String,
         trim : true,
         required :true
+    },
+    fav : {
+        type : Number,
+        required :true
     }
 },{
     timestamps : true,
