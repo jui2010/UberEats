@@ -1,5 +1,5 @@
 import {SET_AUTHENTICATED, SIGNUP_USER, LOGIN_USER, EDIT_PROFILE, GET_AUTHENTICATED_USER, CHANGE_MODE, 
-    CREATE_ORDER, GET_ALL_ORDERS, GET_SELECTED_USER, LOCATION_FILTER, VEGETARIAN_FILTER, VEGAN_FILTER,
+    CREATE_ORDER, CANCEL_ORDER, GET_ALL_ORDERS, GET_SELECTED_USER, LOCATION_FILTER, VEGETARIAN_FILTER, VEGAN_FILTER,
      NONVEGETARIAN_FILTER, LOGOUT_USER} from '../types'
 
 const initialState = {
@@ -64,6 +64,23 @@ export default function(state = initialState , action){
             }
           
         case CREATE_ORDER: 
+            return {
+                ...state,
+            }
+
+        case CANCEL_ORDER: 
+
+            let index = state.authenticatedUser.orders.findIndex(
+                order => order._id === action.payload.orderid
+            )
+
+            if(index !== -1){
+                state.authenticatedUser.orders[index] = {
+                  ...state.authenticatedUser.orders[index],
+                  orderStatus : "cancelled" 
+                }
+            }
+
             return {
                 ...state,
             }

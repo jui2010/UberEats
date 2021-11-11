@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
 
 import { GET_ALL_ORDERS } from '../redux/types'
+import { cancelOrder } from '../redux/actions/userActions'
 import axios from 'axios'
 import store from '../redux/store'
 import {connect} from 'react-redux'
@@ -101,6 +102,10 @@ class orders extends Component {
         })
     }
 
+    handleCancelOrder = (orderid) => {
+        this.props.cancelOrder({orderid : orderid})
+    }
+
     componentDidMount(){
         // setTimeout(()=>{
             axios.get('/authUser/getOrders')
@@ -147,7 +152,10 @@ class orders extends Component {
                     </Grid>
                     <Grid item xs={12} className={classes.det}>
                         {orderItem.dishes.length} 
-                        {orderItem.dishes.length === 1 ? ' item' : ' items'} for ${Math.round(orderItem.orderPriceTotal * 100)/100} • {month[orderItem.updatedAt.split("T")[0].split("-")[1]]} {orderItem.updatedAt.split("T")[0].split("-")[2]} at {orderItem.updatedAt.split("T")[1].split(':')[0]}:{orderItem.updatedAt.split("T")[1].split(':')[1]} • <Button className={classes.rec} onClick={this.handleOpen}>View receipt</Button>
+                        {orderItem.dishes.length === 1 ? ' item' : ' items'} for ${Math.round(orderItem.orderPriceTotal * 100)/100} • {orderItem.orderStatus === "cancelled" && "Cancelled at "}{month[orderItem.updatedAt.split("T")[0].split("-")[1]]} {orderItem.updatedAt.split("T")[0].split("-")[2]} at {orderItem.updatedAt.split("T")[1].split(':')[0]}:{orderItem.updatedAt.split("T")[1].split(':')[1]} •  
+                        <Button className={classes.rec} onClick={this.handleOpen}>View receipt</Button> 
+                        {orderItem.orderStatus !== "cancelled" && " • "}
+                        {orderItem.orderStatus !== "cancelled" && <Button className={classes.rec} onClick={() => this.handleCancelOrder(orderItem._id)}>Cancel order</Button>}
                     </Grid>
                     <Dialog open={this.state.open} onClose={this.handleClose}>
                         <DialogTitle style={{borderBottom : '1px solid #cfcfcf'}}>
@@ -249,4 +257,4 @@ const mapStateToProps = (state) => ({
     restaurant : state.restaurant
 })
 
-export default connect(mapStateToProps, {} )(withStyles(styles)(orders))
+export default connect(mapStateToProps, {cancelOrder} )(withStyles(styles)(orders))

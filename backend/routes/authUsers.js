@@ -89,6 +89,20 @@ router.route('/createOrder').post((req, res) => {
         .catch(err => res.status(400).json({ error : err}))
 })
 
+
+//cancel order
+router.route('/cancelOrder').post((req, res) => {
+    console.log(JSON.stringify("cancelOrder function"))
+    Order.findById(req.body.orderid)
+        .then((order) => {
+            order.orderStatus = "cancelled"
+
+            order.save()
+                .then(() => res.json(order) )
+                .catch(err => res.status(400).json({ error : err}))
+        })
+})
+
 //get orders
 router.route('/getOrders').get((req, res) => {
     console.log(JSON.stringify("getOrders function"))

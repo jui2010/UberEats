@@ -1,4 +1,4 @@
-import { SIGNUP_USER, GET_AUTHENTICATED_USER, EDIT_PROFILE, CREATE_ORDER , GET_SELECTED_USER, SET_LOGIN_ERROR, CLEAR_LOGIN_ERROR, SET_SIGNUP_ERROR, CLEAR_SIGNUP_ERROR, LOGOUT_USER} from '../types'
+import { SIGNUP_USER, GET_AUTHENTICATED_USER, EDIT_PROFILE, CREATE_ORDER, CANCEL_ORDER, GET_SELECTED_USER, SET_LOGIN_ERROR, CLEAR_LOGIN_ERROR, SET_SIGNUP_ERROR, CLEAR_SIGNUP_ERROR, LOGOUT_USER} from '../types'
 import axios from 'axios'
 
 export const signupUser = (newUser, history) => (dispatch) => {
@@ -100,6 +100,20 @@ export const createOrder = (createOrder) => (dispatch) => {
                 payload : res.data
             })
             console.log("create order successful")
+        })
+        .catch(err => {
+            console.log(err)
+        })
+}
+
+export const cancelOrder = (orderid) => (dispatch) => {
+    axios.post('/authUser/cancelOrder', orderid)
+        .then(res => {
+            dispatch({
+                type : CANCEL_ORDER,
+                payload : orderid
+            })
+            console.log("cancel order successful")
         })
         .catch(err => {
             console.log(err)
