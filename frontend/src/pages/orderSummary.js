@@ -63,16 +63,14 @@ class orderSummary extends Component {
     }
 
     componentDidMount(){
-        setTimeout(()=>{
-            console.log('get order summary')
-            axios.post('/getOrderSummary', {restaurantid : this.props.restaurant.authenticatedRestaurant.restaurantid})
-                .then(res => {
-                    store.dispatch({
-                        type : GET_ORDER_SUMMARY,
-                        payload : res.data
-                    })
-            })
-        },2000)  
+        console.log('get order summary')
+        axios.get('/authRestaurant/getOrderSummary')
+            .then(res => {
+                store.dispatch({
+                    type : GET_ORDER_SUMMARY,
+                    payload : res.data
+                })
+        })
     }
 
     renderOrderItems = (dishes) => {
@@ -128,7 +126,7 @@ class orderSummary extends Component {
                         ${Math.round(orderItem.orderPriceTotal * 100)/100}
                     </Grid>
                     <Grid item xs={3} className={classes.heading}>
-                        <OrderStatus key={orderItem} orderItem={orderItem}/>
+                        <OrderStatus key={orderItem._id} orderItem={orderItem}/>
                     </Grid>
                 </Grid>
             ))

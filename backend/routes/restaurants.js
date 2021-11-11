@@ -59,12 +59,12 @@ router.route('/getSelectedRestaurantData').post((req, res) => {
 
     Restaurant.findOne({restaurantName : req.body.restaurantName})
         .then((restaurant) => {
-    // console.log(JSON.stringify(restaurant))
-    // console.log(JSON.stringify(userid))
-    let restaurantid = restaurant._id
-    console.log(JSON.stringify( restaurant._id))
+            // console.log(JSON.stringify(restaurant))
+            // console.log(JSON.stringify(userid))
+            let restaurantid = restaurant._id
+            // console.log(JSON.stringify( restaurant))
 
-            Dish.find({restaurantid : restaurant._id })
+            Dish.find({restaurantid : restaurantid})
                 .then((dishesArray) => {
                     restaurant = {
                         ...restaurant._doc,
@@ -73,8 +73,8 @@ router.route('/getSelectedRestaurantData').post((req, res) => {
                     // res.json(restaurant) 
                 })
                 .catch(err => res.status(400).json({ error : err}) )
-console.log(JSON.stringify(restaurantid))
-    console.log(JSON.stringify(userid))
+            console.log(JSON.stringify(restaurantid))
+            console.log(JSON.stringify(userid))
             Favorite.find({restaurantid : restaurant._id, userid : userid })
                 .then((favoriteArray) => {
                     if(favoriteArray.length > 0){
@@ -86,8 +86,8 @@ console.log(JSON.stringify(restaurantid))
                     res.json(restaurant) 
                 })
                 .catch(err => res.status(400).json({ error : err}) )
-        })
-        .catch(err => res.status(400).json({ error : err}))
+    })
+    .catch(err => res.status(400).json({ error : err}))
 })
 
 //get all restaurants

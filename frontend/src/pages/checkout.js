@@ -4,7 +4,7 @@ import withStyles from '@material-ui/core/styles/withStyles'
 import {connect} from 'react-redux'
 import Grid from '@material-ui/core/Grid'
 import { Link } from 'react-router-dom'
-import axios from 'axios'
+// import axios from 'axios'
 import {createOrder} from '../redux/actions/userActions'
 import store from '../redux/store'
 import {EMPTY_CART} from '../redux/types'
@@ -83,14 +83,6 @@ class checkout extends Component {
     componentDidMount(){
         const { cart } = this.props.restaurant
 
-        axios.get('/getMaxOrderId')
-            .then(res => {
-                console.log('res'+JSON.stringify(res.data))
-                this.setState({
-                    maxOrderId : res.data[0].maxOrderId
-                })
-            })
-
         cart.forEach(cartElement => {
             console.log('state'+this.state.total)
             this.setState({
@@ -101,25 +93,35 @@ class checkout extends Component {
     
     handleCheckout = () => {
         const { cart } = this.props.restaurant
-
-        const orderid = parseInt(this.state.maxOrderId) 
-        console.log("orderid"+JSON.stringify(this.state.maxOrderId))
-
-        cart.forEach(cartElement => {
-            let order = {
-                orderid : orderid + 1,
-                restaurantid : this.props.restaurant.selectedRestaurant.restaurantid,
-                userid : this.props.user.authenticatedUser.userid,
-                dishid : cartElement.dishid,
-                dishQuantity : cartElement.dishQuantity,
-                dishPrice : cartElement.dishPrice,
-                deliveryOrPickup : this.props.user.mode,
-                orderStatus : 'orderReceived'
-            }
-            console.log(JSON.stringify(order))
-            this.props.createOrder(order)
-        })
         
+        let order = {
+            restaurantid : this.props.restaurant.selectedRestaurant._id,
+            restaurantName : this.props.restaurant.selectedRestaurant.restaurantName,
+            location : this.props.restaurant.selectedRestaurant.location,
+            userid : this.props.user.authenticatedUser._id,
+            deliveryOrPickup : this.props.user.mode,
+            orderStatus : 'orderReceived'
+        }
+
+        let dishes = []
+        cart.forEach(cartElement => {
+            let dish = {
+                dishid : cartElement.dishid,
+                dishName : cartElement.dishName,
+                dishQuantity : cartElement.dishQuantity,
+                dishPrice : cartElement.dishPrice
+            }
+            dishes.push(dish)
+        })
+
+        order = {
+            ...order,
+            dishes : dishes
+        }
+
+        console.log(JSON.stringify(order))
+        this.props.createOrder(order)
+
         store.dispatch({
             type : EMPTY_CART
         })
@@ -154,6 +156,7 @@ class checkout extends Component {
         console.log(tot)
         return tot
     }
+    
     render() {
         const {classes} = this.props
         const {restaurantName, location, deliveryFee} = this.props.restaurant.selectedRestaurant

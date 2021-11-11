@@ -98,17 +98,16 @@ class orders extends Component {
     }
 
     componentDidMount(){
-        setTimeout(()=>{
-            // console.log('get orders')
-            axios.post('/getOrders', {userid : this.props.user.authenticatedUser.userid})
+        // setTimeout(()=>{
+            axios.get('/authUser/getOrders')
                 .then(res => {
+                    console.log("userid :"+JSON.stringify(res.data))
                     store.dispatch({
                         type : GET_ALL_ORDERS,
                         payload : res.data
                     })
             })
-        },2000)
-        
+        // },1000)
     }
 
     renderReceipt = (dishes) => {
@@ -159,7 +158,7 @@ class orders extends Component {
         if(this.props.user.authenticatedUser.orders && this.props.user.authenticatedUser.orders.length > 0){
 
             let filteredOrders = this.state.orderStatus === "all" ? orders : 
-                orders.filter((or) => {return or.orderStatus === this.state.orderStatus})
+                orders.filter((ord) => {return ord.orderStatus === this.state.orderStatus})
 
             return filteredOrders.map(orderItem => (
                 <Grid container>
@@ -167,7 +166,8 @@ class orders extends Component {
                         {orderItem.restaurantName} ({orderItem.location})
                     </Grid>
                     <Grid item xs={12} className={classes.det}>
-                        {orderItem.dishes.length} {orderItem.dishes.length === 1 ? 'item' : 'items'} for ${Math.round(orderItem.orderPriceTotal * 100)/100} • {month[orderItem.orderDate.split("-")[1]]} {orderItem.orderDate.split("-")[2].split("T")[0]} at {orderItem.orderTime.split(':')[0]}:{orderItem.orderTime.split(':')[1]} • <Button className={classes.rec} onClick={this.handleOpen}>View receipt</Button>
+                        {orderItem.dishes.length} 
+                        {orderItem.dishes.length === 1 ? ' item' : ' items'} for ${Math.round(orderItem.orderPriceTotal * 100)/100} • {month[orderItem.updatedAt.split("T")[0].split("-")[1]]} {orderItem.updatedAt.split("T")[0].split("-")[2]} at {orderItem.updatedAt.split("T")[1].split(':')[0]}:{orderItem.updatedAt.split("T")[1].split(':')[1]} • <Button className={classes.rec} onClick={this.handleOpen}>View receipt</Button>
                     </Grid>
                     <Dialog open={this.state.open} onClose={this.handleClose}>
                         <DialogTitle style={{borderBottom : '1px solid #cfcfcf'}}>

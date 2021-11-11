@@ -49,9 +49,12 @@ class OrderStatus extends Component {
         })
 
         let newOrderStatus = {
-            orderid : this.props.orderItem.orderid,
+            orderid : this.props.orderItem._id,
             orderStatus : stat
         }
+
+        console.log("changeOrderStatus "+ newOrderStatus.orderid)
+
         this.props.changeOrderStatus(newOrderStatus)
     }
 

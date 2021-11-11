@@ -93,11 +93,11 @@ export const editProfile = (userDetails) => (dispatch) => {
 }
 
 export const createOrder = (createOrder) => (dispatch) => {
-    axios.post('/createOrder', createOrder)
+    axios.post('/authUser/createOrder', createOrder)
         .then(res => {
             dispatch({
                 type : CREATE_ORDER,
-                payload : createOrder
+                payload : res.data
             })
             console.log("create order successful")
         })

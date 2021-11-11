@@ -69,50 +69,20 @@ export default function(state = initialState , action){
             }
 
         case GET_ALL_ORDERS:
-            let oldOrder = action.payload
-            let newOrder = []
-            oldOrder.forEach(oldEl => {
-                newOrder.push({
-                    orderid : oldEl.orderid, 
-                    userid : oldEl.userid, 
-                    restaurantid : oldEl.restaurantid, 
-                    restaurantName : oldEl.restaurantName, 
-                    location : oldEl.location, 
-                    deliveryOrPickup: oldEl.deliveryOrPickup,
-                    orderStatus: oldEl.orderStatus,
-                    orderDate: oldEl.orderDate,
-                    orderTime: oldEl.orderTime,
-                    orderPriceTotal : 0,
-                    dishes : [] })
-            })
+            let ordersAll = action.payload
 
-            newOrder = newOrder.filter((newOr, index, self) =>
-                index === self.findIndex((t) => (
-                    t.orderid === newOr.orderid && t.userid === newOr.userid && t.restaurantid === newOr.restaurantid
-                ))
-            )
-
-            oldOrder.forEach(oldEl => {
-                let dish = {
-                    dishid : oldEl.dishid,
-                    dishQuantity : oldEl.dishQuantity,
-                    dishPrice : oldEl.dishPrice,
-                    dishName : oldEl.dishName,
-                }
-
-                let index = newOrder.findIndex(
-                    newOr => newOr.orderid === oldEl.orderid && newOr.userid === oldEl.userid && newOr.restaurantid === oldEl.restaurantid
-                )
-
-                newOrder[index].dishes.push(dish)
-                newOrder[index].orderPriceTotal = newOrder[index].orderPriceTotal + dish.dishPrice
+            ordersAll.forEach(order => {
+                order.orderPriceTotal = 0
+                order.dishes.forEach(dish => {
+                    order.orderPriceTotal = order.orderPriceTotal + dish.dishPrice
+                })
             })
 
             return {
                 ...state,
                 authenticatedUser : {
                     ...state.authenticatedUser,
-                    orders : newOrder
+                    orders : ordersAll
                 }
             }   
 

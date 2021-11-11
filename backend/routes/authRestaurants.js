@@ -80,4 +80,30 @@ router.route('/editDish').post((req, res) => {
         .catch(err => res.status(400).json({ error : err}))
 })
 
+// Get all orders for a particular restaurant
+router.route('/getOrderSummary').get((req, res) => {
+    console.log(JSON.stringify("getOrderSummary function" +req.restaurantid))
+
+    Order.find({restaurantid : req.restaurantid})
+        .then((orderArray) => {
+            console.log("order"+JSON.stringify(orderArray))
+            res.json(orderArray)      
+        })
+        .catch(err => res.status(400).json({ error : err}))
+})
+
+// change order status
+router.route('/changeOrderStatus').post((req, res) => {
+    console.log(JSON.stringify("changeOrderStatus function" +req.body.orderid))
+
+    Order.findById(req.body.orderid)
+        .then((order) => {
+            order.orderStatus = req.body.orderStatus
+            order.save()
+                .then(() => res.json(order) )
+                .catch(err => res.status(400).json({ error : err}))
+        })
+        .catch(err => res.status(400).json({ error : err}))
+})
+
 module.exports = router

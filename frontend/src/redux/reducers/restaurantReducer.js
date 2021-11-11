@@ -101,63 +101,82 @@ export default function (state = initialState, action){
         }
   
       case GET_ORDER_SUMMARY: 
-        let oldOrder = action.payload
-        let newOrder = []
-        oldOrder.forEach(oldEl => {
-          newOrder.push({
-            orderid : oldEl.orderid, 
-            userid : oldEl.userid, 
-            firstname : oldEl.firstname,
-            lastname : oldEl.lastname,
-            restaurantid : oldEl.restaurantid, 
-            restaurantName : oldEl.restaurantName, 
-            location : oldEl.location, 
-            deliveryOrPickup: oldEl.deliveryOrPickup,
-            orderStatus: oldEl.orderStatus,
-            orderDate: oldEl.orderDate,
-            orderTime: oldEl.orderTime,
-            orderPriceTotal : 0,
-            dishes : [] })
-        })
+        // let oldOrder = action.payload
+        // let newOrder = []
+        // oldOrder.forEach(oldEl => {
+        //   newOrder.push({
+        //     orderid : oldEl.orderid, 
+        //     userid : oldEl.userid, 
+        //     firstname : oldEl.firstname,
+        //     lastname : oldEl.lastname,
+        //     restaurantid : oldEl.restaurantid, 
+        //     restaurantName : oldEl.restaurantName, 
+        //     location : oldEl.location, 
+        //     deliveryOrPickup: oldEl.deliveryOrPickup,
+        //     orderStatus: oldEl.orderStatus,
+        //     orderDate: oldEl.orderDate,
+        //     orderTime: oldEl.orderTime,
+        //     orderPriceTotal : 0,
+        //     dishes : [] })
+        // })
 
-        newOrder = newOrder.filter((newOr, index, self) =>
-          index === self.findIndex((t) => (
-            t.orderid === newOr.orderid && t.userid === newOr.userid && t.restaurantid === newOr.restaurantid
-          ))
-        )
+        // newOrder = newOrder.filter((newOr, index, self) =>
+        //   index === self.findIndex((t) => (
+        //     t.orderid === newOr.orderid && t.userid === newOr.userid && t.restaurantid === newOr.restaurantid
+        //   ))
+        // )
 
-        oldOrder.forEach(oldEl => {
-          let dish = {
-            dishid : oldEl.dishid,
-            dishQuantity : oldEl.dishQuantity,
-            dishPrice : oldEl.dishPrice,
-            dishName : oldEl.dishName,
-          }
+        // oldOrder.forEach(oldEl => {
+        //   let dish = {
+        //     dishid : oldEl.dishid,
+        //     dishQuantity : oldEl.dishQuantity,
+        //     dishPrice : oldEl.dishPrice,
+        //     dishName : oldEl.dishName,
+        //   }
 
-          let index = newOrder.findIndex(
-            newOr => newOr.orderid === oldEl.orderid && newOr.userid === oldEl.userid && newOr.restaurantid === oldEl.restaurantid
-          )
+        //   let index = newOrder.findIndex(
+        //     newOr => newOr.orderid === oldEl.orderid && newOr.userid === oldEl.userid && newOr.restaurantid === oldEl.restaurantid
+        //   )
 
-          newOrder[index].dishes.push(dish)
-          newOrder[index].orderPriceTotal = newOrder[index].orderPriceTotal + dish.dishPrice
+        //   newOrder[index].dishes.push(dish)
+        //   newOrder[index].orderPriceTotal = newOrder[index].orderPriceTotal + dish.dishPrice
+        // })
+
+        // return {
+        //   ...state,
+        //   authenticatedRestaurant : {
+        //     ...state.authenticatedRestaurant,
+        //     orders : newOrder
+        //   }
+        // }   
+
+        let ordersAll = action.payload
+
+        ordersAll.forEach(order => {
+            order.orderPriceTotal = 0
+            order.dishes.forEach(dish => {
+                order.orderPriceTotal = order.orderPriceTotal + dish.dishPrice
+            })
         })
 
         return {
-          ...state,
-          authenticatedRestaurant : {
-            ...state.authenticatedRestaurant,
-            orders : newOrder
-          }
+            ...state,
+            authenticatedRestaurant : {
+                ...state.authenticatedRestaurant,
+                orders : ordersAll
+            }
         }   
 
       case CHANGE_ORDER_STATUS : 
         let ind = state.authenticatedRestaurant.orders.findIndex(
-          order => order.orderid === action.payload.orderid
+          order => order._id === action.payload.orderid
         )
+
         state.authenticatedRestaurant.orders[ind] = {
           ...state.authenticatedRestaurant.orders[ind],
           orderStatus : action.payload.orderStatus
         }
+
         return {
           ...state,
         }

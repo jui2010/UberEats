@@ -130,7 +130,7 @@ export const addToCart = (orderedDish) => (dispatch) => {
 
 // change order status
 export const changeOrderStatus = (newOrderStatus) => (dispatch) => {
-  axios.post(`/changeOrderStatus/`, newOrderStatus)
+  axios.post(`/authRestaurant/changeOrderStatus/`, newOrderStatus)
     .then(res => {
       dispatch({
         type : CHANGE_ORDER_STATUS,
