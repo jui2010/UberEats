@@ -156,10 +156,10 @@ export default function (state = initialState, action){
         let ordersAll = action.payload
 
         ordersAll.forEach(order => {
-            order.orderPriceTotal = 0
-            order.dishes.forEach(dish => {
-                order.orderPriceTotal = order.orderPriceTotal + dish.dishPrice
-            })
+          order.orderPriceTotal = 0
+          order.dishes.forEach(dish => {
+            order.orderPriceTotal = order.orderPriceTotal + parseFloat(dish.dishPrice) * parseInt(dish.dishQuantity) 
+          })
         })
 
         return {

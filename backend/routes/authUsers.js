@@ -79,10 +79,11 @@ router.route('/createOrder').post((req, res) => {
     let deliveryOrPickup = req.body.deliveryOrPickup
     let orderStatus = req.body.orderStatus
     let dishes = req.body.dishes
+    let instructions = req.body.instructions
 
     console.log("userid :"+JSON.stringify(userid))
     console.log("restaurantid :"+JSON.stringify(restaurantid))
-    const newOrder = new Order({userid, firstname, lastname,restaurantid, restaurantName, location, deliveryOrPickup, orderStatus, dishes })
+    const newOrder = new Order({userid, firstname, lastname,restaurantid, restaurantName, location, deliveryOrPickup, orderStatus, dishes , instructions})
     newOrder.save()
         .then(() => res.json(newOrder))
         .catch(err => res.status(400).json({ error : err}))

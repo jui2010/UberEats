@@ -76,6 +76,10 @@ const styles = (theme) => ({
         color: '#292929',
         fontWeight: '600',
         fontSize : '15px',
+    },
+    ins : {
+        paddingLeft : '20px',
+        paddingBottom : '40px'
     }
 })
 
@@ -108,30 +112,6 @@ class orders extends Component {
                     })
             })
         // },1000)
-    }
-
-    renderReceipt = (dishes) => {
-        const {classes} = this.props
-
-        return dishes.map(dish => (
-            <Grid container  className={classes.dish} >
-                <Grid item xs={1}>
-                    <div className={classes.dishQuantity} >
-                        {dish.dishQuantity}
-                    </div>
-                </Grid>
-                <Grid item xs={9} className={classes.dishName}>
-                    <div>
-                        {dish.dishName} 
-                    </div>
-                </Grid>
-                <Grid item xs={1}>
-                    <div className={classes.dishPrice}>
-                        ${Math.round(dish.dishPrice * 100 ) /100}
-                    </div>
-                </Grid>
-            </Grid>
-        ))
     }
 
     renderOrders = () => {
@@ -181,9 +161,7 @@ class orders extends Component {
                                 ${Math.round(orderItem.orderPriceTotal * 100)/100} 
                             </Grid>
                         </Grid>
-                        {/* {this.renderReceipt(orderItem.dishes)} */}
-                        {/* {console.log(JSON.stringify(orderItem.dishes))} */}
-                        
+
                         {
                         orderItem.dishes.map(dish => (
                             <Grid container  className={classes.dish} >
@@ -199,11 +177,19 @@ class orders extends Component {
                                 </Grid>
                                 <Grid item xs={1}>
                                     <div className={classes.dishPrice}>
-                                        ${Math.round(dish.dishPrice * 100 ) /100}
+                                        ${Math.round(dish.dishPrice * dish.dishQuantity * 100 ) /100}
                                     </div>
                                 </Grid>
                             </Grid>
                         ))}
+
+                        {orderItem.instructions &&
+                        <Grid container  className={classes.ins} >
+                            <Grid item xs={12}>
+                                <span style={{fontWeight: '700'}}>Special Instructions : </span>{orderItem.instructions}
+                            </Grid>
+                        </Grid>
+                        }
                     </Dialog>
                 </Grid>
             ))

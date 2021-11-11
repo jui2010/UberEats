@@ -74,7 +74,7 @@ export default function(state = initialState , action){
             ordersAll.forEach(order => {
                 order.orderPriceTotal = 0
                 order.dishes.forEach(dish => {
-                    order.orderPriceTotal = order.orderPriceTotal + dish.dishPrice
+                    order.orderPriceTotal = order.orderPriceTotal + parseFloat(dish.dishPrice) * dish.dishQuantity 
                 })
             })
 

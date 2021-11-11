@@ -1,18 +1,15 @@
 import React, { Component, Fragment } from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
 
-import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import Tooltip from '@material-ui/core/Tooltip'
 import Grid from '@material-ui/core/Grid'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
-import { REMOVE_FROM_CART } from '../redux/types'
 
 import { Link } from 'react-router-dom'
 import CartDish from '../components/CartDish'
 
-import store from '../redux/store'
 import {connect} from 'react-redux'
 
 const styles = (theme) => ({

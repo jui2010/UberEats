@@ -3,6 +3,7 @@ import withStyles from '@material-ui/core/styles/withStyles'
 
 import {connect} from 'react-redux'
 import Grid from '@material-ui/core/Grid'
+import InputBase from '@material-ui/core/InputBase'
 import { Link } from 'react-router-dom'
 // import axios from 'axios'
 import {createOrder} from '../redux/actions/userActions'
@@ -70,6 +71,16 @@ const styles = (theme) => ({
     align : {
         display: 'flex',
         justifyContent: 'space-around',
+    },
+    instructions : {
+        fontSize : '20px',
+        fontWeight : '600',
+        padding : '20px',
+        width : '100%'
+    },
+    instructionsBox : {
+        border : '1px solid #dedede',
+        marginLeft : '20px'
     }
 })
 
@@ -77,7 +88,8 @@ class checkout extends Component {
 
     state = {
         maxOrderId : 0,
-        total : 0
+        total : 0,
+        instructions : ''
     }
 
     componentDidMount(){
@@ -100,7 +112,8 @@ class checkout extends Component {
             location : this.props.restaurant.selectedRestaurant.location,
             userid : this.props.user.authenticatedUser._id,
             deliveryOrPickup : this.props.user.mode,
-            orderStatus : 'orderReceived'
+            orderStatus : 'orderReceived',
+            instructions : this.state.instructions
         }
 
         let dishes = []
@@ -157,6 +170,12 @@ class checkout extends Component {
         return tot
     }
     
+    handleChange = (event) => {
+        this.setState({
+            [event.target.name] : event.target.value
+        })
+    }
+
     render() {
         const {classes} = this.props
         const {restaurantName, location, deliveryFee} = this.props.restaurant.selectedRestaurant
@@ -175,6 +194,18 @@ class checkout extends Component {
                     {/* <Grid item sm={12} className={classes.itemsList} > */}
                         {this.displayDishOrders()}
                     {/* </Grid> */}
+
+                    <div className={classes.instructions}>
+                        Special Instructions
+                    </div>
+                    <InputBase
+                        id="instructions"
+                        name="instructions"
+                        className={classes.instructionsBox}
+                        onChange={this.handleChange}
+                        fullWidth
+                        multiline
+                    />
                 </Grid>
 
                 <Grid container item sm={5} className={classes.placeOrderMain}>

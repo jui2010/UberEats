@@ -43,6 +43,9 @@ const orderSchema = new Schema({
     },
     orderTime : {
         type : String,
+    },
+    instructions : {
+        type : String,
     }
 },{
     timestamps : true,
