@@ -137,7 +137,8 @@ class DishCard extends Component {
             dishid : this.props.dish._id,
             dishName : this.props.dish.dishName,
             dishQuantity : this.state.dishQuantity,
-            dishPrice : Math.round(this.props.dish.dishPrice * this.state.dishQuantity * 100)/100,
+            // dishPrice : Math.round(this.props.dish.dishPrice * this.state.dishQuantity * 100)/100,
+            dishPrice : this.props.dish.dishPrice,
             deliveryOrPickup : '',
             orderStatus : 'New Order'
         } 

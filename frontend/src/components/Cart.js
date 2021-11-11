@@ -1,14 +1,18 @@
 import React, { Component, Fragment } from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
 
+import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import Tooltip from '@material-ui/core/Tooltip'
 import Grid from '@material-ui/core/Grid'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
+import { REMOVE_FROM_CART } from '../redux/types'
 
 import { Link } from 'react-router-dom'
+import CartDish from '../components/CartDish'
 
+import store from '../redux/store'
 import {connect} from 'react-redux'
 
 const styles = (theme) => ({
@@ -47,22 +51,28 @@ const styles = (theme) => ({
         justifyContent: 'space-around',
     },
     dishName : {
-        fontSize : '23px',
+        fontSize : '20px',
         fontWeight : '600'
     }, 
     dishQuantity : {
-        fontSize : '22px',
+        fontSize : '20px',
         fontWeight : '500',
         paddingLeft : '20px',
     }, 
     dishPrice : {
         fontSize : '18px',
-        color : '#171717'
+        color : '#171717',
+        paddingLeft : '30px'
     },
     list : {
         paddingBottom : '10px',
         marginBottom : '10px',
         borderBottom : '1px solid #dedede'
+    },
+    remove : {
+        fontSize : '12px',
+        color : '#171717',
+        paddingLeft : '30px'
     }
 })
 
@@ -85,22 +95,11 @@ class Cart extends Component {
     }
 
     displayDishOrders(){
-        const {classes} = this.props
         const { cart } = this.props.restaurant
         if(this.props.restaurant.cart.length > 0){
-            console.log("display dish orders")
-            return cart.map(cartItem => (
-                    <Grid container item xs={12} key={cartItem.dishQuantity} className={classes.list}>
-                        <Grid item xs={1} className={classes.dishQuantity} >
-                            {cartItem.dishQuantity}
-                        </Grid>
-                        <Grid item xs={8} className={classes.dishName}>
-                            {cartItem.dishName}
-                        </Grid>
-                        <Grid item xs={3} className={classes.dishPrice}>
-                            ${cartItem.dishPrice} 
-                        </Grid>
-                    </Grid>
+            return cart.map((cartItem) => (
+            // console.log("display dish orders" + JSON.stringify(cartItem))
+                    <CartDish key={cartItem.dishid} cartItem={cartItem}/>
                 )
             )
         }
@@ -110,7 +109,7 @@ class Cart extends Component {
         const {classes} = this.props
         const {selectedRestaurant} = this.props.restaurant
 
-        const { cart } = this.props.restaurant
+        const { cart, cartValue} = this.props.restaurant
 
         let total = 0
         cart.forEach(cartItem => {
@@ -138,7 +137,7 @@ class Cart extends Component {
                             </div>
                             <div role="button" onClick={this.handleClose}>
                                 <Link to="/checkout" style={{textDecoration: 'none'}}>
-                                    <div className={classes.checkout} >Go to checkout • ${Math.round(total *100)/100}</div>
+                                    <div className={classes.checkout} >Go to checkout • ${Math.round(cartValue *100)/100}</div>
                                 </Link>
                             </div>
                         </Fragment>

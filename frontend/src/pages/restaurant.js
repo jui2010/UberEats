@@ -71,7 +71,7 @@ class restaurant extends Component {
         //get data for specific restaurant
         console.log("getSelectedRestaurantData"+JSON.stringify(details))
         this.props.getSelectedRestaurantData(details)}
-        ,100)
+        ,500)
     }
 
     handleAddToFavorite = () => {

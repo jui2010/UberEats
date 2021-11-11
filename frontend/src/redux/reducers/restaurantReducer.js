@@ -1,12 +1,13 @@
 import {SET_AUTHENTICATED_REST, SIGNUP_RESTAURANT, LOGIN_RESTAURANT, GET_AUTHENTICATED_RESTAURANT, GET_ALL_RESTAURANTS, GET_RESTAURANT_DATA, EDIT_RESTAURANT_PROFILE, 
-  ADD_DISH, ADD_TO_CART, EMPTY_CART, GET_ORDER_SUMMARY, CHANGE_ORDER_STATUS, MARK_FAVORITE, MARK_UNFAVORITE, EDIT_DISH, LOGOUT_RESTAURANT} from '../types'
+  ADD_DISH, ADD_TO_CART, REMOVE_FROM_CART, EDIT_FROM_CART, EMPTY_CART, GET_ORDER_SUMMARY, CHANGE_ORDER_STATUS, MARK_FAVORITE, MARK_UNFAVORITE, EDIT_DISH, LOGOUT_RESTAURANT} from '../types'
 
 const initialState = {
   restaurants : [],
   selectedRestaurant : {}, 
   authenticatedRestaurant : {},
   authenticated : false,
-  cart : []
+  cart : [],
+  cartValue : 0
 }
 
 // eslint-disable-next-line import/no-anonymous-default-export
@@ -82,18 +83,69 @@ export default function (state = initialState, action){
 
         if(index === -1){
           state.cart[state.cart.length] = action.payload
-        } else {
+        } 
+        else {
           state.cart[index] = {
             ...state.cart[index],
             dishQuantity : parseInt(state.cart[index].dishQuantity) + parseInt(action.payload.dishQuantity),
-            dishPrice : state.cart[index].dishPrice + action.payload.dishPrice,
+            dishPrice : action.payload.dishPrice,
           }
         }
         
+        let total = 0
+        state.cart.forEach(cartItem => {
+          total = total + parseFloat(cartItem.dishPrice)* parseInt(cartItem.dishQuantity)
+        })
+        total = Math.round(total * 100)/100
+
         return {
           ...state,
+          cartValue : total
         }
       
+      case REMOVE_FROM_CART :
+        let tot = 0
+        state.cart.forEach(cartItem => {
+          tot = tot + parseFloat(cartItem.dishPrice)* parseInt(cartItem.dishQuantity)
+        })
+
+        tot = Math.round(tot * 100)/100
+
+        return {
+          ...state,
+          cart : state.cart.filter((cartItem) => cartItem.dishName !== action.payload),
+          cartValue : tot
+        }
+
+      case EDIT_FROM_CART : 
+        let idx = state.cart.findIndex(
+          cartItem => cartItem.dishName === action.payload.dishName
+        )
+
+        console.log("idx"+idx)
+        if(idx === -1){
+          state.cart[state.cart.length] = action.payload
+        } 
+        else {
+        console.log(" action.payload.dishQuantity"+ action.payload.dishQuantity)
+
+          state.cart[idx] = {
+            ...state.cart[idx],
+            dishQuantity : action.payload.dishQuantity,
+          }
+        }
+
+        let etot = 0
+        state.cart.forEach(cartItem => {
+          etot = etot + parseFloat(cartItem.dishPrice)* parseInt(cartItem.dishQuantity)
+        })
+        etot = Math.round(etot * 100)/100
+
+        return {
+          ...state,
+          cartValue : etot
+        }
+
       case EMPTY_CART: 
         return {
           ...state,
@@ -101,55 +153,6 @@ export default function (state = initialState, action){
         }
   
       case GET_ORDER_SUMMARY: 
-        // let oldOrder = action.payload
-        // let newOrder = []
-        // oldOrder.forEach(oldEl => {
-        //   newOrder.push({
-        //     orderid : oldEl.orderid, 
-        //     userid : oldEl.userid, 
-        //     firstname : oldEl.firstname,
-        //     lastname : oldEl.lastname,
-        //     restaurantid : oldEl.restaurantid, 
-        //     restaurantName : oldEl.restaurantName, 
-        //     location : oldEl.location, 
-        //     deliveryOrPickup: oldEl.deliveryOrPickup,
-        //     orderStatus: oldEl.orderStatus,
-        //     orderDate: oldEl.orderDate,
-        //     orderTime: oldEl.orderTime,
-        //     orderPriceTotal : 0,
-        //     dishes : [] })
-        // })
-
-        // newOrder = newOrder.filter((newOr, index, self) =>
-        //   index === self.findIndex((t) => (
-        //     t.orderid === newOr.orderid && t.userid === newOr.userid && t.restaurantid === newOr.restaurantid
-        //   ))
-        // )
-
-        // oldOrder.forEach(oldEl => {
-        //   let dish = {
-        //     dishid : oldEl.dishid,
-        //     dishQuantity : oldEl.dishQuantity,
-        //     dishPrice : oldEl.dishPrice,
-        //     dishName : oldEl.dishName,
-        //   }
-
-        //   let index = newOrder.findIndex(
-        //     newOr => newOr.orderid === oldEl.orderid && newOr.userid === oldEl.userid && newOr.restaurantid === oldEl.restaurantid
-        //   )
-
-        //   newOrder[index].dishes.push(dish)
-        //   newOrder[index].orderPriceTotal = newOrder[index].orderPriceTotal + dish.dishPrice
-        // })
-
-        // return {
-        //   ...state,
-        //   authenticatedRestaurant : {
-        //     ...state.authenticatedRestaurant,
-        //     orders : newOrder
-        //   }
-        // }   
-
         let ordersAll = action.payload
 
         ordersAll.forEach(order => {
