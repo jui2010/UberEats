@@ -2,6 +2,7 @@ const express = require('express')
 
 //Cross-Origin-Resource-Sharing
 const cors = require('cors')
+// var kafka = require('./kafka/client')
 const mongoose = require('mongoose')
 
 //Configuring Environment Variables

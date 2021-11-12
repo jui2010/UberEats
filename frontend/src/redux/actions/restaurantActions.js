@@ -171,6 +171,7 @@ export const addToUnfavorite = (unfavRestaurant) => (dispatch) => {
 export const editDish = (dishDetails) => (dispatch) => {
   axios.post(`/authRestaurant/editDish/`, dishDetails)
     .then(res => {
+      console.log(JSON.stringify(dishDetails))
       dispatch({
         type : EDIT_DISH,
         payload : dishDetails

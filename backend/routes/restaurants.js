@@ -70,22 +70,26 @@ router.route('/getSelectedRestaurantData').post((req, res) => {
                         ...restaurant._doc,
                         dishes : dishesArray
                     }
-                    // res.json(restaurant) 
+                    res.json(restaurant) 
                 })
                 .catch(err => res.status(400).json({ error : err}) )
             console.log(JSON.stringify(restaurantid))
             console.log(JSON.stringify(userid))
-            Favorite.find({restaurantid : restaurant._id, userid : userid })
-                .then((favoriteArray) => {
-                    if(favoriteArray.length > 0){
-                        restaurant = {
-                            ...restaurant,
-                            fav : 1
+
+            if(userid)
+            {
+                Favorite.find({restaurantid : restaurant._id, userid : userid })
+                    .then((favoriteArray) => {
+                        if(favoriteArray.length > 0){
+                            restaurant = {
+                                ...restaurant,
+                                fav : 1
+                            }
                         }
-                    }
-                    res.json(restaurant) 
-                })
-                .catch(err => res.status(400).json({ error : err}) )
+                        res.json(restaurant) 
+                    })
+                    .catch(err => res.status(400).json({ error : err}) )
+            }
     })
     .catch(err => res.status(400).json({ error : err}))
 })

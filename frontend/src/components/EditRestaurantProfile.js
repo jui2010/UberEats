@@ -12,8 +12,19 @@ import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import Select from '@mui/material/Select'
 
+import { uploadFile } from 'react-s3'
+
 import {connect} from 'react-redux'
 import {editRestaurantProfile} from '../redux/actions/restaurantActions'
+
+import config from '../config'
+
+const conf = {
+    bucketName: config.S3_BUCKET,
+    region: config.REGION,
+    accessKeyId: config.ACCESS_KEY,
+    secretAccessKey: config.SECRET_ACCESS_KEY,
+}
 
 const styles = (theme) => ({
     ...theme.spread,
@@ -36,6 +47,7 @@ class EditRestaurantProfile extends Component {
         tile : this.props.restaurant.authenticatedRestaurant.tile,
         typeOfRestaurant : this.props.restaurant.authenticatedRestaurant.typeOfRestaurant,
         typeOfFood : this.props.restaurant.authenticatedRestaurant.typeOfFood,
+        selectedFile : null
     }
 
     handleOpen = () => {
@@ -76,8 +88,24 @@ class EditRestaurantProfile extends Component {
         this.handleClose()
     }
     
+    handleFileInput = (e) => {
+        this.setState({
+            selectedFile : e.target.files[0]
+        })
+    }
+
+    handleUpload = async (file) => {
+        uploadFile(file, conf)
+            .then(data => this.setState({
+                    tile : data.location
+                })
+            )
+            .catch(err => console.error(err))
+    }
+
     render() {
         const {classes} = this.props
+        
         return (
             <Fragment>
                 <div onClick={this.handleOpen} className={classes.button}>
@@ -112,10 +140,7 @@ class EditRestaurantProfile extends Component {
                         
                         <TextField name="timing" id="timing" label="Timing" type="text" onChange={this.handleChange}
                             style={{marginBottom: '10px'}} value={this.state.timing} variant="outlined" fullWidth />
-                        
-                        <TextField name="tile" id="tile" label="Restaurant picture" type="text" onChange={this.handleChange}
-                            style={{marginBottom: '10px'}} value={this.state.tile} variant="outlined" fullWidth />
-                        
+
                         <FormControl >
                         <InputLabel id="type of rest">Type Of Restaurant</InputLabel>
                             <Select
@@ -148,6 +173,11 @@ class EditRestaurantProfile extends Component {
                             </Select>
                         </FormControl>
 
+                        <div style={{fontSize : '13px', padding:'10px'}}>Upload restaurant background image :</div>
+                        <input type="file" onChange={this.handleFileInput}/>
+                        <button onClick={() => this.handleUpload(this.state.selectedFile)}> Upload</button>
+                        
+                        <br/>
                         <Button type="submit" variant="contained" color="primary"
                             style={{ margin : '10px 5px', fontSize : '16px'}}>
                             Submit

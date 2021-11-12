@@ -43,6 +43,7 @@ router.route('/editRestaurantProfile').post((req, res) => {
 
 // edit restaurant details
 router.route('/addDish').post((req, res) => {
+    console.log(JSON.stringify("addDish function"))
     let dishDetails = {
         restaurantid : req.restaurantid,
         dishName : req.body.dishName,
@@ -62,22 +63,47 @@ router.route('/addDish').post((req, res) => {
 
 // edit dish details
 router.route('/editDish').post((req, res) => {
+    console.log(JSON.stringify("editDish function"))
+    console.log(JSON.stringify( req.body.dishid +" "+req.body.dishName +" "+req.body.dishPicture))
 
-    Dish.findById(req.body.dishid)
-        .then((dish) => {
-            dish.dishid = req.body.dishid
-            dish.dishName = req.body.dishName
-            dish.dishPicture = req.body.dishPicture
-            dish.dishDescription = req.body.dishDescription
-            dish.dishCategory = req.body.dishCategory
-            dish.cuisine = req.body.cuisine
-            dish.dishType = req.body.dishType
-            dish.dishPrice = req.body.dishPrice
-            dish.save()
-                .then(() => res.json(dish) )
-                .catch(err => res.status(400).json({ error : err}))
-        })
-        .catch(err => res.status(400).json({ error : err}))
+    if(req.body.dishid){
+        Dish.findById(req.body.dishid)
+            .then((dish) => {
+                dish.dishName = req.body.dishName
+                dish.dishPicture = req.body.dishPicture
+                dish.dishDescription = req.body.dishDescription
+                dish.dishCategory = req.body.dishCategory
+                dish.cuisine = req.body.cuisine
+                dish.dishType = req.body.dishType
+                dish.dishPrice = req.body.dishPrice
+                dish.save()
+                    .then(() => {
+                        console.log(JSON.stringify(dish))
+                        res.json(dish) 
+                    })
+                    .catch(err => res.status(400).json({ error : err}))
+            })
+            .catch(err => res.status(400).json({ error : err}))
+    }
+    else{
+        Dish.findOne({dishName : req.body.dishName})
+            .then((dish) => {
+                dish.dishName = req.body.dishName
+                dish.dishPicture = req.body.dishPicture
+                dish.dishDescription = req.body.dishDescription
+                dish.dishCategory = req.body.dishCategory
+                dish.cuisine = req.body.cuisine
+                dish.dishType = req.body.dishType
+                dish.dishPrice = req.body.dishPrice
+                dish.save()
+                    .then(() => {
+                        console.log(JSON.stringify(dish))
+                        res.json(dish) 
+                    })
+                    .catch(err => res.status(400).json({ error : err}))
+            })
+            .catch(err => res.status(400).json({ error : err}))
+    }
 })
 
 // Get all orders for a particular restaurant
