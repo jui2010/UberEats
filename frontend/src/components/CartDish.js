@@ -109,7 +109,7 @@ class Cart extends Component {
                     {cartItem.dishName}
                 </Grid>
                 <Grid item xs={2} className={classes.dishPrice}>
-                    ${cartItem.dishPrice * this.state.dishQuantity } 
+                    ${Math.round(cartItem.dishPrice * this.state.dishQuantity * 100) / 100 } 
                 </Grid>
                 <Grid item xs={1} >
                     <Button onClick={this.handleRemoveFromCart} className={classes.remove}><u> Remove </u></Button>

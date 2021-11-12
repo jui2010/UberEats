@@ -154,7 +154,7 @@ class checkout extends Component {
                             {cartItem.dishName}
                         </Grid>
                         <Grid item xs={1} className={classes.dishPrice}>
-                            ${cartItem.dishPrice} 
+                            ${Math.round(cartItem.dishQuantity * cartItem.dishPrice * 100) /100 } 
                         </Grid>
                     </Grid>
                 )
@@ -165,7 +165,7 @@ class checkout extends Component {
     getSubTotal = () =>{
         const { cart } = this.props.restaurant
         let tot = 0
-        cart.map(cartItem => tot = tot + cartItem.dishPrice)
+        cart.map(cartItem => tot = tot + cartItem.dishQuantity * cartItem.dishPrice)
         console.log(tot)
         return tot
     }
@@ -235,7 +235,9 @@ class checkout extends Component {
                             </div>
                             <div className={classes.align} style={{marginTop : '20px'}}>
                             <div style={{width: '300px', fontWeight : '700'}}>Total</div>
-                            <div style={{fontWeight : '700'}}>${Math.round((subtotal+ parseInt(deliveryFee) + 7 + this.state.total * 0.15) *100)/100 }</div>
+                            <div style={{fontWeight : '700'}}>
+                                ${Math.round((parseFloat(subtotal)+ parseFloat(deliveryFee) + 7 + this.state.total * 0.15) *100)/100 }
+                            </div>
                             </div>
                             <div role="button" onClick={this.handleCheckout} style={{marginTop : '120px'}}>
                                 <Link to="/orderSuccess" style={{textDecoration: 'none'}}>
