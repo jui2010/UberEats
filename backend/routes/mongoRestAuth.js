@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 let Restaurant = require('../models/restaurantModel')
+require('dotenv').config()
 
 module.exports = (req, res, next ) => {
     let idToken = ''
@@ -10,7 +11,9 @@ module.exports = (req, res, next ) => {
         return res.status(403).json({error : "Un-Authorized"})
     }
 
-    const decodedToken = jwt.verify(idToken, process.env.TOKEN_SECRET)
+    const secret = process.env.TOKEN_SECRET
+
+    const decodedToken = jwt.verify(idToken, secret)
 
     Restaurant.findById(decodedToken._id)
         .then(restaurant => {
