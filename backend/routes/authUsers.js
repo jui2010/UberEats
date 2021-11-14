@@ -62,7 +62,7 @@ router.route('/addToUnfavorite').post((req, res) => {
     console.log("userid :"+JSON.stringify(userid))
     console.log("restaurantid :"+JSON.stringify(restaurantid))
     Favorite.deleteMany({userid : userid, restaurantid : restaurantid})
-        .then(() => res.json("Question and Answer deleted"))
+        .then(() => res.json("Favorite deleted"))
         .catch(err => res.status(400).json({ error : err}))
 })
 

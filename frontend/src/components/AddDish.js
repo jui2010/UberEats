@@ -11,6 +11,16 @@ import Tooltip from '@material-ui/core/Tooltip'
 import {connect} from 'react-redux'
 import {addDish} from '../redux/actions/restaurantActions'
 
+import { uploadFile } from 'react-s3'
+import config from '../config'
+
+const conf = {
+    bucketName: config.S3_BUCKET,
+    region: config.REGION,
+    accessKeyId: config.ACCESS_KEY,
+    secretAccessKey: config.SECRET_ACCESS_KEY,
+}
+
 const styles = (theme) => ({
     ...theme.spread,
     button : {
@@ -30,7 +40,8 @@ class AddDish extends Component {
         dishCategory : this.props.restaurant.authenticatedRestaurant.dishCategory,
         dishPicture : this.props.restaurant.authenticatedRestaurant.dishPicture,
         dishType : this.props.restaurant.authenticatedRestaurant.dishType,
-        cuisine : this.props.restaurant.authenticatedRestaurant.cuisine
+        cuisine : this.props.restaurant.authenticatedRestaurant.cuisine,
+        selectedFile : null
     }
 
     handleOpen = () => {
@@ -77,6 +88,21 @@ class AddDish extends Component {
         this.handleClose()
     }
     
+    handleFileInput = (e) => {
+        this.setState({
+            selectedFile : e.target.files[0]
+        })
+    }
+
+    handleUpload = async (file) => {
+        uploadFile(file, conf)
+            .then(data => this.setState({
+                    dishPicture : data.location
+                })
+            )
+            .catch(err => console.error(err))
+    }
+
     render() {
         const {classes} = this.props
         return (
@@ -106,15 +132,17 @@ class AddDish extends Component {
                         <TextField name="dishCategory" id="dishCategory" label="Category" type="text" onChange={this.handleChange} 
                             style={{marginBottom: '10px'}} value={this.state.dishCategory} variant="outlined" fullWidth />
 
-                        <TextField name="dishPicture" id="dishPicture" label="Picture Link" type="text" onChange={this.handleChange}
-                            style={{marginBottom: '10px'}} value={this.state.dishPicture} variant="outlined" fullWidth />
-                        
                         <TextField name="dishType" id="dishType" label="Type" type="text" onChange={this.handleChange} 
                             style={{marginBottom: '10px'}} value={this.state.dishType} variant="outlined" fullWidth />
 
                         <TextField name="cuisine" id="cuisine" label="Cuisine" type="text" onChange={this.handleChange}
                             style={{marginBottom: '10px'}} value={this.state.cuisine} variant="outlined" fullWidth />
 
+                        <div style={{fontSize : '13px', padding:'10px'}}>Upload dish image :</div>
+                        <input type="file" onChange={this.handleFileInput}/>
+                        <button onClick={() => this.handleUpload(this.state.selectedFile)}> Upload</button>
+                        <br/>
+                        
                         <Button type="submit" variant="contained" color="primary"
                             style={{ margin : '10px 5px', fontSize : '16px'}}>
                             Submit

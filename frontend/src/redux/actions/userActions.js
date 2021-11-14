@@ -79,8 +79,10 @@ export const getSelectedUser = (userid) => (dispatch) => {
     }
 
 export const editProfile = (userDetails) => (dispatch) => {
-    axios.post('/edit', userDetails)
+    axios.post('/authUser/editProfile', userDetails)
         .then(res => {
+
+            console.log("USERRS DEETS "+JSON.stringify(userDetails))
             dispatch({
                 type : EDIT_PROFILE,
                 payload : userDetails

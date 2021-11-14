@@ -28,12 +28,12 @@ var Login = require('./services/login.js')
 
 //authUser
 var GetAuthenticatedUserData = require('./services/getAuthenticatedUserData.js')
-// var EditProfile = require('./services/editProfile.js')
-// var AddToFavorite = require('./services/addToFavorite.js')
-// var AddToUnfavorite = require('./services/addToUnfavorite.js')
-// var CreateOrder = require('./services/createOrder.js')
-// var CancelOrder = require('./services/cancelOrder.js')
-// var GetOrders = require('./services/getOrders.js')
+var EditProfile = require('./services/editProfile.js')
+var AddToFavorite = require('./services/addToFavorite.js')
+var AddToUnfavorite = require('./services/addToUnfavorite.js')
+var CreateOrder = require('./services/createOrder.js')
+var CancelOrder = require('./services/cancelOrder.js')
+var GetOrders = require('./services/getOrders.js')
 
 // //restaurant
 var RestaurantSignup = require('./services/restaurantSignup.js')
@@ -44,10 +44,10 @@ var GetAllRestaurants = require('./services/getAllRestaurants.js')
 //authRestaurant
 var GetAuthenticatedRestaurantData = require('./services/getAuthenticatedRestaurantData.js')
 var EditRestaurantProfile = require('./services/editRestaurantProfile.js')
-// var AddDish = require('./services/addDish.js')
-// var EditDish = require('./services/editDish.js')
-// var GetOrderSummary = require('./services/getOrderSummary.js')
-// var ChangeOrderStatus = require('./services/changeOrderStatus.js')
+var AddDish = require('./services/addDish.js')
+var EditDish = require('./services/editDish.js')
+var GetOrderSummary = require('./services/getOrderSummary.js')
+var ChangeOrderStatus = require('./services/changeOrderStatus.js')
 
 function handleTopicRequest(topic_name,fname){
     //var topic_name = 'root_topic'
@@ -86,12 +86,12 @@ handleTopicRequest("login", Login)
 
 //authUser
 handleTopicRequest("getAuthenticatedUserData", GetAuthenticatedUserData)
-// handleTopicRequest("editProfile", EditProfile)
-// handleTopicRequest("addToFavorite", AddToFavorite)
-// handleTopicRequest("addToUnfavorite", AddToUnfavorite) 
-// handleTopicRequest("createOrder", CreateOrder)
-// handleTopicRequest("cancelOrder", CancelOrder)
-// handleTopicRequest("getOrders", GetOrders)
+handleTopicRequest("editProfile", EditProfile)
+handleTopicRequest("addToFavorite", AddToFavorite)
+handleTopicRequest("addToUnfavorite", AddToUnfavorite) 
+handleTopicRequest("createOrder", CreateOrder)
+handleTopicRequest("cancelOrder", CancelOrder)
+handleTopicRequest("getOrders", GetOrders)
 
 //restaurant
 handleTopicRequest("restaurantSignup", RestaurantSignup)
@@ -102,7 +102,7 @@ handleTopicRequest("getAllRestaurants", GetAllRestaurants)
 //authRestaurant
 handleTopicRequest("getAuthenticatedRestaurantData", GetAuthenticatedRestaurantData)
 handleTopicRequest("editRestaurantProfile", EditRestaurantProfile)
-// handleTopicRequest("addDish", AddDish)
-// handleTopicRequest("editDish", EditDish)
-// handleTopicRequest("getOrderSummary", GetOrderSummary)
-// handleTopicRequest("changeOrderStatus", ChangeOrderStatus)
+handleTopicRequest("addDish", AddDish)
+handleTopicRequest("editDish", EditDish)
+handleTopicRequest("getOrderSummary", GetOrderSummary)
+handleTopicRequest("changeOrderStatus", ChangeOrderStatus)

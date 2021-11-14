@@ -6,7 +6,7 @@ var bodyParser = require('body-parser')
 var cors = require('cors')
 var kafka = require('./kafka/client')
 //use cors to allow cross origin resource sharing
-app.use(cors({ origin: 'http://localhost:8080', credentials: true }))
+app.use(cors({ origin: 'http://18.117.128.170:8080', credentials: true }))
 app.use(bodyParser.json())
 
 //Configuring Environment Variables
@@ -34,7 +34,7 @@ const connectDB = async () => {
 
 //Allow Access Control
 app.use(function(req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080')
+    res.setHeader('Access-Control-Allow-Origin', 'http://18.117.128.170:8080')
     res.setHeader('Access-Control-Allow-Credentials', 'true')
     res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT,DELETE')
     res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers')
@@ -186,6 +186,148 @@ app.get('/api/authUser/getAuthenticatedUserData', mongoAuth, async function(req,
     })
 })
 
+app.post('/api/authUser/editProfile', mongoAuth, async function(req, res){
+    let userDetails = {
+        userid : req.userid,
+        ...req.body
+    }
+    console.log("in user editProfile backend" + userDetails)
+    await kafka.make_request('editProfile', userDetails, function(err,results){
+        console.log('in result')
+        console.log(results)
+        if(err){
+            console.log("Inside err")
+            res.json({
+                status:"error",
+                msg:"System Error, Try Again."
+            })
+        }
+        else{
+            console.log("Inside else")
+            res.json(results)
+            res.end()
+        }
+    })
+})
+
+app.post('/api/authUser/addToFavorite', mongoAuth, async function(req, res){
+    let favDetails = {
+        userid : req.userid,
+        restaurantid : req.body.restaurantid,
+        fav : 1
+    }
+
+    console.log("in user addToFavorite backend" + favDetails)
+    await kafka.make_request('addToFavorite',favDetails, function(err,results){
+        console.log('in result')
+        console.log(results)
+        if(err){
+            console.log("Inside err")
+            res.json({
+                status:"error",
+                msg:"System Error, Try Again."
+            })
+        }
+        else{
+            console.log("Inside else")
+            res.json(results)
+            res.end()
+        }
+    })
+})
+
+app.post('/api/authUser/addToUnfavorite', mongoAuth, async function(req, res){
+    let unfavDetails = {
+        userid : req.userid,
+        restaurantid : req.body.restaurantid,
+    }
+
+    console.log("in user addToUnfavorite backend" + unfavDetails)
+    await kafka.make_request('addToUnfavorite', unfavDetails, function(err,results){
+        console.log('in result')
+        console.log(results)
+        if(err){
+            console.log("Inside err")
+            res.json({
+                status:"error",
+                msg:"System Error, Try Again."
+            })
+        }
+        else{
+            console.log("Inside else")
+            res.json(results)
+            res.end()
+        }
+    })
+})
+
+app.post('/api/authUser/createOrder', mongoAuth, async function(req, res){
+    let orderDetails = {
+        userid : req.userid,
+        firstname : req.firstname,
+        lastname : req.lastname,
+        ...req.body
+    }
+
+    console.log("in user createOrder backend" + orderDetails)
+    await kafka.make_request('createOrder', orderDetails, function(err,results){
+        console.log('in result')
+        console.log(results)
+        if(err){
+            console.log("Inside err")
+            res.json({
+                status:"error",
+                msg:"System Error, Try Again."
+            })
+        }
+        else{
+            console.log("Inside else")
+            res.json(results)
+            res.end()
+        }
+    })
+})
+
+app.post('/api/authUser/cancelOrder', mongoAuth, async function(req, res){
+    console.log("in user cancelOrder backend" + req.body.orderid)
+    await kafka.make_request('cancelOrder', req.body.orderid, function(err,results){
+        console.log('in result')
+        console.log(results)
+        if(err){
+            console.log("Inside err")
+            res.json({
+                status:"error",
+                msg:"System Error, Try Again."
+            })
+        }
+        else{
+            console.log("Inside else")
+            res.json(results)
+            res.end()
+        }
+    })
+})
+
+app.get('/api/authUser/getOrders', mongoAuth, async function(req, res){
+    console.log("in user getOrders backend" + req.userid)
+    await kafka.make_request('getOrders', req.userid, function(err,results){
+        console.log('in result')
+        console.log(results)
+        if(err){
+            console.log("Inside err")
+            res.json({
+                status:"error",
+                msg:"System Error, Try Again."
+            })
+        }
+        else{
+            console.log("Inside else")
+            res.json(results)
+            res.end()
+        }
+    })
+})
+
 app.get('/api/authRestaurant/getAuthenticatedRestaurantData', mongoRestAuth, async function(req, res){
     console.log("in getAuthenticatedRestaurantData backend" + req.restaurantid)
     await kafka.make_request('getAuthenticatedRestaurantData',req.restaurantid, function(err,results){
@@ -214,6 +356,94 @@ app.post('/api/authRestaurant/editRestaurantProfile', mongoRestAuth, async funct
 
     console.log("in editRestaurantProfile backend" + restaurant)
     await kafka.make_request('editRestaurantProfile',restaurant, function(err,results){
+        console.log('in result')
+        console.log(results)
+        if(err){
+            console.log("Inside err")
+            res.json({
+                status:"error",
+                msg:"System Error, Try Again."
+            })
+        }
+        else{
+            console.log("Inside else")
+            res.json(results)
+            res.end()
+        }
+    })
+})
+
+app.post('/api/authRestaurant/addDish', mongoRestAuth, async function(req, res){
+    let newDish = {
+        restaurantid : req.restaurantid,
+        ...req.body
+    }
+    console.log("in addDish backend" + newDish)
+    await kafka.make_request('addDish', newDish, function(err,results){
+        console.log('in result')
+        console.log(results)
+        if(err){
+            console.log("Inside err")
+            res.json({
+                status:"error",
+                msg:"System Error, Try Again."
+            })
+        }
+        else{
+            console.log("Inside else")
+            res.json(results)
+            res.end()
+        }
+    })
+})
+
+app.post('/api/authRestaurant/editDish', mongoRestAuth, async function(req, res){
+    let newDish = {
+        restaurantid : req.restaurantid,
+        ...req.body
+    }
+    console.log("in editDish backend" + req.body)
+    await kafka.make_request('editDish', req.body, function(err,results){
+        console.log('in result')
+        console.log(results)
+        if(err){
+            console.log("Inside err")
+            res.json({
+                status:"error",
+                msg:"System Error, Try Again."
+            })
+        }
+        else{
+            console.log("Inside else")
+            res.json(results)
+            res.end()
+        }
+    })
+})
+
+app.get('/api/authRestaurant/getOrderSummary', mongoRestAuth, async function(req, res){
+    console.log("in getOrderSummary backend " + req.restaurantid )
+    await kafka.make_request('getOrderSummary', req.restaurantid, function(err,results){
+        console.log('in result')
+        console.log(results)
+        if(err){
+            console.log("Inside err")
+            res.json({
+                status:"error",
+                msg:"System Error, Try Again."
+            })
+        }
+        else{
+            console.log("Inside else")
+            res.json(results)
+            res.end()
+        }
+    })
+})
+
+app.post('/api/authRestaurant/changeOrderStatus', mongoRestAuth, async function(req, res){
+    console.log("in changeOrderStatus backend " + JSON.stringify(req.body) )
+    await kafka.make_request('changeOrderStatus', req.body, function(err,results){
         console.log('in result')
         console.log(results)
         if(err){
