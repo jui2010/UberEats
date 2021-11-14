@@ -1,15 +1,16 @@
 let User = require('../models/userModel')
 const jwt = require('jsonwebtoken')
+const bcrypt = require("bcryptjs")
 
 async function handle_request(user, callback){
   console.log("in user login service")
   console.log("user:" + JSON.stringify(user) )
   try{
-    await User.findOne({email : user.email, password : user.password}, async(err, userItem) => {
+    await User.findOne({email : user.email}, async(err, userItem) => {
       if(err){
-        callback(err, {loginError : "Incorrect email or password"})
+        callback(err, {loginError : "Email not found"})
       }
-      if(userItem){
+      if( bcrypt.compare(user.password, userItem.password)){
         const token = jwt.sign({_id : userItem._id }, "dhvbhcvbhd")
         callback(null, token)
       }

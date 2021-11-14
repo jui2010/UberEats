@@ -49,5 +49,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://18.117.128.170:3001/api/"
+  "proxy": "http://localhost:3001/api/"
 }

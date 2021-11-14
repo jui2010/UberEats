@@ -39,6 +39,9 @@ const styles = (theme) => ({
         backgroundColor : '#3FC060', 
         fontWeight : '700',         
         textTransform : 'capitalize'
+    },
+    div : {
+        fontWeight : 700
     }
 })
 
@@ -54,22 +57,6 @@ class profile extends Component {
         state : this.props.user.authenticatedUser.state,
         country : this.props.user.authenticatedUser.country
     }
-
-    // componentDidMount(){
-    //     const userid = this.props.match.params.userid
-    //     //get data for specific user
-    //     this.props.getSelectedUser(userid)
-
-    //     this.setState({
-    //         phone  : this.props.user.selectedUser.phone,
-    //         nickname : this.props.user.selectedUser.nickname,
-    //         dob : this.props.user.selectedUser.dob,
-    //         about : this.props.user.selectedUser.about,
-    //         city : this.props.user.selectedUser.city,
-    //         state : this.props.user.selectedUser.state,
-    //         country : this.props.user.selectedUser.country
-    //     })
-    // }
 
     handleChange = (event) => {
         this.setState({
@@ -87,10 +74,6 @@ class profile extends Component {
         event.preventDefault()
         
         var userDetails = {
-            userid : this.props.user.authenticated.userid,
-            firstname : this.props.user.authenticated.firstname,
-            lastname : this.props.user.authenticated.lastname,
-            email : this.props.user.authenticated.email,
             phone  : this.state.phone,
             nickname : this.state.nickname,
             dob : this.state.dob,
@@ -111,7 +94,7 @@ class profile extends Component {
     render() {
         const {classes} = this.props
         const {authenticatedUser} = this.props.user
-console.log(JSON.stringify(this.state))
+// console.log(JSON.stringify(this.state))
         return (
             <Grid container direcion="row" alignItems="center" justifyContent="center" className={classes.mainGrid}>
                 <Grid container item sm={3} direcion="row" >
@@ -140,8 +123,8 @@ console.log(JSON.stringify(this.state))
                 <Grid item sm={1} >
                 </Grid>
                 <Grid item sm={4} >
-                    <form noValidate onSubmit ={this.handleSubmit }>
-                        <div>
+                    {/* <form noValidate onSubmit ={this.handleSubmit }> */}
+                        <div className={classes.div}>
                             Date of Birth : 
                         </div>
                         <InputBase
@@ -149,11 +132,11 @@ console.log(JSON.stringify(this.state))
                             name="dob"
                             style={{border : this.state.edit ? '1px solid #7d7d7d' : '', borderRadius : 3, marginBottom : '5px'}}
                             placeholder="Date of Birth"
-                            value={this.state.dob} 
+                            value={this.state.dob.split("T")[0]} 
                             onChange={this.handleChange}
                         />
                         
-                        <div>
+                        <div className={classes.div}>
                             Phone : 
                         </div>
                         <InputBase
@@ -166,7 +149,7 @@ console.log(JSON.stringify(this.state))
                             onChange={this.handleChange}
                         />
                         
-                        <div>
+                        <div className={classes.div}>
                             Nickname : 
                         </div>
                         <InputBase
@@ -179,7 +162,7 @@ console.log(JSON.stringify(this.state))
                             onChange={this.handleChange}
                         />
 
-                        <div>
+                        <div className={classes.div}>
                             About : 
                         </div>
                         <InputBase
@@ -192,7 +175,7 @@ console.log(JSON.stringify(this.state))
                             onChange={this.handleChange}
                         />
 
-                        <div>
+                        <div className={classes.div}>
                             City : 
                         </div>
                         <InputBase
@@ -205,7 +188,7 @@ console.log(JSON.stringify(this.state))
                             onChange={this.handleChange}
                         />
 
-                        <div>
+                        <div className={classes.div}>
                             State : 
                         </div>
                         <InputBase
@@ -217,7 +200,7 @@ console.log(JSON.stringify(this.state))
                             value={this.state.state} 
                             onChange={this.handleChange}
                         />
-                        <div>
+                        <div className={classes.div}>
                             Country : 
                         </div>
                         <InputBase
@@ -231,14 +214,13 @@ console.log(JSON.stringify(this.state))
                         />
 
                         { this.state.edit &&
-                        (<Button type="submit" variant="contained" fullWidth className={classes.edit} >
+                        (<Button type="submit" onClick={this.handleSubmit} variant="contained" fullWidth className={classes.edit} >
                             Submit
                         </Button>)}
-                    </form>
+                    {/* </form> */}
                 </Grid>
                 <Grid item sm={3} >
                 </Grid>
-
                     
                 {/* </Grid> */}
             </Grid>

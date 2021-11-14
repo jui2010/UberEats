@@ -5,16 +5,16 @@ async function handle_request(restaurant, callback){
   console.log("in restaurant login service")
   console.log("restaurant:" + JSON.stringify(restaurant) )
   try{
-    await Restaurant.findOne({email : restaurant.email, password : restaurant.password}, async(err, restaurantItem) => {
+    await Restaurant.findOne({email : restaurant.email}, async(err, restaurantItem) => {
       if(err){
-        callback(err, {loginError : "Incorrect email or password"})
+        callback(err, {loginRestError : "Email not found"})
       }
-      if(restaurantItem){
+      if( bcrypt.compare(restaurant.password, restaurantItem.password)){
         const token = jwt.sign({_id : restaurantItem._id }, "dhvbhcvbhd")
         callback(null, token)
       }
       else {
-        callback(null, {loginError : "Incorrect email or password"})
+        callback(null, {loginRestError : "Incorrect email or password"})
       }
     })
   }

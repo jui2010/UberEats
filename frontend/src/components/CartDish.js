@@ -68,6 +68,19 @@ class Cart extends Component {
         })
     }
     
+    handleEditFromCart1 = (q) => {
+        let editDish = {
+            dishQuantity : q,
+            dishName : this.props.cartItem.dishName
+        }
+
+        console.log("editDish"+JSON.stringify(editDish))
+        store.dispatch({
+            type : EDIT_FROM_CART,
+            payload : editDish
+        })
+    }
+
     handleRemoveFromCart = () => {
         store.dispatch({
             type : REMOVE_FROM_CART,
@@ -92,16 +105,16 @@ class Cart extends Component {
                         name="dishQuantity"
                         autoWidth
                         >
-                        <MenuItem value={1}>1</MenuItem>
-                        <MenuItem value={2}>2</MenuItem>
-                        <MenuItem value={3}>3</MenuItem>
-                        <MenuItem value={4}>4</MenuItem>
-                        <MenuItem value={5}>5</MenuItem>
-                        <MenuItem value={6}>6</MenuItem>
-                        <MenuItem value={7}>7</MenuItem>
-                        <MenuItem value={8}>8</MenuItem>
-                        <MenuItem value={9}>9</MenuItem>
-                        <MenuItem value={10}>10</MenuItem>
+                        <MenuItem value={1} onClick={() => this.handleEditFromCart()}>1</MenuItem>
+                        <MenuItem value={2} onClick={() => this.handleEditFromCart()}>2</MenuItem>
+                        <MenuItem value={3} onClick={() => this.handleEditFromCart()}>3</MenuItem>
+                        <MenuItem value={4} onClick={() => this.handleEditFromCart()}>4</MenuItem>
+                        <MenuItem value={5} onClick={() => this.handleEditFromCart()}>5</MenuItem>
+                        <MenuItem value={6} onClick={() => this.handleEditFromCart()}>6</MenuItem>
+                        <MenuItem value={7} onClick={() => this.handleEditFromCart()}>7</MenuItem>
+                        <MenuItem value={8} onClick={() => this.handleEditFromCart()}>8</MenuItem>
+                        <MenuItem value={9} onClick={() => this.handleEditFromCart()}>9</MenuItem>
+                        <MenuItem value={10} onClick={() => this.handleEditFromCart()}>10</MenuItem>
                         </Select>
                     </FormControl>
                 </Grid>

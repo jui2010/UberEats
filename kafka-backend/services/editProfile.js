@@ -4,12 +4,11 @@ async function handle_request(userDetails, callback){
   console.log("in editProfile service")
   console.log("user:" + JSON.stringify(userDetails) )
   try{
-    await User.findOne({_id : userDetails.userid}, async(err, user) => {
+    await User.findById(userDetails.userid, async(err, user) => {
       if(err){
         callback(err, {error : "User not found"})
       }
       if(user){
-        user.email = userDetails.email
         user.phone  = userDetails.phone
         user.nickname = userDetails.nickname
         user.dob = userDetails.dob

@@ -59,6 +59,7 @@ class orders extends Component {
         this.setState({
             page : value
         })
+        console.log(this.state.page)
     }
 
     handleChange = (event) => {
@@ -76,9 +77,10 @@ class orders extends Component {
             let filteredOrders = this.state.orderStatus === "all" ? orders : 
                 orders.filter((ord) => {return ord.orderStatus === this.state.orderStatus})
                 
-            let numberOfPages = filteredOrders.length/this.state.itemsPerPage
+            let numberOfPages =filteredOrders.length / this.state.itemsPerPage 
+            // let numberOfPages = filteredOrders.length % this.state.itemsPerPage === 0 ? filteredOrders.length / this.state.itemsPerPage : filteredOrders.length / this.state.itemsPerPage + 1
 
-            filteredOrders.slice((this.state.page - 1) * this.state.itemsPerPage, this.state.page * this.state.itemsPerPage).map(orderItem => (
+            filteredOrders.slice((Number(this.state.page) - 1) * this.state.itemsPerPage, Number(this.state.page) *  this.state.itemsPerPage).map(orderItem => (
                 rows.push(
                     <OrderItem key={orderItem._id} orderItem={orderItem}/>
                 )
@@ -106,8 +108,8 @@ class orders extends Component {
                 <Box component="span" style={{padding: '5px'}}>
                     <Pagination
                     name="page"
-                    count={numberOfPages}
-                    page={this.state.page}
+                    count={Math.ceil(numberOfPages)}
+                    page={Number(this.state.page)}
                     onChange={this.handlePageSet}
                     defaultPage={1}
                     showFirstButton

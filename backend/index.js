@@ -6,7 +6,7 @@ var bodyParser = require('body-parser')
 var cors = require('cors')
 var kafka = require('./kafka/client')
 //use cors to allow cross origin resource sharing
-app.use(cors({ origin: 'http://3.142.92.54:8080', credentials: true }))
+app.use(cors({ origin: 'http://localhost:3000', credentials: true }))
 app.use(bodyParser.json())
 
 //Configuring Environment Variables
@@ -34,7 +34,7 @@ const connectDB = async () => {
 
 //Allow Access Control
 app.use(function(req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', 'http://3.142.92.54:8080')
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000')
     res.setHeader('Access-Control-Allow-Credentials', 'true')
     res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT,DELETE')
     res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers')

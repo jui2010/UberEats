@@ -53,6 +53,7 @@ export default function(state = initialState , action){
             return {
                 ...state, 
                 authenticatedUser : {
+                    ...state.authenticatedUser,
                     ...action.payload
                 }
             } 
