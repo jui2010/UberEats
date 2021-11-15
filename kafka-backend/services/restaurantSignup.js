@@ -1,4 +1,5 @@
 let Restaurant = require('../models/restaurantModel')
+const bcrypt = require("bcryptjs")
 
 async function handle_request(restaurant, callback){
   console.log("in restaurant signup service")

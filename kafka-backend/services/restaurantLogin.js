@@ -1,5 +1,6 @@
 let Restaurant = require('../models/restaurantModel')
 const jwt = require('jsonwebtoken')
+const bcrypt = require("bcryptjs")
 
 async function handle_request(restaurant, callback){
   console.log("in restaurant login service")
