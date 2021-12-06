@@ -35,4 +35,21 @@ const getAuthenticatedUserData = gql`
     }
 `
 
-export {signupUser, loginUser, getAuthenticatedUserData}
+const signupRestaurant = gql`
+    mutation signupRestaurant($restaurantName : String! $location: String! $email: String! $password: String!){
+        signupRestaurant(restaurantName : $restaurantName location : $location email: $email password: $password){
+            restaurantName
+            location
+        }
+    }
+`
+
+const loginRestaurant = gql`
+    mutation loginRestaurant($email: String! $password: String!){
+        loginRestaurant(email: $email password: $password){
+            token
+        }
+    }
+`
+
+export {signupUser, loginUser, getAuthenticatedUserData, signupRestaurant, loginRestaurant}

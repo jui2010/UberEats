@@ -4,12 +4,13 @@ import Grid from '@material-ui/core/Grid'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import { Button } from '@material-ui/core'
-
+import {flowRight as compose} from 'lodash'
+import { graphql } from 'react-apollo'
 import { Link } from 'react-router-dom'
 
 //redux
-import {connect} from 'react-redux'
-import {loginRestaurant} from '../redux/actions/restaurantActions'
+// import {connect} from 'react-redux'
+import {loginRestaurant} from '../graphql/mutation'
 
 const styles = (theme) => ({
     ...theme.spread,
@@ -64,11 +65,17 @@ class restaurantLogin extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault()
-        var newRestaurant = {
-            email : this.state.email,
-            password : this.state.password
-        }
-        this.props.loginRestaurant(newRestaurant, this.props.history)
+        this.props.loginRestaurant({
+            variables: {
+                email : this.state.email,
+                password : this.state.password,
+            }
+        })
+        .then((res) => {
+            let token = res.data.loginRestaurant.token
+            localStorage.setItem('restaurantToken' , token )
+            this.props.history.push('/')
+        })
     }
 
     render() {
@@ -115,9 +122,9 @@ class restaurantLogin extends Component {
                         </Button>
                         <br/>
                         
-                        <Typography className={classes.errors}>
+                        {/* <Typography className={classes.errors}>
                             {this.props.errors.loginRestError ? this.props.errors.loginRestError : ''}
-                        </Typography>
+                        </Typography> */}
 
                         <Typography type="submit" className={classes.text3}>
                             <span className={classes.new} >
@@ -137,9 +144,10 @@ class restaurantLogin extends Component {
     }
 }
 
-const mapStateToProps = (state) => ({
-    user : state.user,
-    errors : state.errors
-})
+// const mapStateToProps = (state) => ({
+//     user : state.user,
+//     errors : state.errors
+// })
 
-export default connect(mapStateToProps, {loginRestaurant} )(withStyles(styles)(restaurantLogin))
+// export default connect(mapStateToProps, {loginRestaurant} )(withStyles(styles)(restaurantLogin))
+export default compose(graphql(loginRestaurant, { name: "loginRestaurant" }))(withStyles(styles)(restaurantLogin))

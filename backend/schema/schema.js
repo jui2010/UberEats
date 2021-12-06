@@ -1,7 +1,9 @@
 const graphql = require('graphql')
 const {GraphQLObjectType, GraphQLSchema,GraphQLList, GraphQLInt, GraphQLString} = graphql
 const UserType = require('./TypeDefs/UserType')
+const RestaurantType = require('./TypeDefs/RestaurantType')
 let User = require('../models/userModel')
+let Restaurant = require('../models/restaurantModel')
 const jwt = require('jsonwebtoken')
 
 const RootQuery = new GraphQLObjectType({
@@ -109,6 +111,69 @@ const RootQuery = new GraphQLObjectType({
                         else {
                             console.log('user', JSON.stringify(user))
                             resolve(user)
+                        } 
+                    })
+                })
+            }
+        },
+
+        signupRestaurant : {
+            type : RestaurantType,
+            args : {
+                restaurantName : { type : GraphQLString},
+                location : { type : GraphQLString},
+                email : { type : GraphQLString},
+                password : { type : GraphQLString}
+            },
+            resolve(parent, args){
+                return new Promise((resolve, reject) => {
+                    const newRestaurant = new Restaurant({
+                        restaurantName : args.restaurantName, 
+                        location : args.location, 
+                        email : args.email, 
+                        password : args.password
+                    })
+                    newRestaurant.save((err, restaurant) => {
+                        if (err) {
+                            console.log('result in error', err)
+                            reject({error : "Email already exists"})
+                        }
+                        else {
+                            console.log('result', {
+                                restaurantName : args.restaurantName, 
+                                location : args.location, 
+                                email : args.email, 
+                                password : args.password
+                            })
+                            resolve({
+                                restaurantName : args.restaurantName, 
+                                location : args.location, 
+                                email : args.email, 
+                                password : args.password
+                            })
+                        } 
+                    })
+                })
+            }
+        },
+
+        loginRestaurant : {
+            type : RestaurantType,
+            args : {
+                email : { type : GraphQLString},
+                password : { type : GraphQLString}
+            },
+            resolve(parent, args){
+                return new Promise((resolve, reject) => {
+                    Restaurant.findOne({email : args.email, password : args.password}, (err, restaurant) => {
+                        if (err) {
+                            console.log('result in error', err)
+                            reject({error : "Invalid restaurant name or password"})
+                        }
+                        else {
+                            const token = jwt.sign({_id : restaurant._id }, "dhvbhcvbhd")
+                            // console.log(token)
+                            resolve({ token : token })
                         } 
                     })
                 })

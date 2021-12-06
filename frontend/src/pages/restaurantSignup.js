@@ -5,10 +5,11 @@ import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
 import { Button } from '@material-ui/core'
 import { Link } from 'react-router-dom'
-
+import {flowRight as compose} from 'lodash'
+import { graphql } from 'react-apollo'
 //redux
-import {connect} from 'react-redux'
-import {signupRestaurant} from '../redux/actions/restaurantActions'
+// import {connect} from 'react-redux'
+import {signupRestaurant} from '../graphql/mutation'
 
 const styles = (theme) => ({
     ...theme.spread,
@@ -61,13 +62,18 @@ class restaurantSignup extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault()
-        var newRestaurant = {
-            restaurantName : this.state.restaurantName,
-            location : this.state.location,
-            email : this.state.email,
-            password : this.state.password,
-        }
-        this.props.signupRestaurant(newRestaurant, this.props.history)
+        console.log(JSON.stringify(this.state))
+
+        this.props.signupRestaurant({
+            variables: {
+                restaurantName : this.state.restaurantName,
+                location : this.state.location,
+                email : this.state.email,
+                password : this.state.password,
+            }
+        })
+
+        this.props.history.push('/restaurantLogin')
     }
 
     render() {
@@ -135,9 +141,9 @@ class restaurantSignup extends Component {
                             Signup
                         </Button>
 
-                        <Typography className={classes.errors}>
+                        {/* <Typography className={classes.errors}>
                             {this.props.errors.signupRestError ? this.props.errors.signupRestError : ''}
-                        </Typography>
+                        </Typography> */}
 
                         <Typography type="submit" className={classes.text3}>
                             <span className={classes.new} >
@@ -158,8 +164,9 @@ class restaurantSignup extends Component {
     }
 }
 
-const mapStateToProps = (state) => ({
-    errors : state.errors
-})
+// const mapStateToProps = (state) => ({
+//     errors : state.errors
+// })
 
-export default connect(mapStateToProps, {signupRestaurant} )(withStyles(styles)(restaurantSignup))
+// export default connect(mapStateToProps, {signupRestaurant} )(withStyles(styles)(restaurantSignup))
+export default compose(graphql(signupRestaurant, { name: "signupRestaurant" }))(withStyles(styles)(restaurantSignup)) 
