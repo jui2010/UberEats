@@ -1,14 +1,19 @@
 import React, { Component } from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
 
-import {  GET_ALL_RESTAURANTS } from '../redux/types'
-import axios from 'axios'
+// import {  GET_ALL_RESTAURANTS } from '../redux/types'
 import store from '../redux/store'
-import {connect} from 'react-redux'
+// import {connect} from 'react-redux'
 import Grid from '@material-ui/core/Grid'
+import {flowRight as compose} from 'lodash'
+import { graphql } from 'react-apollo'
+import jwtDecode from 'jwt-decode'
+
+import {GET_AUTHENTICATED_USER } from '../redux/types'
+import { getAuthenticatedUserData } from '../graphql/mutation'
 
 import RestaurantCard from '../components/RestaurantCard'
-import Filter from '../components/Filter'
+// import Filter from '../components/Filter'
 
 const styles = (theme) => ({
     ...theme.spread,
@@ -19,22 +24,31 @@ const styles = (theme) => ({
 
 class home extends Component {
     componentDidMount(){
-        console.log('load all restaurants'+this.props.user.authenticatedUser._id)
-        axios.post('/restaurant/getAllRestaurants', {userid : this.props.user.authenticatedUser._id})
-            .then(res => {
-                console.log('load all restaurants'+JSON.stringify(res.data))
+        const token = localStorage.userToken
+        if(token){
+            const decodedToken = jwtDecode(token)
+
+            this.props.getAuthenticatedUserData({
+                variables: {
+                    _id : decodedToken._id
+                }
+            })
+            .then((res) => {
+                let userData = res.data.getAuthenticatedUserData
+                console.log(JSON.stringify(userData))
                 store.dispatch({
-                    type : GET_ALL_RESTAURANTS,
-                    payload : res.data
+                    type : GET_AUTHENTICATED_USER,
+                    payload : userData
                 })
-        })
+            })
+        }
     }
 
     displayRestaurants(){
-        const {vegetarianFilter, veganFilter, nonVegetarianFilter} = this.props.user
+        const {vegetarianFilter, veganFilter, nonVegetarianFilter} = store.getState().user
         if(this.props.restaurant.restaurants.length > 0){
             console.log("display restaurants")
-            const allRestaurants = this.props.restaurant.restaurants
+            const allRestaurants = store.getState().restaurant.restaurants
 
             let restaurants = allRestaurants.filter(rest => {
 
@@ -53,24 +67,19 @@ class home extends Component {
 
     render() {
         const { classes } = this.props
-
+        console.log("STORREE"+JSON.stringify(store.getState().user))
         return (    
             <Grid direction="row" container className={classes.main}>
                 <Grid container item sm={3}>
-                    <Filter/>
+                    {/* <Filter/> */}
                 </Grid>
 
                 <Grid container item sm={9} style={{paddingLeft : '20px'}}>
-                    {this.displayRestaurants()}
+                    {/* {this.displayRestaurants()} */}
                 </Grid>
             </Grid>
         )
     }
 }
 
-const mapStateToProps = (state) => ({
-    user : state.user,
-    restaurant : state.restaurant
-})
-
-export default connect(mapStateToProps, {} )(withStyles(styles)(home))
+export default compose(graphql(getAuthenticatedUserData, { name: "getAuthenticatedUserData" }))(withStyles(styles)(home))

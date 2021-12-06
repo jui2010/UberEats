@@ -4,12 +4,14 @@ import Grid from '@material-ui/core/Grid'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import { Button } from '@material-ui/core'
-
+import {flowRight as compose} from 'lodash'
+import { graphql } from 'react-apollo'
 import { Link } from 'react-router-dom'
 
 //redux
-import {connect} from 'react-redux'
-import {loginUser} from '../redux/actions/userActions'
+// import {connect} from 'react-redux'
+// import {loginUser} from '../redux/actions/userActions'
+import { loginUser } from '../graphql/mutation'
 
 const styles = (theme) => ({
     ...theme.spread,
@@ -64,11 +66,17 @@ class login extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault()
-        var newUser = {
-            email : this.state.email,
-            password : this.state.password
-        }
-        this.props.loginUser(newUser, this.props.history)
+        this.props.loginUser({
+            variables: {
+                email : this.state.email,
+                password : this.state.password,
+            }
+        })
+        .then((res) => {
+            let token = res.data.loginUser.token
+            localStorage.setItem('userToken' , token )
+            this.props.history.push('/')
+        })
     }
 
     render() {
@@ -115,9 +123,9 @@ class login extends Component {
                         </Button>
                         <br/>
                         
-                        <Typography className={classes.errors}>
+                        {/* <Typography className={classes.errors}>
                             {this.props.errors.loginError ? this.props.errors.loginError : ''}
-                        </Typography>
+                        </Typography> */}
 
                         <Typography type="submit" className={classes.text3}>
                             <span className={classes.new} >
@@ -138,9 +146,9 @@ class login extends Component {
     }
 }
 
-const mapStateToProps = (state) => ({
-    user : state.user,
-    errors : state.errors
-})
+// const mapStateToProps = (state) => ({
+//     user : state.user,
+//     errors : state.errors
+// })
 
-export default connect(mapStateToProps, {loginUser} )(withStyles(styles)(login))
+export default compose(graphql(loginUser, { name: "loginUser" }))(withStyles(styles)(login))

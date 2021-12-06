@@ -5,10 +5,12 @@ import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
 import { Button } from '@material-ui/core'
 import { Link } from 'react-router-dom'
-
+import {flowRight as compose} from 'lodash'
+import { graphql } from 'react-apollo'
 //redux
-import {connect} from 'react-redux'
-import {signupUser} from '../redux/actions/userActions'
+// import {connect} from 'react-redux'
+// import {signup} from '../redux/actions/userActions'
+import { signupUser } from '../graphql/mutation'
 
 const styles = (theme) => ({
     ...theme.spread,
@@ -61,13 +63,18 @@ class signup extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault()
-        var newUser = {
-            firstname : this.state.firstname,
-            lastname : this.state.lastname,
-            email : this.state.email,
-            password : this.state.password,
-        }
-        this.props.signupUser(newUser, this.props.history)
+        console.log(JSON.stringify(this.state))
+
+        this.props.signupUser({
+            variables: {
+                firstname : this.state.firstname,
+                lastname : this.state.lastname,
+                email : this.state.email,
+                password : this.state.password,
+            }
+        })
+
+        this.props.history.push('/login')
     }
 
     render() {
@@ -135,9 +142,9 @@ class signup extends Component {
                             Signup
                         </Button>
 
-                        <Typography className={classes.errors}>
+                        {/* <Typography className={classes.errors}>
                             {this.props.errors.signupError ? this.props.errors.signupError : ''}
-                        </Typography>
+                        </Typography> */}
 
                         <Typography type="submit" className={classes.text3}>
                             <span className={classes.new} >
@@ -167,9 +174,10 @@ class signup extends Component {
     }
 }
 
-const mapStateToProps = (state) => ({
-    user : state.user,
-    errors : state.errors
-})
+// const mapStateToProps = (state) => ({
+//     user : state.user,
+//     errors : state.errors
+// })
 
-export default connect(mapStateToProps, {signupUser} )(withStyles(styles)(signup))
+// export default connect(mapStateToProps, {} )(withStyles(styles)(signup))
+export default compose(graphql(signupUser, { name: "signupUser" }))(withStyles(styles)(signup)) 
