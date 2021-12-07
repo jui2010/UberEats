@@ -8,8 +8,6 @@ import {connect} from 'react-redux'
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder'
 import FavoriteIcon from '@material-ui/icons/Favorite'
 
-import {addToFavorite, addToUnfavorite} from '../redux/actions/restaurantActions'
-
 const styles = (theme) => ({
     ...theme.spread,
     root: {
@@ -61,26 +59,6 @@ const styles = (theme) => ({
 
 class RestaurantCard extends Component {
 
-    handleAddToFavorite = () => {
-        const { restaurantid} = this.props.restaurant
-        let favRestaurant ={
-            restaurantid : restaurantid,
-            userid : this.props.user.authenticatedUser.userid
-        }
-
-        this.props.addToFavorite(favRestaurant)
-    }
-
-    handleAddToUnfavorite = () => {
-        const { restaurantid} = this.props.restaurant
-        let unfavRestaurant = {
-            restaurantid : restaurantid,
-            userid : this.props.user.authenticatedUser.userid
-        }
-
-        this.props.addToUnfavorite(unfavRestaurant)
-    }
-
     render(){
         const { classes } = this.props
         const { restaurantName, tile, location, deliveryFee, timing, fav} = this.props.restaurant
@@ -91,8 +69,8 @@ class RestaurantCard extends Component {
                     <Grid container item xs={12}>
                         {/* <CardMedia component="img" height="140" image={tile}  /> */}
                         <div className={classes.image} style={{backgroundImage: `url(${tile})`}}>
-                            {!fav && <FavoriteBorderIcon className={classes.favBorder} onClick={this.handleAddToFavorite}/>}
-                            {fav && <FavoriteIcon className={classes.fav}  onClick={this.handleAddToUnfavorite}/>}
+                            {!fav && <FavoriteBorderIcon className={classes.favBorder}/>}
+                            {fav && <FavoriteIcon className={classes.fav}  />}
                         </div>
                     </Grid>
                     <Grid container item xs={12} className={classes.name}>
@@ -111,4 +89,4 @@ const mapStateToProps = (state) => ({
     user : state.user
 })
 
-export default connect(mapStateToProps, {addToFavorite, addToUnfavorite} )(withStyles(styles)(RestaurantCard))
+export default connect(mapStateToProps, {} )(withStyles(styles)(RestaurantCard))

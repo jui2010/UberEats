@@ -1,15 +1,20 @@
 import React, { Component } from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
 
-import {connect} from 'react-redux'
 import Grid from '@material-ui/core/Grid'
-import {getSelectedRestaurantData, addToFavorite, addToUnfavorite} from '../redux/actions/restaurantActions'
-
+// import {getSelectedRestaurantData, addToFavorite, addToUnfavorite} from '../redux/actions/restaurantActions'
 import Dishes from '../components/Dishes'
 import EditRestaurantProfile from '../components/EditRestaurantProfile'
 import AddDish from '../components/AddDish'
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder'
 import FavoriteIcon from '@material-ui/icons/Favorite'
+
+import store from '../redux/store'
+import {GET_RESTAURANT_DATA} from '../redux/types'
+
+import {flowRight as compose} from 'lodash'
+import { graphql } from 'react-apollo'
+import { getSelectedRestaurantData } from '../graphql/mutation'
 
 const styles = (theme) => ({
     ...theme.spread,
@@ -63,39 +68,24 @@ const styles = (theme) => ({
 class restaurant extends Component {
 
     componentDidMount(){
-        setTimeout(() =>
-        {const details = {
-            restaurantName : this.props.match.params.restaurantName,
-            userid : this.props.user.authenticatedUser._id
-        }
         //get data for specific restaurant
-        console.log("getSelectedRestaurantData"+JSON.stringify(details))
-        this.props.getSelectedRestaurantData(details)}
-        ,500)
-    }
-
-    handleAddToFavorite = () => {
-        const { _id } = this.props.restaurant.selectedRestaurant
-        let favRestaurant = {
-            restaurantid : _id,
-            userid : this.props.user.authenticatedUser._id
-        }
-
-        this.props.addToFavorite(favRestaurant)
-    }
-
-    handleAddToUnfavorite = () => {
-        const { _id} = this.props.restaurant.selectedRestaurant
-        let unfavRestaurant = {
-            restaurantid : _id,
-            userid : this.props.user.authenticatedUser._id
-        }
-
-        this.props.addToUnfavorite(unfavRestaurant)
+        this.props.getSelectedRestaurantData({
+            variables: {
+                restaurantName : this.props.match.params.restaurantName     
+            }
+        })
+        .then((res) => {
+            let restaurantData = res.data.getSelectedRestaurantData
+            console.log(JSON.stringify(restaurantData))
+            store.dispatch({
+                type : GET_RESTAURANT_DATA,
+                payload : restaurantData
+            })
+        })
     }
 
     render() {
-        const { _id, restaurantName, location, tile, description, address , dishes, deliveryFee, timing, fav} = this.props.restaurant.selectedRestaurant
+        const { _id, restaurantName, location, tile, description, address , dishes, deliveryFee, timing, fav} = store.getState().restaurant.selectedRestaurant
         const { classes } = this.props
 
         let restaurantid = _id
@@ -104,8 +94,8 @@ class restaurant extends Component {
                 <Grid item sm={12}>
                     <div>
                         <img src={tile} alt={restaurantName} className={classes.tile} />
-                        {!fav && <FavoriteBorderIcon className={classes.favBorder} onClick={this.handleAddToFavorite}/>}
-                        {fav && <FavoriteIcon className={classes.fav}  onClick={this.handleAddToUnfavorite}/>}
+                        {!fav && <FavoriteBorderIcon className={classes.favBorder} />}
+                        {fav && <FavoriteIcon className={classes.fav}/>}
                         <div className={classes.nameLoc}>{restaurantName} ({location})</div>
                         <div className={classes.delTime}>• ${deliveryFee === null ? '0' : deliveryFee } Delivery Fee • {timing === null ? '0' : timing} Min </div>
                     </div>
@@ -123,8 +113,8 @@ class restaurant extends Component {
                     </Grid>
                     <Grid item sm={1}>
                         <div className={classes.description}>
-                            {this.props.restaurant.authenticated && 
-                            this.props.restaurant.authenticatedRestaurant.email === this.props.restaurant.selectedRestaurant.email &&
+                            {store.getState().restaurant.authenticated && 
+                            store.getState().restaurant.authenticatedRestaurant.email === store.getState().restaurant.selectedRestaurant.email &&
                             <EditRestaurantProfile/> }
                         </div>
                     </Grid>
@@ -137,8 +127,8 @@ class restaurant extends Component {
                     </Grid> 
 
                     <Grid item sm={1}>
-                            {this.props.restaurant.authenticated && 
-                            this.props.restaurant.authenticatedRestaurant.email === this.props.restaurant.selectedRestaurant.email &&
+                            {store.getState().restaurant.authenticated && 
+                            store.getState().restaurant.authenticatedRestaurant.email === store.getState().restaurant.selectedRestaurant.email &&
                             <AddDish/> }
                     </Grid> 
                 </Grid> 
@@ -147,9 +137,10 @@ class restaurant extends Component {
     }
 }
 
-const mapStateToProps = (state) => ({
-    user : state.user,
-    restaurant : state.restaurant
-})
+// const mapStateToProps = (state) => ({
+//     user : state.user,
+//     restaurant : state.restaurant
+// })
 
-export default connect(mapStateToProps, {getSelectedRestaurantData, addToFavorite, addToUnfavorite} )(withStyles(styles)(restaurant))
+// export default connect(mapStateToProps, {getSelectedRestaurantData, addToFavorite, addToUnfavorite} )(withStyles(styles)(restaurant))
+export default compose(graphql(getSelectedRestaurantData, { name: "getSelectedRestaurantData" }))(withStyles(styles)(restaurant))

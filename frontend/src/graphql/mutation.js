@@ -52,4 +52,34 @@ const loginRestaurant = gql`
     }
 `
 
-export {signupUser, loginUser, getAuthenticatedUserData, signupRestaurant, loginRestaurant}
+const getSelectedRestaurantData = gql`
+    mutation getSelectedRestaurantData($restaurantName: String!){
+        getSelectedRestaurantData(restaurantName : $restaurantName){
+            _id 
+            restaurantName 
+            email  
+            location 
+            address 
+            deliveryFee 
+            description 
+            phone 
+            timing 
+            typeOfFood 
+            typeOfRestaurant 
+            tile 
+            dishes {
+                _id
+                restaurantid
+                dishName
+                dishPrice
+                dishDescription
+                dishCategory
+                dishPicture
+                dishType
+                cuisine
+            } 
+        }
+    }
+`
+
+export {signupUser, loginUser, getAuthenticatedUserData, signupRestaurant, loginRestaurant, getSelectedRestaurantData}

@@ -1,5 +1,6 @@
 const graphql = require('graphql')
-const {GraphQLObjectType, GraphQLInt, GraphQLString} = graphql
+const {GraphQLObjectType, GraphQLList, GraphQLInt, GraphQLString} = graphql
+const DishType = require('../TypeDefs/DishType')
 
 const RestaurantType = new GraphQLObjectType({
     name : "Restaurant",
@@ -17,7 +18,8 @@ const RestaurantType = new GraphQLObjectType({
         typeOfFood : { type : GraphQLString},
         typeOfRestaurant : { type : GraphQLString},
         tile : { type : GraphQLString},
-        token : { type : GraphQLString}
+        token : { type : GraphQLString},
+        dishes : { type :  new GraphQLList(DishType)}
     })
 })
 
