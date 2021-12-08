@@ -108,6 +108,8 @@ class checkout extends Component {
         
         let order = {
             restaurantid : this.props.restaurant.selectedRestaurant._id,
+            firstname : this.props.restaurant.selectedRestaurant.firstname,
+            lastname : this.props.restaurant.selectedRestaurant.lastname,
             restaurantName : this.props.restaurant.selectedRestaurant.restaurantName,
             location : this.props.restaurant.selectedRestaurant.location,
             userid : this.props.user.authenticatedUser._id,

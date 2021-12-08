@@ -10,11 +10,12 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder'
 import FavoriteIcon from '@material-ui/icons/Favorite'
 
 import store from '../redux/store'
-import {GET_RESTAURANT_DATA} from '../redux/types'
+import {GET_RESTAURANT_DATA, GET_AUTHENTICATED_RESTAURANT} from '../redux/types'
 
 import {flowRight as compose} from 'lodash'
 import { graphql } from 'react-apollo'
-import { getSelectedRestaurantData } from '../graphql/mutation'
+import { getSelectedRestaurantData, getAuthenticatedRestaurantData} from '../graphql/mutation'
+import jwtDecode from 'jwt-decode'
 
 const styles = (theme) => ({
     ...theme.spread,
@@ -68,6 +69,24 @@ const styles = (theme) => ({
 class restaurant extends Component {
 
     componentDidMount(){
+        const token = localStorage.restaurantToken
+        if(token){
+            const decodedToken = jwtDecode(token)
+            this.props.getAuthenticatedRestaurantData({
+                variables: {
+                    restaurantid : decodedToken._id
+                }
+            })
+            .then((res) => {
+                let restaurantData = res.data.getAuthenticatedRestaurantData
+                // console.log(JSON.stringify(userData))
+                store.dispatch({
+                    type : GET_AUTHENTICATED_RESTAURANT,
+                    payload : restaurantData
+                })
+            })
+        }
+
         //get data for specific restaurant
         this.props.getSelectedRestaurantData({
             variables: {
@@ -90,6 +109,7 @@ class restaurant extends Component {
 
         let restaurantid = _id
         return (
+            store.getState().restaurant.selectedRestaurant && 
             <Grid direction="row" container>
                 <Grid item sm={12}>
                     <div>
@@ -127,7 +147,8 @@ class restaurant extends Component {
                     </Grid> 
 
                     <Grid item sm={1}>
-                            {store.getState().restaurant.authenticated && 
+                            {/* {console.log("TF "+ store.getState().restaurant.authenticatedRestaurant.email === store.getState().restaurant.selectedRestaurant.email )} */}
+                            {store.getState().restaurant.authenticatedRestaurant && 
                             store.getState().restaurant.authenticatedRestaurant.email === store.getState().restaurant.selectedRestaurant.email &&
                             <AddDish/> }
                     </Grid> 
@@ -143,4 +164,4 @@ class restaurant extends Component {
 // })
 
 // export default connect(mapStateToProps, {getSelectedRestaurantData, addToFavorite, addToUnfavorite} )(withStyles(styles)(restaurant))
-export default compose(graphql(getSelectedRestaurantData, { name: "getSelectedRestaurantData" }))(withStyles(styles)(restaurant))
+export default compose(graphql(getSelectedRestaurantData, { name: "getSelectedRestaurantData" }), graphql(getAuthenticatedRestaurantData, { name: "getAuthenticatedRestaurantData" }))(withStyles(styles)(restaurant))

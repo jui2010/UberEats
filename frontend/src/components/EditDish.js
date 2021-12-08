@@ -8,8 +8,12 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import EditIcon from '@material-ui/icons/Edit'
 import Tooltip from '@material-ui/core/Tooltip'
 
-import {connect} from 'react-redux'
-import {editDish} from '../redux/actions/restaurantActions'
+import store from '../redux/store'
+import {EDIT_DISH} from '../redux/types'
+
+import {flowRight as compose} from 'lodash'
+import { graphql } from 'react-apollo'
+import { editDish} from '../graphql/mutation'
 
 import { uploadFile } from 'react-s3'
 import config from '../config'
@@ -63,21 +67,28 @@ class EditDish extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault()
-        const dishDetails = {
-            dishid : this.props.dish._id,
-            restaurantid : this.props.restaurant.authenticatedRestaurant.restaurantid,
-            dishName : this.state.dishName,
-            dishPicture : this.state.dishPicture,
-            dishDescription : this.state.dishDescription,
-            dishCategory : this.state.dishCategory,
-            cuisine : this.state.cuisine,
-            dishType : this.state.dishType,
-            dishPrice : this.state.dishPrice
-        }
         console.log("dishid "+JSON.stringify(this.props.dish._id))
         
-        this.props.editDish(dishDetails)
-        console.log("dishDetails "+JSON.stringify(dishDetails))
+        this.props.editDish({
+            variables: {
+                dishid : this.props.dish._id,
+                dishName : this.state.dishName,
+                dishPrice : this.state.dishPrice,
+                dishDescription : this.state.dishDescription,
+                dishCategory : this.state.dishCategory,
+                dishPicture : this.state.dishPicture,
+                dishType : this.state.dishType,
+                cuisine : this.state.cuisine
+            }
+        })
+        .then((res) => {
+            let dishData = res.data.editDish
+            // console.log(JSON.stringify(dishData))
+            store.dispatch({
+                type : EDIT_DISH,
+                payload : dishData
+            })
+        })
         this.handleClose()
     }
     
@@ -92,7 +103,7 @@ class EditDish extends Component {
             .then(data =>{
                 const dishDetails = {
                     dishid : this.props.dish._id,
-                    restaurantid : this.props.restaurant.authenticatedRestaurant.restaurantid,
+                    restaurantid : store.getState().restaurant.authenticatedRestaurant.restaurantid,
                     dishName : this.state.dishName,
                     dishPicture : data.location,
                     dishDescription : this.state.dishDescription,
@@ -159,8 +170,9 @@ class EditDish extends Component {
     }
 }
 
-const mapStateToProps = (state) => ({
-    restaurant : state.restaurant
-})
+// const mapStateToProps = (state) => ({
+//     restaurant : state.restaurant
+// })
 
-export default connect(mapStateToProps, {editDish})(withStyles(styles)(EditDish))
+// export default connect(mapStateToProps, {editDish})(withStyles(styles)(EditDish))
+export default compose(graphql(editDish, { name: "editDish" }))(withStyles(styles)(EditDish))

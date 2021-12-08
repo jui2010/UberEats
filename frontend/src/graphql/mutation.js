@@ -82,4 +82,92 @@ const getSelectedRestaurantData = gql`
     }
 `
 
-export {signupUser, loginUser, getAuthenticatedUserData, signupRestaurant, loginRestaurant, getSelectedRestaurantData}
+const getAuthenticatedRestaurantData = gql`
+    mutation getAuthenticatedRestaurantData($restaurantid: String!){
+        getAuthenticatedRestaurantData(restaurantid : $restaurantid){
+            _id 
+            restaurantName 
+            email  
+            location 
+            address 
+            deliveryFee 
+            description 
+            phone 
+            timing 
+            typeOfFood 
+            typeOfRestaurant 
+            tile 
+        }
+    }
+`
+
+const addDish = gql`
+    mutation addDish(
+        $restaurantid : String,
+        $dishName : String,
+        $dishPrice : String,
+        $dishDescription : String,
+        $dishCategory : String,
+        $dishPicture : String, 
+        $dishType : String,
+        $cuisine : String
+        ){
+        addDish(
+            restaurantid : $restaurantid,
+            dishName : $dishName,
+            dishPrice : $dishPrice,
+            dishDescription : $dishDescription,
+            dishCategory : $dishCategory,
+            dishPicture : $dishPicture, 
+            dishType : $dishType,
+            cuisine : $cuisine
+        ){
+            _id 
+            restaurantid
+            dishName
+            dishPrice
+            dishDescription
+            dishCategory
+            dishPicture 
+            dishType
+            cuisine
+        }
+    }
+`
+
+const editDish = gql`
+    mutation editDish(
+        $dishid : String,
+        $dishName : String,
+        $dishPrice : String,
+        $dishDescription : String,
+        $dishCategory : String,
+        $dishPicture : String, 
+        $dishType : String,
+        $cuisine : String
+        ){
+        editDish(
+            dishid : $dishid,
+            dishName : $dishName,
+            dishPrice : $dishPrice,
+            dishDescription : $dishDescription,
+            dishCategory : $dishCategory,
+            dishPicture : $dishPicture, 
+            dishType : $dishType,
+            cuisine : $cuisine
+        ){
+            _id 
+            restaurantid
+            dishName
+            dishPrice
+            dishDescription
+            dishCategory
+            dishPicture 
+            dishType
+            cuisine
+        }
+    }
+`
+
+export {signupUser, loginUser, getAuthenticatedUserData, signupRestaurant, loginRestaurant, 
+    getSelectedRestaurantData, getAuthenticatedRestaurantData, addDish, editDish}

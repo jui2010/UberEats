@@ -8,8 +8,12 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import AddBoxIcon from '@material-ui/icons/AddBox'
 import Tooltip from '@material-ui/core/Tooltip'
 
-import {connect} from 'react-redux'
-import {addDish} from '../redux/actions/restaurantActions'
+import {flowRight as compose} from 'lodash'
+import { graphql } from 'react-apollo'
+import store from '../redux/store'
+
+import {ADD_DISH} from '../redux/types'
+import { addDish } from '../graphql/mutation'
 
 import { uploadFile } from 'react-s3'
 import config from '../config'
@@ -34,13 +38,13 @@ const styles = (theme) => ({
 class AddDish extends Component {
     state = {
         open : false,
-        dishName : this.props.restaurant.authenticatedRestaurant.dishName,
-        dishPrice : this.props.restaurant.authenticatedRestaurant.dishPrice,
-        dishDescription : this.props.restaurant.authenticatedRestaurant.dishDescription,
-        dishCategory : this.props.restaurant.authenticatedRestaurant.dishCategory,
-        dishPicture : this.props.restaurant.authenticatedRestaurant.dishPicture,
-        dishType : this.props.restaurant.authenticatedRestaurant.dishType,
-        cuisine : this.props.restaurant.authenticatedRestaurant.cuisine,
+        dishName : store.getState().restaurant.authenticatedRestaurant.dishName,
+        dishPrice : store.getState().restaurant.authenticatedRestaurant.dishPrice,
+        dishDescription : store.getState().restaurant.authenticatedRestaurant.dishDescription,
+        dishCategory : store.getState().restaurant.authenticatedRestaurant.dishCategory,
+        dishPicture : store.getState().restaurant.authenticatedRestaurant.dishPicture,
+        dishType : store.getState().restaurant.authenticatedRestaurant.dishType,
+        cuisine : store.getState().restaurant.authenticatedRestaurant.cuisine,
         selectedFile : null
     }
 
@@ -64,18 +68,28 @@ class AddDish extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault()
-        const newDish = {
-            restaurantid : this.props.restaurant.authenticatedRestaurant.restaurantid,
-            dishName : this.state.dishName,
-            dishPrice : this.state.dishPrice,
-            dishDescription : this.state.dishDescription,
-            dishCategory : this.state.dishCategory,
-            dishPicture : this.state.dishPicture,
-            dishType : this.state.dishType,
-            cuisine : this.state.cuisine
-        }
-        this.props.addDish(newDish)
-        console.log("newDish "+JSON.stringify(newDish))
+        store.getState().restaurant.authenticatedRestaurant &&
+        this.props.addDish({
+            variables: {
+                restaurantid : store.getState().restaurant.authenticatedRestaurant.restaurantid,
+                dishName : this.state.dishName,
+                dishPrice : this.state.dishPrice,
+                dishDescription : this.state.dishDescription,
+                dishCategory : this.state.dishCategory,
+                dishPicture : this.state.dishPicture,
+                dishType : this.state.dishType,
+                cuisine : this.state.cuisine
+            }
+        })
+        .then((res) => {
+            let dishData = res.data.addDish
+            // console.log(JSON.stringify(dishData))
+            store.dispatch({
+                type : ADD_DISH,
+                payload : dishData
+            })
+        })
+
         this.setState({
             dishName : '',
             dishPrice : '',
@@ -155,8 +169,9 @@ class AddDish extends Component {
     }
 }
 
-const mapStateToProps = (state) => ({
-    restaurant : state.restaurant
-})
+// const mapStateToProps = (state) => ({
+//     restaurant : state.restaurant
+// })
 
-export default connect(mapStateToProps, {addDish})(withStyles(styles)(AddDish))
+// export default connect(mapStateToProps, {addDish})(withStyles(styles)(AddDish))
+export default compose(graphql(addDish, { name: "addDish" }))(withStyles(styles)(AddDish))

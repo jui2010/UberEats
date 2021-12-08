@@ -3,9 +3,12 @@ const {GraphQLObjectType, GraphQLSchema,GraphQLList, GraphQLInt, GraphQLString} 
 const UserType = require('./TypeDefs/UserType')
 const RestaurantType = require('./TypeDefs/RestaurantType')
 const DishType = require('./TypeDefs/DishType')
+const DishInputType = require('./TypeDefs/DishInputType')
+const OrderType = require('./TypeDefs/OrderType')
 let User = require('../models/userModel')
 let Restaurant = require('../models/restaurantModel')
 let Dish = require('../models/dishModel')
+let Order = require('../models/orderModel')
 const jwt = require('jsonwebtoken')
 
 const RootQuery = new GraphQLObjectType({
@@ -174,6 +177,7 @@ const RootQuery = new GraphQLObjectType({
                             reject({error : "Invalid restaurant name or password"})
                         }
                         else {
+                            console.log(JSON.stringify(restaurant))
                             const token = jwt.sign({_id : restaurant._id }, "dhvbhcvbhd")
                             // console.log(token)
                             resolve({ token : token })
@@ -196,6 +200,7 @@ const RootQuery = new GraphQLObjectType({
                             reject({error : "Invalid restaurant name"})
                         }
                         else {
+                            restaurant && 
                             Dish.find({restaurantid : restaurant._id})
                                 .then((dishesArray) => {
                                     restaurant = {
@@ -228,6 +233,133 @@ const RootQuery = new GraphQLObjectType({
             }
         },
 
+        createOrder : {
+            type : OrderType,
+            args : {
+                userid : { type : GraphQLString},
+                firstname : { type : GraphQLString},
+                lastname : { type : GraphQLString},
+                restaurantid : { type : GraphQLString},
+                restaurantName : { type : GraphQLString},
+                location : { type : GraphQLString},
+                deliveryOrPickup : { type : GraphQLString},
+                orderStatus : { type : GraphQLString},
+                instructions : { type : GraphQLString},
+                // dish : {type :  new GraphQLList({
+                //     _id : { type : GraphQLString}
+                // })}
+                // dishes : {
+                //     type :  new GraphQLList({
+                //         dishName : { type : GraphQLString}
+                //     })
+                // }
+            },
+            resolve(parent, args){
+                return new Promise((resolve, reject) => {
+                    console.log("AGRDFDGDGD" + JSON.stringify(args))
+                    const newOrder = new Order(args)
+                    newOrder.save((err, order) => {
+                        if (err) {
+                            console.log('result in error', err)
+                            reject({error : "Error"})
+                        }
+                        else {
+                            resolve(order)
+                        } 
+                    })
+                })
+            }
+        },
+
+
+        getAuthenticatedRestaurantData : {
+            type : RestaurantType,
+            args : {
+                restaurantid : { type : GraphQLString},
+            },
+            resolve(parent, args){
+                return new Promise((resolve, reject) => {
+                    Restaurant.findOne({_id : args.restaurantid}, (err, restaurant) => {
+                        if (err) {
+                            console.log('result in error', err)
+                            reject({error : "Invalid restaurant name"})
+                        }
+                        else {
+                            console.log(JSON.stringify(restaurant))
+                            resolve(restaurant)
+                        } 
+                    })
+                })
+            }
+        },
+
+        addDish : {
+            type : DishType,
+            args : {
+                restaurantid : { type : GraphQLString},
+                dishName : { type : GraphQLString},
+                dishPrice : { type : GraphQLString},
+                dishDescription : { type : GraphQLString},
+                dishCategory : { type : GraphQLString},
+                dishPicture : { type : GraphQLString}, 
+                dishType : { type : GraphQLString},
+                cuisine : { type : GraphQLString}
+            },
+            resolve(parent, args){
+                return new Promise((resolve, reject) => {
+                    const newDish = new Dish(args)
+                    newDish.save((err, dish) => {
+                        if (err) {
+                            console.log('result in error', err)
+                            reject({error : "Error"})
+                        }
+                        else {
+                            console.log("AddDish "+dish)
+                            resolve(dish)
+                        } 
+                    })
+                })
+            }
+        },
+
+        editDish : {
+            type : DishType,
+            args : {
+                dishid : { type : GraphQLString},
+                dishName : { type : GraphQLString},
+                dishPrice : { type : GraphQLString},
+                dishDescription : { type : GraphQLString},
+                dishCategory : { type : GraphQLString},
+                dishPicture : { type : GraphQLString}, 
+                dishType : { type : GraphQLString},
+                cuisine : { type : GraphQLString}
+            },
+            resolve(parent, args){
+                return new Promise((resolve, reject) => {
+                    Dish.findOne({_id : args.dishid}, (err, dish) => {
+                        if (err) {
+                            console.log('result in error', err)
+                            reject({error : "Invalid dish name"})
+                        }
+                        else {
+                            if(dish){
+                                dish.dishName = args.dishName
+                                dish.dishPicture = args.dishPicture
+                                dish.dishDescription = args.dishDescription
+                                dish.dishCategory = args.dishCategory
+                                dish.cuisine = args.cuisine
+                                dish.dishType = args.dishType
+                                dish.dishPrice = args.dishPrice
+                        
+                                dish.save()
+                                  .then((dishData) => resolve(dishData) )
+                                  .catch(err => reject({error : "Error"}))
+                            }
+                        } 
+                    })
+                })
+            }
+        },
     }
 })
   
