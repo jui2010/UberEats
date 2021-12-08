@@ -5,8 +5,12 @@ import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
 import InputBase from '@material-ui/core/InputBase'
 
-import {connect} from 'react-redux'
-import {editProfile, getSelectedUser} from '../redux/actions/userActions'
+import {flowRight as compose} from 'lodash'
+import { graphql } from 'react-apollo'
+
+import store from '../redux/store'
+import {EDIT_PROFILE} from '../redux/types'
+import { editProfile } from '../graphql/mutation'
 
 const styles = (theme) => ({
     ...theme.spread,
@@ -49,13 +53,13 @@ class profile extends Component {
     
     state = {
         edit : false,
-        phone  : this.props.user.authenticatedUser.phone,
-        nickname : this.props.user.authenticatedUser.nickname,
-        dob : this.props.user.authenticatedUser.dob,
-        about : this.props.user.authenticatedUser.about,
-        city : this.props.user.authenticatedUser.city,
-        state : this.props.user.authenticatedUser.state,
-        country : this.props.user.authenticatedUser.country
+        phone  : store.getState().user.authenticatedUser.phone,
+        nickname : store.getState().user.authenticatedUser.nickname,
+        dob : store.getState().user.authenticatedUser.dob,
+        about : store.getState().user.authenticatedUser.about,
+        city : store.getState().user.authenticatedUser.city,
+        state : store.getState().user.authenticatedUser.state,
+        country : store.getState().user.authenticatedUser.country
     }
 
     handleChange = (event) => {
@@ -72,19 +76,26 @@ class profile extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault()
-        
-        var userDetails = {
-            phone  : this.state.phone,
-            nickname : this.state.nickname,
-            dob : this.state.dob,
-            about : this.state.about,
-            city : this.state.city,
-            state : this.state.state,
-            country : this.state.country
-        }
-
-        console.log("user deeets"+ JSON.stringify(userDetails) )
-        this.props.editProfile(userDetails)
+        // console.log("user deeets"+ JSON.stringify(userDetails) )
+        this.props.editProfile({
+                variables: {
+                phone : this.state.phone,
+                nickname: this.state.nickname,
+                dob: this.state.dob,
+                about: this.state.about,
+                city: this.state.city,
+                state: this.state.state,
+                country: this.state.country
+            }
+        })
+        .then((res) => {
+            let userData = res.data.editProfile
+            // console.log(JSON.stringify(userData))
+            store.dispatch({
+                type : EDIT_PROFILE,
+                payload : userData
+            })
+        })
 
         this.setState({
             edit : false
@@ -93,7 +104,7 @@ class profile extends Component {
 
     render() {
         const {classes} = this.props
-        const {authenticatedUser} = this.props.user
+        const {authenticatedUser} = store.getState().user
 // console.log(JSON.stringify(this.state))
         return (
             <Grid container direcion="row" alignItems="center" justifyContent="center" className={classes.mainGrid}>
@@ -228,8 +239,9 @@ class profile extends Component {
     }
 }
 
-const mapStateToProps = (state) => ({
-    user : state.user
-})
+// const mapStateToProps = (state) => ({
+//     user : state.user
+// })
 
-export default connect(mapStateToProps, {editProfile, getSelectedUser} )(withStyles(styles)(profile))
+// export default connect(mapStateToProps, {editProfile, getSelectedUser} )(withStyles(styles)(profile))
+export default compose(graphql(editProfile, { name: "editProfile" }))(withStyles(styles)(profile))

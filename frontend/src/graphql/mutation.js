@@ -169,5 +169,81 @@ const editDish = gql`
     }
 `
 
+const editProfile = gql`
+    mutation editProfile(
+        $phone: String
+        $nickname: String
+        $dob: String
+        $about: String
+        $city: String
+        $state: String
+        $country: String
+        ){
+        editProfile(
+            phone : $phone
+            nickname : $nickname
+            dob : $dob
+            about : $about
+            city : $city
+            state : $state
+            country : $country
+        ){
+            firstname
+            lastname
+            email
+            profilePic
+            phone
+            nickname
+            about
+            city
+            country
+            state
+            dob
+        }
+    }
+`
+
+const editRestaurantProfile = gql`
+    mutation editRestaurantProfile(
+        $restaurantid : String,
+        $restaurantName: String,
+        $phone: String,
+        $location: String,
+        $address: String,
+        $description: String,
+        $deliveryFee: String,
+        $timing: String,
+        $tile: String,
+        $typeOfRestaurant: String,
+        $typeOfFood: String
+        ){
+        editRestaurantProfile(
+            restaurantid : $restaurantid,
+            restaurantName: $restaurantName,
+            phone: $phone,
+            location: $location,
+            address: $address,
+            description: $description,
+            deliveryFee: $deliveryFee,
+            timing: $timing,
+            tile: $tile,
+            typeOfRestaurant: $typeOfRestaurant,
+            typeOfFood: $typeOfFood
+        ){
+            firstname
+            lastname
+            email
+            profilePic
+            phone
+            nickname
+            about
+            city
+            country
+            state
+            dob
+        }
+    }
+`
+
 export {signupUser, loginUser, getAuthenticatedUserData, signupRestaurant, loginRestaurant, 
-    getSelectedRestaurantData, getAuthenticatedRestaurantData, addDish, editDish}
+    getSelectedRestaurantData, getAuthenticatedRestaurantData, addDish, editDish, editProfile, editRestaurantProfile}

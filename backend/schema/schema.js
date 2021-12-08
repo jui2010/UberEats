@@ -360,6 +360,90 @@ const RootQuery = new GraphQLObjectType({
                 })
             }
         },
+
+        editProfile : {
+            type : UserType,
+            args : {
+                userid: { type : GraphQLString},
+                phone: { type : GraphQLString},
+                nickname: { type : GraphQLString},
+                dob: { type : GraphQLString},
+                about: { type : GraphQLString},
+                city: { type : GraphQLString},
+                state: { type : GraphQLString},
+                country: { type : GraphQLString},
+            },
+            resolve(parent, args){
+                return new Promise((resolve, reject) => {
+                    User.findOne({_id : args.userid}, (err, user) => {
+                        if (err) {
+                            console.log('result in error', err)
+                            reject({error : "Invalid user name"})
+                        }
+                        else {
+                            if(user){
+                                user.phone  = args.phone
+                                user.nickname = args.nickname
+                                user.dob = args.dob
+                                user.about = args.about
+                                user.city = args.city
+                                user.state = args.state
+                                user.country = args.country
+                        
+                                user.save()
+                                  .then((userData) => resolve(userData) )
+                                  .catch(err => reject({error : "Error"}))
+                            }
+                        } 
+                    })
+                })
+            }
+        },
+
+        editRestaurantProfile : {
+            type : RestaurantType,
+            args : {
+                restaurantid : { type : GraphQLString},
+                restaurantName: { type : GraphQLString},
+                phone: { type : GraphQLString},
+                location: { type : GraphQLString},
+                address: { type : GraphQLString},
+                description: { type : GraphQLString},
+                deliveryFee: { type : GraphQLString},
+                timing: { type : GraphQLString},
+                tile: { type : GraphQLString},
+                typeOfRestaurant: { type : GraphQLString},
+                typeOfFood: { type : GraphQLString}
+            },
+            resolve(parent, args){
+                return new Promise((resolve, reject) => {
+                    Restaurant.findOne({_id : args.restaurantid}, (err, restaurant) => {
+                        if (err) {
+                            console.log('result in error', err)
+                            reject({error : "Invalid restaurant name"})
+                        }
+                        else {
+                            if(restaurant){
+                                restaurant.phone = args.phone
+                                restaurant.location = args.location
+                                restaurant.address = args.address
+                                restaurant.description = args.description
+                                restaurant.deliveryFee = args.deliveryFee
+                                restaurant.timing = args.timing
+                                restaurant.tile = args.tile
+                                restaurant.typeOfRestaurant = args.typeOfRestaurant
+                                restaurant.typeOfFood = args.typeOfFood
+                        
+                                restaurant.save()
+                                  .then((restaurantData) => resolve(restaurantData) )
+                                  .catch(err => reject({error : "Error"+ err}))
+                            }
+                        } 
+                    })
+                })
+            }
+        },
+
     }
 })
   

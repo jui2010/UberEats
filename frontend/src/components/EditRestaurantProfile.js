@@ -14,8 +14,12 @@ import Select from '@mui/material/Select'
 
 import { uploadFile } from 'react-s3'
 
-import {connect} from 'react-redux'
-import {editRestaurantProfile} from '../redux/actions/restaurantActions'
+import {flowRight as compose} from 'lodash'
+import { graphql } from 'react-apollo'
+
+import store from '../redux/store'
+import {EDIT_RESTAURANT_PROFILE} from '../redux/types'
+import { editRestaurantProfile } from '../graphql/mutation'
 
 import config from '../config'
 
@@ -37,16 +41,16 @@ const styles = (theme) => ({
 class EditRestaurantProfile extends Component {
     state = {
         open : false,
-        restaurantName : this.props.restaurant.authenticatedRestaurant.restaurantName,
-        phone : this.props.restaurant.authenticatedRestaurant.phone,
-        location : this.props.restaurant.authenticatedRestaurant.location,
-        address : this.props.restaurant.authenticatedRestaurant.address,
-        description : this.props.restaurant.authenticatedRestaurant.description,
-        deliveryFee : this.props.restaurant.authenticatedRestaurant.deliveryFee,
-        timing : this.props.restaurant.authenticatedRestaurant.timing,
-        tile : this.props.restaurant.authenticatedRestaurant.tile,
-        typeOfRestaurant : this.props.restaurant.authenticatedRestaurant.typeOfRestaurant,
-        typeOfFood : this.props.restaurant.authenticatedRestaurant.typeOfFood,
+        restaurantName : store.getState().restaurant.authenticatedRestaurant.restaurantName,
+        phone : store.getState().restaurant.authenticatedRestaurant.phone,
+        location : store.getState().restaurant.authenticatedRestaurant.location,
+        address : store.getState().restaurant.authenticatedRestaurant.address,
+        description : store.getState().restaurant.authenticatedRestaurant.description,
+        deliveryFee : store.getState().restaurant.authenticatedRestaurant.deliveryFee,
+        timing : store.getState().restaurant.authenticatedRestaurant.timing,
+        tile : store.getState().restaurant.authenticatedRestaurant.tile,
+        typeOfRestaurant : store.getState().restaurant.authenticatedRestaurant.typeOfRestaurant,
+        typeOfFood : store.getState().restaurant.authenticatedRestaurant.typeOfFood,
         selectedFile : null
     }
 
@@ -70,21 +74,31 @@ class EditRestaurantProfile extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault()
-        const restaurantDetails = {
-            email : this.props.restaurant.authenticatedRestaurant.email,
-            restaurantName : this.state.restaurantName,
-            phone : this.state.phone,
-            location : this.state.location,
-            address : this.state.address,
-            description : this.state.description,
-            deliveryFee : this.state.deliveryFee,
-            timing : this.state.timing,
-            tile : this.state.tile,
-            typeOfRestaurant : this.state.typeOfRestaurant,
-            typeOfFood : this.state.typeOfFood
-        }
-        this.props.editRestaurantProfile(restaurantDetails)
-        console.log("restaurantDetails "+JSON.stringify(restaurantDetails))
+
+        this.props.editRestaurantProfile({
+            variables: {
+                email : store.getState().restaurant.authenticatedRestaurant.email,
+                restaurantName : this.state.restaurantName,
+                phone : this.state.phone,
+                location : this.state.location,
+                address : this.state.address,
+                description : this.state.description,
+                deliveryFee : this.state.deliveryFee,
+                timing : this.state.timing,
+                tile : this.state.tile,
+                typeOfRestaurant : this.state.typeOfRestaurant,
+                typeOfFood : this.state.typeOfFood
+            }
+        })
+        .then((res) => {
+            let restaurantData = res.data.editRestaurantProfile
+            // console.log(JSON.stringify(restaurantData))
+            store.dispatch({
+                type : EDIT_RESTAURANT_PROFILE,
+                payload : restaurantData
+            })
+        })
+
         this.handleClose()
     }
     
@@ -190,8 +204,9 @@ class EditRestaurantProfile extends Component {
     }
 }
 
-const mapStateToProps = (state) => ({
-    restaurant : state.restaurant
-})
+// const mapStateToProps = (state) => ({
+//     restaurant : state.restaurant
+// })
 
-export default connect(mapStateToProps, {editRestaurantProfile})(withStyles(styles)(EditRestaurantProfile))
+// export default connect(mapStateToProps, {editRestaurantProfile})(withStyles(styles)(EditRestaurantProfile))
+export default compose(graphql(editRestaurantProfile, { name: "editRestaurantProfile" }))(withStyles(styles)(EditRestaurantProfile))
