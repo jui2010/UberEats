@@ -10,6 +10,7 @@ let Restaurant = require('../models/restaurantModel')
 let Dish = require('../models/dishModel')
 let Order = require('../models/orderModel')
 const jwt = require('jsonwebtoken')
+const bcrypt = require("bcryptjs")
 
 const RootQuery = new GraphQLObjectType({
     name : "RootQueryType",
@@ -48,12 +49,15 @@ const RootQuery = new GraphQLObjectType({
                 password : { type : GraphQLString}
             },
             resolve(parent, args){
+                const salt = bcrypt.genSalt(10)
+                const hashedPassword = bcrypt.hash(args.password, salt)
+
                 return new Promise((resolve, reject) => {
                     const newUser = new User({
                         firstname : args.firstname, 
                         lastname : args.lastname, 
                         email : args.email, 
-                        password : args.password
+                        password : hashedPassword
                     })
                     console.log("In signupUser :" +JSON.stringify(newUser))
                     newUser.save((err, user) => {
@@ -65,14 +69,13 @@ const RootQuery = new GraphQLObjectType({
                             console.log('result', {
                                 firstname : args.firstname, 
                                 lastname : args.lastname, 
-                                email : args.email, 
-                                password : args.password
+                                email : args.email,
+                                password : hashedPassword
                             })
                             resolve({
                                 firstname : args.firstname, 
                                 lastname : args.lastname, 
-                                email : args.email, 
-                                password : args.password
+                                email : args.email
                             })
                             console.log("signupUser successful")
                         } 
@@ -91,16 +94,21 @@ const RootQuery = new GraphQLObjectType({
                 return new Promise((resolve, reject) => {
                     console.log("In loginUser :" +JSON.stringify(args))
 
-                    User.findOne({email : args.email, password : args.password}, (err, user) => {
+                    User.findOne({email : args.email}, (err, user) => {
                         if (err) {
                             console.log('result in error', err)
-                            reject({error : "Invalid username or password"})
+                            reject({error : "Invalid username"})
                         }
                         else {
-                            const token = jwt.sign({_id : user._id }, "dhvbhcvbhd")
-                            console.log("user token : "+token)
-                            resolve({ token : token })
-                            console.log("loginUser successful")
+                            if( bcrypt.compare(args.password, user.password)){
+                                const token = jwt.sign({_id : userItem._id }, "dhvbhcvbhd")
+                                console.log("user token : "+token)
+                                resolve({ token : token })
+                                console.log("loginUser successful")
+                            }
+                            else {
+                                reject({error : "Invalid password"})
+                            }
                         } 
                     })
                 })
@@ -150,17 +158,19 @@ const RootQuery = new GraphQLObjectType({
                             reject({error : "Email already exists"})
                         }
                         else {
+                            const salt = bcrypt.genSalt(10)
+                            let hashedPassword = bcrypt.hash(args.password, salt)
+
                             console.log('result', {
                                 restaurantName : args.restaurantName, 
                                 location : args.location, 
                                 email : args.email, 
-                                password : args.password
+                                password : hashedPassword
                             })
                             resolve({
                                 restaurantName : args.restaurantName, 
                                 location : args.location, 
-                                email : args.email, 
-                                password : args.password
+                                email : args.email
                             })
                         } 
                     })
@@ -179,13 +189,18 @@ const RootQuery = new GraphQLObjectType({
                     Restaurant.findOne({email : args.email, password : args.password}, (err, restaurant) => {
                         if (err) {
                             console.log('result in error', err)
-                            reject({error : "Invalid restaurant name or password"})
+                            reject({error : "Invalid restaurant email"})
                         }
                         else {
                             console.log(JSON.stringify(restaurant))
-                            const token = jwt.sign({_id : restaurant._id }, "dhvbhcvbhd")
-                            // console.log(token)
-                            resolve({ token : token })
+
+                            if( bcrypt.compare(args.password, restaurant.password)){
+                                const token = jwt.sign({_id : restaurant._id }, "dhvbhcvbhd")
+                                resolve({ token : token })
+                            }
+                            else {
+                                reject({error : "Invalid password"})
+                            }
                         } 
                     })
                 })
@@ -212,7 +227,7 @@ const RootQuery = new GraphQLObjectType({
                                     ...restaurant._doc,
                                     dishes : dishesArray
                                     }
-                                    console.log("GET SELECTED "+JSON.stringify(restaurant))
+                                    console.log("GET RESTAURANT DATA "+JSON.stringify(restaurant))
                                     resolve({
                                         _id : restaurant._id,
                                         restaurantName : restaurant.restaurantName,
