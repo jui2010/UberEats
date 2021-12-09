@@ -1,16 +1,18 @@
 import React, { Component } from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
 
-import { GET_ORDER_SUMMARY } from '../redux/types'
-import axios from 'axios'
-import store from '../redux/store'
-import {connect} from 'react-redux'
 import Grid from '@material-ui/core/Grid'
 import Avatar from '@mui/material/Avatar'
 import {Link } from 'react-router-dom'
-
 import OrderStatus from '../components/OrderStatus'
 import { Button } from '@material-ui/core'
+
+import store from '../redux/store'
+import {GET_ORDER_SUMMARY} from '../redux/types'
+
+import {flowRight as compose} from 'lodash'
+import { graphql } from 'react-apollo'
+import { getOrderSummary } from '../graphql/mutation'
 
 const styles = (theme) => ({
     ...theme.spread,
@@ -64,12 +66,17 @@ class orderSummary extends Component {
 
     componentDidMount(){
         console.log('get order summary')
-        axios.get('/authRestaurant/getOrderSummary')
-            .then(res => {
-                store.dispatch({
-                    type : GET_ORDER_SUMMARY,
-                    payload : res.data
-                })
+        this.props.getOrderSummary({
+            variables : {
+                restaurantid : store.getState().restaurant.authenticatedRestaurant._id
+            }
+        })
+        .then((res) => {
+            let orderData = res.data.getOrderSummary
+            store.dispatch({
+                type : GET_ORDER_SUMMARY,
+                payload : orderData
+            })
         })
     }
 
@@ -100,13 +107,13 @@ class orderSummary extends Component {
 
     renderOrderSummary = () => {
         const {classes } = this.props
-        const allOrders = this.props.restaurant.authenticatedRestaurant.orders
+        const allOrders = store.getState().restaurant.authenticatedRestaurant.orders
 
         let orders =  this.state.status === 'all' ? allOrders : allOrders.filter((order) => {
             return this.state.status === 'delivered' ? order.orderStatus === 'delivered' : this.state.status === 'cancelled' ? order.orderStatus === 'cancelled' : order.orderStatus === 'orderReceived' | order.orderStatus === 'prepared' | order.orderStatus === 'onTheWay'  
         })
 
-        if(this.props.restaurant.authenticatedRestaurant.orders && this.props.restaurant.authenticatedRestaurant.orders.length > 0){
+        if(store.getState().restaurant.authenticatedRestaurant.orders && store.getState().restaurant.authenticatedRestaurant.orders.length > 0){
             return orders.map(orderItem => (
                 <Grid container item  xs={12} className={classes.orders}>
                     <Grid item xs={1} className={classes.heading}>
@@ -159,9 +166,10 @@ class orderSummary extends Component {
     }
 }
 
-const mapStateToProps = (state) => ({
-    user : state.user,
-    restaurant : state.restaurant
-})
+// const mapStateToProps = (state) => ({
+//     user : state.user,
+//     restaurant : state.restaurant
+// })
 
-export default connect(mapStateToProps, {} )(withStyles(styles)(orderSummary))
+// export default connect(mapStateToProps, {} )(withStyles(styles)(orderSummary))
+export default compose(graphql(getOrderSummary, { name: "getOrderSummary" }))(withStyles(styles)(orderSummary))

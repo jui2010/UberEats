@@ -1,13 +1,17 @@
 import React, { Component } from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
 
-import {connect} from 'react-redux'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import Select from '@mui/material/Select'
 
-import {changeOrderStatus} from '../redux/actions/restaurantActions'
+import store from '../redux/store'
+import {CHANGE_ORDER_STATUS} from '../redux/types'
+
+import {flowRight as compose} from 'lodash'
+import { graphql } from 'react-apollo'
+import { changeOrderStatus } from '../graphql/mutation'
 
 const styles = (theme) => ({
     ...theme.spread,
@@ -48,14 +52,19 @@ class OrderStatus extends Component {
             orderStatus : stat
         })
 
-        let newOrderStatus = {
-            orderid : this.props.orderItem._id,
-            orderStatus : stat
-        }
-
-        console.log("changeOrderStatus "+ newOrderStatus.orderid)
-
-        this.props.changeOrderStatus(newOrderStatus)
+        this.props.changeOrderStatus({
+            variables : {
+                orderid : this.props.orderItem._id,
+                orderStatus : stat
+            }
+        })
+        .then((res) => {
+            let orderData = res.data.changeOrderStatus
+            store.dispatch({
+                type : CHANGE_ORDER_STATUS,
+                payload : orderData
+            })
+        })
     }
 
     render() {
@@ -103,9 +112,10 @@ class OrderStatus extends Component {
     }
 }
 
-const mapStateToProps = (state) => ({
-    user : state.user,
-    restaurant : state.restaurant
-})
+// const mapStateToProps = (state) => ({
+//     user : state.user,
+//     restaurant : state.restaurant
+// })
 
-export default connect(mapStateToProps, {changeOrderStatus} )(withStyles(styles)(OrderStatus))
+// export default connect(mapStateToProps, {changeOrderStatus} )(withStyles(styles)(OrderStatus))
+export default compose(graphql(changeOrderStatus, { name: "changeOrderStatus" }))(withStyles(styles)(OrderStatus))

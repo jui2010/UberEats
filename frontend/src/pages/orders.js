@@ -1,11 +1,8 @@
 import React, { Component } from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
 
-import { GET_ALL_ORDERS } from '../redux/types'
-import { cancelOrder } from '../redux/actions/userActions'
-import axios from 'axios'
-import store from '../redux/store'
-import {connect} from 'react-redux'
+// import { cancelOrder } from '../redux/actions/userActions'
+// import {connect} from 'react-redux'
 import Grid from '@material-ui/core/Grid'
 import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
@@ -14,6 +11,13 @@ import Box from '@material-ui/core/Box'
 import Pagination from '@mui/material/Pagination'
 
 import OrderItem from '../components/OrderItem'
+
+import store from '../redux/store'
+import {GET_ALL_ORDERS} from '../redux/types'
+
+import {flowRight as compose} from 'lodash'
+import { graphql } from 'react-apollo'
+import { getOrders } from '../graphql/mutation'
 
 const styles = (theme) => ({
     ...theme.spread,
@@ -43,16 +47,20 @@ class orders extends Component {
     }
 
     componentDidMount(){
-        // setTimeout(()=>{
-            axios.get('/authUser/getOrders')
-                .then(res => {
-                    console.log("userid :"+JSON.stringify(res.data))
-                    store.dispatch({
-                        type : GET_ALL_ORDERS,
-                        payload : res.data
-                    })
+        
+        this.props.getOrders({
+            variables : {
+                userid : store.getState().user.authenticatedUser._id
+            }
+        })
+        .then((res) => {
+            let orderData = res.data.getOrders
+            store.dispatch({
+                type : GET_ALL_ORDERS,
+                payload : orderData
             })
-        // },1000)
+        })
+
     }
 
     handlePageSet = (event, value) => {
@@ -160,9 +168,10 @@ class orders extends Component {
     }
 }
 
-const mapStateToProps = (state) => ({
-    user : state.user,
-    restaurant : state.restaurant
-})
+// const mapStateToProps = (state) => ({
+//     user : state.user,
+//     restaurant : state.restaurant
+// })
 
-export default connect(mapStateToProps, {cancelOrder} )(withStyles(styles)(orders))
+// export default connect(mapStateToProps, {cancelOrder} )(withStyles(styles)(orders))
+export default compose(graphql(getOrders, { name: "getOrders" }))(withStyles(styles)(orders))

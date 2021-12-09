@@ -1,14 +1,16 @@
 import React, { Component } from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
 
-import {connect} from 'react-redux'
 import Grid from '@material-ui/core/Grid'
 import InputBase from '@material-ui/core/InputBase'
 import { Link } from 'react-router-dom'
-// import axios from 'axios'
-import {createOrder} from '../redux/actions/userActions'
+
 import store from '../redux/store'
-import {EMPTY_CART} from '../redux/types'
+import {CREATE_ORDER, EMPTY_CART} from '../redux/types'
+
+import {flowRight as compose} from 'lodash'
+import { graphql } from 'react-apollo'
+import { createOrder } from '../graphql/mutation'
 
 const styles = (theme) => ({
     ...theme.spread,
@@ -93,7 +95,7 @@ class checkout extends Component {
     }
 
     componentDidMount(){
-        const { cart } = this.props.restaurant
+        const { cart } = store.getState().restaurant
 
         cart.forEach(cartElement => {
             console.log('state'+this.state.total)
@@ -104,16 +106,16 @@ class checkout extends Component {
     }
     
     handleCheckout = () => {
-        const { cart } = this.props.restaurant
+        const { cart } = store.getState().restaurant
         
         let order = {
-            restaurantid : this.props.restaurant.selectedRestaurant._id,
-            firstname : this.props.restaurant.selectedRestaurant.firstname,
-            lastname : this.props.restaurant.selectedRestaurant.lastname,
-            restaurantName : this.props.restaurant.selectedRestaurant.restaurantName,
-            location : this.props.restaurant.selectedRestaurant.location,
-            userid : this.props.user.authenticatedUser._id,
-            deliveryOrPickup : this.props.user.mode,
+            restaurantid : store.getState().restaurant.selectedRestaurant._id,
+            firstname : store.getState().restaurant.selectedRestaurant.firstname,
+            lastname : store.getState().restaurant.selectedRestaurant.lastname,
+            restaurantName : store.getState().restaurant.selectedRestaurant.restaurantName,
+            location : store.getState().restaurant.selectedRestaurant.location,
+            userid : store.getState().user.authenticatedUser._id,
+            deliveryOrPickup : store.getState().user.mode,
             orderStatus : 'orderReceived',
             instructions : this.state.instructions
         }
@@ -135,7 +137,19 @@ class checkout extends Component {
         }
 
         console.log(JSON.stringify(order))
-        this.props.createOrder(order)
+        this.props.createOrder({
+            variables : {
+                dishes
+            }
+        })
+        .then((res) => {
+            let orderData = res.data.createOrder
+            // console.log(JSON.stringify(orderData))
+            store.dispatch({
+                type : CREATE_ORDER,
+                payload : orderData
+            })
+        })
 
         store.dispatch({
             type : EMPTY_CART
@@ -144,8 +158,8 @@ class checkout extends Component {
 
     displayDishOrders(){
         const {classes} = this.props
-        const { cart } = this.props.restaurant
-        if(this.props.restaurant.cart.length > 0){
+        const { cart } = store.getState().restaurant
+        if(store.getState().restaurant.cart.length > 0){
             console.log("display dish orders")
             return cart.map(cartItem => (
                     <Grid container item xs={12} key={cartItem.dishid} className={classes.list}>
@@ -165,7 +179,7 @@ class checkout extends Component {
     }
 
     getSubTotal = () =>{
-        const { cart } = this.props.restaurant
+        const { cart } = store.getState().restaurant
         let tot = 0
         cart.map(cartItem => tot = tot + cartItem.dishQuantity * cartItem.dishPrice)
         console.log(tot)
@@ -180,7 +194,7 @@ class checkout extends Component {
 
     render() {
         const {classes} = this.props
-        const {restaurantName, location, deliveryFee} = this.props.restaurant.selectedRestaurant
+        const {restaurantName, location, deliveryFee} = store.getState().restaurant.selectedRestaurant
 
         let subtotal = this.getSubTotal()
         return (
@@ -253,9 +267,10 @@ class checkout extends Component {
     }
 }
 
-const mapStateToProps = (state) => ({
-    user : state.user,
-    restaurant : state.restaurant
-})
+// const mapStateToProps = (state) => ({
+//     user : state.user,
+//     restaurant : state.restaurant
+// })
 
-export default connect(mapStateToProps, {createOrder} )(withStyles(styles)(checkout))
+// export default connect(mapStateToProps, {createOrder} )(withStyles(styles)(checkout))
+export default compose(graphql(createOrder, { name: "createOrder" }))(withStyles(styles)(checkout))

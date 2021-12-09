@@ -18,10 +18,7 @@ const OrderType = new GraphQLObjectType({
         orderDate : { type : GraphQLString},
         orderTime : { type : GraphQLString},
         instructions : { type : GraphQLString},
-        dishes : { type :  DishInputType},
-        // dishes : { type :  new GraphQLList({
-        //     dishName : { type : GraphQLString},
-        // })},
+        dishes : { type :  new GraphQLList(DishInputType) },
     })
 })
 

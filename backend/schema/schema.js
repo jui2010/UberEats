@@ -55,6 +55,7 @@ const RootQuery = new GraphQLObjectType({
                         email : args.email, 
                         password : args.password
                     })
+                    console.log("In signupUser :" +JSON.stringify(newUser))
                     newUser.save((err, user) => {
                         if (err) {
                             console.log('result in error', err)
@@ -73,6 +74,7 @@ const RootQuery = new GraphQLObjectType({
                                 email : args.email, 
                                 password : args.password
                             })
+                            console.log("signupUser successful")
                         } 
                     })
                 })
@@ -87,6 +89,8 @@ const RootQuery = new GraphQLObjectType({
             },
             resolve(parent, args){
                 return new Promise((resolve, reject) => {
+                    console.log("In loginUser :" +JSON.stringify(args))
+
                     User.findOne({email : args.email, password : args.password}, (err, user) => {
                         if (err) {
                             console.log('result in error', err)
@@ -94,8 +98,9 @@ const RootQuery = new GraphQLObjectType({
                         }
                         else {
                             const token = jwt.sign({_id : user._id }, "dhvbhcvbhd")
-                            // console.log(token)
+                            console.log("user token : "+token)
                             resolve({ token : token })
+                            console.log("loginUser successful")
                         } 
                     })
                 })
@@ -245,14 +250,7 @@ const RootQuery = new GraphQLObjectType({
                 deliveryOrPickup : { type : GraphQLString},
                 orderStatus : { type : GraphQLString},
                 instructions : { type : GraphQLString},
-                // dish : {type :  new GraphQLList({
-                //     _id : { type : GraphQLString}
-                // })}
-                // dishes : {
-                //     type :  new GraphQLList({
-                //         dishName : { type : GraphQLString}
-                //     })
-                // }
+                // dishes : { type :  new GraphQLList(DishInputType)}
             },
             resolve(parent, args){
                 return new Promise((resolve, reject) => {
@@ -270,7 +268,6 @@ const RootQuery = new GraphQLObjectType({
                 })
             }
         },
-
 
         getAuthenticatedRestaurantData : {
             type : RestaurantType,
@@ -375,6 +372,7 @@ const RootQuery = new GraphQLObjectType({
             },
             resolve(parent, args){
                 return new Promise((resolve, reject) => {
+                    console.log("In editProfile :" +JSON.stringify(args))
                     User.findOne({_id : args.userid}, (err, user) => {
                         if (err) {
                             console.log('result in error', err)
@@ -392,7 +390,8 @@ const RootQuery = new GraphQLObjectType({
                         
                                 user.save()
                                   .then((userData) => resolve(userData) )
-                                  .catch(err => reject({error : "Error"}))
+                                  .catch(err => reject({error : "Error"+err}))
+                                console.log("editProfile successful")
                             }
                         } 
                     })
@@ -437,6 +436,76 @@ const RootQuery = new GraphQLObjectType({
                                 restaurant.save()
                                   .then((restaurantData) => resolve(restaurantData) )
                                   .catch(err => reject({error : "Error"+ err}))
+                            }
+                        } 
+                    })
+                })
+            }
+        },
+
+        getOrders : {
+            type : new GraphQLList(OrderType),
+            args : {
+                userid : { type : GraphQLString},
+            },
+            resolve(parent, args){
+                return new Promise((resolve, reject) => {
+                    Order.find({userid : args.userid}, (err, orderArray) => {
+                        if (err) {
+                            console.log('result in error', err)
+                            reject({error : "Invalid order"})
+                        }
+                        else {
+                            if(orderArray){
+                                resolve(orderArray)
+                            }
+                        } 
+                    })
+                })
+            }
+        },
+
+        getOrderSummary : {
+            type : new GraphQLList(OrderType),
+            args : {
+                restaurantid : { type : GraphQLString},
+            },
+            resolve(parent, args){
+                return new Promise((resolve, reject) => {
+                    Order.find({restaurantid : args.restaurantid}, (err, orderArray) => {
+                        if (err) {
+                            console.log('result in error', err)
+                            reject({error : "Invalid order"})
+                        }
+                        else {
+                            if(orderArray){
+                                resolve(orderArray)
+                            }
+                        } 
+                    })
+                })
+            }
+        },
+
+        changeOrderStatus : {
+            type : OrderType,
+            args : {
+                orderid : { type : GraphQLString},
+                orderStatus : { type : GraphQLString},
+            },
+            resolve(parent, args){
+                return new Promise((resolve, reject) => {
+                    Order.findOne({_id : args.orderid}, (err, order) => {
+                        if (err) {
+                            console.log('result in error', err)
+                            reject({error : "Invalid order"})
+                        }
+                        else {
+                            if(order){
+                                order.orderStatus = args.orderStatus
+                                order.save()
+                                .then((order) => resolve(order) )
+                                .catch(err => reject({error : "Error"+ err}) )
                             }
                         } 
                     })

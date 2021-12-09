@@ -245,5 +245,134 @@ const editRestaurantProfile = gql`
     }
 `
 
+const createOrder = gql`
+    mutation createOrder(
+        $userid : String!,
+        $firstname : String!,
+        $lastname : String!,
+        $restaurantid : String!,
+        $restaurantName : String!,
+        $location : String!,
+        $deliveryOrPickup : String!,
+        $orderStatus : String!,
+        $instructions : String!,
+        $dishes : [DishInputType] 
+        ){
+        createOrder(
+            userid : $userid,
+            firstname : $firstname,
+            lastname : $lastname,
+            restaurantid : $restaurantid,
+            restaurantName : $restaurantName,
+            location : $location,
+            deliveryOrPickup : $deliveryOrPickup,
+            orderStatus : $orderStatus,
+            instructions : $instructions,
+            dishes : $dishes
+        ){
+            _id 
+            userid
+            firstname
+            lastname
+            restaurantid
+            restaurantName
+            location
+            deliveryOrPickup
+            orderStatus
+            instructions
+            dishes {
+                dishid
+                dishName
+                dishQuantity
+                dishPrice
+            }
+        }
+    }
+`
+
+const getOrders = gql`
+    mutation getOrders(
+        $userid : String!
+        ){
+        getOrders(
+            userid : $userid
+        ){
+            _id 
+            userid
+            firstname
+            lastname
+            restaurantid
+            restaurantName
+            location
+            deliveryOrPickup
+            orderStatus
+            instructions
+            dishes {
+                dishid
+                dishName
+                dishQuantity
+                dishPrice
+            }
+        }
+    }
+`
+
+const getOrderSummary = gql`
+    mutation getOrderSummary(
+        $restaurantid : String!
+        ){
+        getOrderSummary(
+            restaurantid : $restaurantid
+        ){
+            _id 
+            userid
+            firstname
+            lastname
+            restaurantid
+            restaurantName
+            location
+            deliveryOrPickup
+            orderStatus
+            instructions
+            dishes {
+                dishid
+                dishName
+                dishQuantity
+                dishPrice
+            }
+        }
+    }
+`
+
+const changeOrderStatus = gql`
+    mutation getOrderSummary(
+        $orderid : String!
+        $orderStatus : String!
+        ){
+        getOrderSummary(
+            orderid : $orderid
+            orderStatus : $orderStatus
+        ){
+            _id 
+            userid
+            firstname
+            lastname
+            restaurantid
+            restaurantName
+            location
+            deliveryOrPickup
+            orderStatus
+            instructions
+            dishes {
+                dishid
+                dishName
+                dishQuantity
+                dishPrice
+            }
+        }
+    }
+`
+
 export {signupUser, loginUser, getAuthenticatedUserData, signupRestaurant, loginRestaurant, 
-    getSelectedRestaurantData, getAuthenticatedRestaurantData, addDish, editDish, editProfile, editRestaurantProfile}
+    getSelectedRestaurantData, getAuthenticatedRestaurantData, addDish, editDish, editProfile, editRestaurantProfile,
+    createOrder, getOrders, getOrderSummary, changeOrderStatus}
